@@ -1,3 +1,5 @@
+obsidian\wiki\src\site\styles\custom-style.scss
+/* 固定顶部导航栏 */
 .fixed-navbar {
   position: fixed;
   top: 0;
@@ -6,12 +8,20 @@
   z-index: 1000;
   background: var(--background-primary);
   border-bottom: 1px solid var(--text-muted);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* 为固定导航栏添加顶部间距 */
 body {
   padding-top: 80px; /* 根据你的导航栏高度调整 */
+}
+
+/* 动态文件树侧边栏样式 */
+.layout-with-sidebar {
+  display: flex;
+  min-height: calc(100vh - 80px);
+  gap: 2rem;
+  margin-top: 0;
 }
 
 .dynamic-sidebar {
@@ -21,22 +31,23 @@ body {
   border-right: 1px solid var(--text-muted);
   padding: 1.5rem;
   position: sticky;
-  top: 90px;
-  height: calc(100vh - 90px);
+  top: 80px; /* 固定导航栏高度 */
+  height: calc(100vh - 80px);
   overflow-y: auto;
-
+  
   @media (max-width: 1200px) {
     width: 250px;
   }
-
+  
   @media (max-width: 800px) {
     position: fixed;
     left: -300px;
-    top: 75px;
-    height: calc(100vh - 75px);
-    z-index: 1000;
+    top: 80px;
+    height: calc(100vh - 80px);
+    z-index: 999;
     transition: left 0.3s ease;
-
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    
     &.open {
       left: 0;
     }
@@ -47,11 +58,12 @@ body {
   flex: 1;
   max-width: calc(100% - 300px);
   margin-top: 0 !important;
-
+  padding: 1.5rem;
+  
   @media (max-width: 1200px) {
     max-width: calc(100% - 250px);
   }
-
+  
   @media (max-width: 800px) {
     max-width: 100%;
   }
@@ -125,7 +137,7 @@ body {
 .sidebar-toggle {
   display: none;
   position: fixed;
-  top: 1rem;
+  top: calc(80px + 1rem);
   left: 1rem;
   z-index: 1001;
   background: var(--text-accent);
@@ -142,8 +154,13 @@ body {
 
 /* 响应式调整 */
 @media (max-width: 800px) {
+  body {
+    padding-top: 75px;
+  }
+  
   .layout-with-sidebar {
     flex-direction: column;
+    min-height: calc(100vh - 75px);
   }
 
   .dynamic-sidebar {
@@ -154,4 +171,18 @@ body {
       transform: translateX(0);
     }
   }
+  
+  .fixed-navbar {
+    height: 75px;
+  }
+}
+
+/* 调整现有内容以适应固定导航栏 */
+.content {
+  margin-top: 0 !important;
+}
+
+.navbar {
+  position: relative;
+  z-index: 1001;
 }
