@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/notion///information-and-entropy/"}
+{"dg-publish":true,"permalink":"/notion///information-and-entropy/","tags":["gardenEntry"]}
 ---
 
 ---
