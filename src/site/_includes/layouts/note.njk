@@ -1,6 +1,5 @@
 ---
 permalink: "notes/{{ page.fileSlug | slugify }}/"
-
 ---
 <!DOCTYPE html>
 <html lang="{{ meta.mainLanguage }}">
@@ -44,14 +43,14 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
           <h1>{{ title }}</h1>
         {% endif %}
         {% if settings.dgShowFileTree !== true %}
-          <div class="navbar-breadcrumbs">
-            <nav class="breadcrumb" aria-label="breadcrumbs">
-              <ul>
-                <li><a href="/">{{meta.siteName}}</a></li>
-                <li>{{title}}</li>
-              </ul>
-            </nav>
-          </div>
+          <!-- <div class="navbar-breadcrumbs"> -->
+            <!-- <nav class="breadcrumb" aria-label="breadcrumbs"> -->
+              <!-- <ul> -->
+                <!-- <li><a href="/">{{meta.siteName}}</a></li> -->
+                <!-- <li>{{title}}</li> -->
+              <!-- </ul> -->
+            <!-- </nav> -->
+          <!-- </div> -->
         {% endif %}
         {%- if settings.dgTimestampSettings and (created or updated) -%}
           <div class="timestamps">
