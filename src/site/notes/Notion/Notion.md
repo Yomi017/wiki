@@ -1,8 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/notion/notion/","tags":["gardenEntry"]}
+{"dg-publish":true,"permalink":"/notion/notion/"}
 ---
 
-# Notion
-
-[[理论知识\|理论知识]]
-[[实践知识\|实践知识]]
+欢迎来到我的网站
