@@ -53,9 +53,9 @@ Storing or transporting a bit requires a physical medium. This medium must have 
 
 ### 1.5 The Quantum Bit (Qubit)
 
-A qubit is a quantum mechanical system capable of storing a single bit, typically represented by two basis states, |0⟩ and |1⟩. Three key quantum mechanical features distinguish qubits (or collections of them) from classical Boolean bits: reversibility, superposition, and entanglement.
+A qubit is a quantum mechanical system capable of storing a single bit, typically represented by two basis states, $|0⟩$ and $|1⟩$. Three key quantum mechanical features distinguish qubits (or collections of them) from classical Boolean bits: reversibility, superposition, and entanglement.
 
-*   **Core:** A bit based on quantum mechanical principles, denoted |0⟩ and |1⟩.
+*   **Core:** A bit based on quantum mechanical principles, denoted $|0⟩$ and $|1⟩$.
 *   **Features:** Reversibility, superposition, and entanglement differentiate it from classical bits.
 
 **Reversibility:**
