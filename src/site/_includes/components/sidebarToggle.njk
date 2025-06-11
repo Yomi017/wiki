@@ -1,0 +1,42 @@
+<button class="sidebar-toggle" onclick="toggleDynamicSidebar()">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <line x1="3" y1="12" x2="21" y2="12"></line>
+    <line x1="3" y1="18" x2="21" y2="18"></line>
+  </svg>
+</button>
+
+<script>
+function toggleDynamicSidebar() {
+  const sidebar = document.querySelector('.dynamic-sidebar');
+  const isOpen = sidebar.classList.contains('open');
+  
+  if (isOpen) {
+    sidebar.classList.remove('open');
+  } else {
+    sidebar.classList.add('open');
+  }
+}
+
+// 点击页面其他地方关闭侧边栏
+document.addEventListener('click', function(e) {
+  const sidebar = document.querySelector('.dynamic-sidebar');
+  const toggle = document.querySelector('.sidebar-toggle');
+  
+  if (window.innerWidth <= 800 && 
+      sidebar && toggle &&
+      !sidebar.contains(e.target) && 
+      !toggle.contains(e.target) && 
+      sidebar.classList.contains('open')) {
+    sidebar.classList.remove('open');
+  }
+});
+
+// 窗口大小改变时重置侧边栏状态
+window.addEventListener('resize', function() {
+  const sidebar = document.querySelector('.dynamic-sidebar');
+  if (window.innerWidth > 800 && sidebar) {
+    sidebar.classList.remove('open');
+  }
+});
+</script>
