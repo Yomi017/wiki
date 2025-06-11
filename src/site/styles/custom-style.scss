@@ -1,12 +1,17 @@
-.layout-with-sidebar {
-  display: flex;
-  min-height: 100vh;
-  gap: 2rem;
-  margin-top: 90px;
+.fixed-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--background-primary);
+  border-bottom: 1px solid var(--text-muted);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-  @media (max-width: 800px) {
-    margin-top: 75px;
-  }
+/* 为固定导航栏添加顶部间距 */
+body {
+  padding-top: 80px; /* 根据你的导航栏高度调整 */
 }
 
 .dynamic-sidebar {

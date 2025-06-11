@@ -7,7 +7,7 @@
           {%- if item.type === 'folder' -%}
             <details {% if item.name === 'Notion' %}open{% endif %}>
               <summary>📁 {{ item.name }}</summary>
-              {%- if item.children.length > 0 -%}
+              {%- if item.children and item.children.length > 0 -%}
                 <ul>
                   {{ renderTree(item.children) }}
                 </ul>
@@ -23,6 +23,10 @@
       {%- endfor -%}
     {%- endmacro -%}
     
-    {{ renderTree(fileTree) }}
+    {%- if fileTree and fileTree.length > 0 -%}
+      {{ renderTree(fileTree) }}
+    {%- else -%}
+      <li>没有找到文件</li>
+    {%- endif -%}
   </ul>
 </div>
