@@ -6,9 +6,9 @@
 
 **前端发送的形式有：**
 
-1. Bearer TOKEN_STRING
-2. TOKEN_STRING
-3. JWT TOKEN_STRING
+1. **Bearer TOKEN_STRING**
+2. **TOKEN_STRING**
+3. **JWT TOKEN_STRING**
 
 注意：TOKEN_STRING 是没有引号的
 
