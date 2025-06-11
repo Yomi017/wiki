@@ -1,0 +1,28 @@
+<div class="file-tree">
+  <h3>文件导航</h3>
+  <ul class="tree-root">
+    {%- macro renderTree(items) -%}
+      {%- for item in items -%}
+        <li>
+          {%- if item.type === 'folder' -%}
+            <details {% if item.name === 'Notion' %}open{% endif %}>
+              <summary>📁 {{ item.name }}</summary>
+              {%- if item.children.length > 0 -%}
+                <ul>
+                  {{ renderTree(item.children) }}
+                </ul>
+              {%- endif -%}
+            </details>
+          {%- else -%}
+            <a href="{{ item.path }}" class="file-link" 
+               {% if item.path === permalink %}data-current="true"{% endif %}>
+              📄 {{ item.name }}
+            </a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    {%- endmacro -%}
+    
+    {{ renderTree(fileTree) }}
+  </ul>
+</div>

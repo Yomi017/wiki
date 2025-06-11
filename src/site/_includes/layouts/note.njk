@@ -26,24 +26,29 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
       {%include "components/searchContainer.njk"%}
     {% endif %}
 
-    <main class="content cm-s-obsidian {{contentClasses}}">
-      <header>
+    <div class="layout-with-sidebar">
+      <!-- 左侧动态文件树 -->
+      <aside class="dynamic-sidebar">
+        {% include "components/dynamicFileTree.njk" %}
+      </aside>
+
+      <!-- 主要内容区域 -->
+      <main class="content cm-s-obsidian {{contentClasses}} main-with-sidebar">
+        <header>
         {% if settings.dgShowInlineTitle === true %}
-          <h1 data-note-icon="{% if noteIcon %}{{noteIcon}}{% else %}{{meta.noteIconsSettings.default}}{% endif %}">{% if title %}{{ title }}{% else %}{{ page.fileSlug }}{% endif %}</h1>
+          <h1>{{ title }}</h1>
         {% endif %}
-        <div class="header-meta">
-          {% if settings.dgShowTags === true and tags %}
-            <div class="header-tags">
-              {% for tag in tags %}
-                {% if tag != 'gardenEntry' and tag !='note' %}
-                  <a class="tag" onclick="toggleTagSearch(this)">
-                    #{{tag}}
-                  </a>
-                {% endif %}
-              {% endfor %}
-            </div>
-          {% endif %}
-          {%- if meta.timestampSettings.showCreated or meta.timestampSettings.showUpdated -%}
+        {% if settings.dgShowFileTree !== true %}
+          <div class="navbar-breadcrumbs">
+            <nav class="breadcrumb" aria-label="breadcrumbs">
+              <ul>
+                <li><a href="/">{{meta.siteName}}</a></li>
+                <li>{{title}}</li>
+              </ul>
+            </nav>
+          </div>
+        {% endif %}
+        {%- if settings.dgTimestampSettings and (created or updated) -%}
           <div class="timestamps">
             {%- if meta.timestampSettings.showCreated and created -%}
             <div><i icon-name="calendar-plus"></i> <span class="human-date" data-date="{{created}}"></span></div>
@@ -75,6 +80,7 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
         {% include imp %}
       {% endfor %}
     </main>
+    </div>
 
     {% if settings.dgShowBacklinks === true or settings.dgShowLocalGraph === true or settings.dgShowToc === true%}
       {%include "components/sidebar.njk"%}

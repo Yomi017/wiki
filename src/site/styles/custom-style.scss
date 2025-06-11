@@ -1,13 +1,152 @@
-body {
-    /***
-      ADD YOUR CUSTOM STYLING HERE. (INSIDE THE body {...} section.)
-      IT WILL TAKE PRECEDENCE OVER THE STYLING IN THE STYLE.CSS FILE.
-   ***/
-    //  background-color: white;
-    //  .content {
-    //   font-size: 14px;
-    //  }
-    //  h1 {
-    //   color: black;
-    //  }
+.layout-with-sidebar {
+  display: flex;
+  min-height: 100vh;
+  gap: 2rem;
+  margin-top: 90px;
+
+  @media (max-width: 800px) {
+    margin-top: 75px;
+  }
+}
+
+.dynamic-sidebar {
+  width: 300px;
+  flex-shrink: 0;
+  background: var(--background-secondary);
+  border-right: 1px solid var(--text-muted);
+  padding: 1.5rem;
+  position: sticky;
+  top: 90px;
+  height: calc(100vh - 90px);
+  overflow-y: auto;
+
+  @media (max-width: 1200px) {
+    width: 250px;
+  }
+
+  @media (max-width: 800px) {
+    position: fixed;
+    left: -300px;
+    top: 75px;
+    height: calc(100vh - 75px);
+    z-index: 1000;
+    transition: left 0.3s ease;
+
+    &.open {
+      left: 0;
+    }
+  }
+}
+
+.main-with-sidebar {
+  flex: 1;
+  max-width: calc(100% - 300px);
+  margin-top: 0 !important;
+
+  @media (max-width: 1200px) {
+    max-width: calc(100% - 250px);
+  }
+
+  @media (max-width: 800px) {
+    max-width: 100%;
+  }
+}
+
+/* 文件树样式 */
+.file-tree {
+  h3 {
+    margin-top: 0;
+    color: var(--text-normal);
+    font-size: 1.1rem;
+    border-bottom: 1px solid var(--text-muted);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+
+    ul {
+      padding-left: 1.2rem;
+      margin-top: 0.25rem;
+    }
+  }
+
+  li {
+    margin: 0.25rem 0;
+  }
+
+  details {
+    margin: 0.25rem 0;
+
+    summary {
+      cursor: pointer;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      user-select: none;
+      font-weight: 500;
+      color: var(--text-normal);
+
+      &:hover {
+        background-color: var(--background-primary);
+      }
+    }
+  }
+
+  .file-link {
+    display: block;
+    padding: 0.25rem 0.5rem;
+    text-decoration: none;
+    color: var(--text-accent);
+    border-radius: 4px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: var(--background-primary);
+      text-decoration: none;
+    }
+
+    &[data-current="true"] {
+      background-color: var(--text-accent);
+      color: var(--background-primary);
+      font-weight: bold;
+    }
+  }
+}
+
+/* 移动端切换按钮 */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1001;
+  background: var(--text-accent);
+  color: var(--background-primary);
+  border: none;
+  padding: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+
+  @media (max-width: 800px) {
+    display: block;
+  }
+}
+
+/* 响应式调整 */
+@media (max-width: 800px) {
+  .layout-with-sidebar {
+    flex-direction: column;
+  }
+
+  .dynamic-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+
+    &.open {
+      transform: translateX(0);
+    }
+  }
 }
