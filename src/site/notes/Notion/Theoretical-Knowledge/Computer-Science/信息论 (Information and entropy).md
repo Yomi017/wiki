@@ -12,9 +12,9 @@ Video: [MIT6.050J information and entropy 001_哔哩哔哩_bilibili](https://www
 # 1. bits
 
 ### 1.1 The Boolean Bit
-![[Image/Information and entropy/1.png\|Image/Information and entropy/1.png]]
-![[Image/Information and entropy/2.png\|Image/Information and entropy/2.png]]
-![[Image/Information and entropy/3.png\|Image/Information and entropy/3.png]]
+![Image/Information and entropy/1.png](/img/user/Image/Information%20and%20entropy/1.png)
+![Image/Information and entropy/2.png](/img/user/Image/Information%20and%20entropy/2.png)
+![Image/Information and entropy/3.png](/img/user/Image/Information%20and%20entropy/3.png)
 ### 1.2 The Circuit Bit
 
 Combinational logic circuits graphically represent Boolean expressions. Each Boolean function (NOT, AND, XOR, etc.) corresponds to a "combinational gate" with inputs and an output. Gates are connected by lines, forming circuits. A key property is that combinational circuits **have no feedback loops**; an output never feeds back into an input earlier in its own causal chain. Circuits with loops are called sequential logic, which Boolean algebra alone cannot describe. For instance, a NOT gate with its output connected directly to its input creates a contradiction under Boolean analysis.
