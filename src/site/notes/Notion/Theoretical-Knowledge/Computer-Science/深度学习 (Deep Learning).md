@@ -28,8 +28,11 @@
         
         - 每个隐藏层的神经元都会接收来自前一层（输入层）所有神经元的加权输入。
             
-        - 计算加权和：$$z = (\omega_1*x_1 + \omega_2*x_2 + ... + \omega_n*x_n) + b$$其中 $x$ 是输入，$\omega$ 是权重，$b$ 是偏置。
-         写成矩阵形式则是：$$\begin{pmatrix} 
+        - 计算加权和：
+        - $$z = (\omega_1*x_1 + \omega_2*x_2 + ... + \omega_n*x_n) + b$$
+        - 其中 $x$ 是输入，$\omega$ 是权重，$b$ 是偏置。
+         写成矩阵形式则是：
+         $$\begin{pmatrix} 
          a_0^{(j+1)} \\
          a_1^{(j+1)} \\
          \vdots \\
@@ -49,7 +52,9 @@
          \vdots \\
          a_n^{(j)}
          \end{pmatrix}
-         $$即$$z^{(j+1)}=Wz^{(j)}+b$$
+         $$
+         即
+         $$z^{(j+1)}=Wz^{(j)}+b$$
 		 **训练的进行就是要改变这些参数以达到最优解**
             
         - 将加权和通过一个**激活函数 (Activation Function)**（如 Sigmoid, ReLU, Tanh 等）进行非线性转换：$a = \text{activation-function}(z)$。这个激活后的值 a 会作为下一层（输出层）的输入。

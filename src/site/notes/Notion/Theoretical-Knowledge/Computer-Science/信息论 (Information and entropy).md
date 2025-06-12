@@ -53,9 +53,9 @@ Storing or transporting a bit requires a physical medium. This medium must have 
 
 ### 1.5 The Quantum Bit (Qubit)
 
-A qubit is a quantum mechanical system capable of storing a single bit, typically represented by two basis states, |0⟩ and |1⟩. Three key quantum mechanical features distinguish qubits (or collections of them) from classical Boolean bits: reversibility, superposition, and entanglement.
+A qubit is a quantum mechanical system capable of storing a single bit, typically represented by two basis states, $|0⟩$ and $|1⟩$. Three key quantum mechanical features distinguish qubits (or collections of them) from classical Boolean bits: reversibility, superposition, and entanglement.
 
-*   **Core:** A bit based on quantum mechanical principles, denoted |0⟩ and |1⟩.
+*   **Core:** A bit based on quantum mechanical principles, denoted $|0⟩$ and $|1⟩$.
 *   **Features:** Reversibility, superposition, and entanglement differentiate it from classical bits.
 
 **Reversibility:**
@@ -65,8 +65,8 @@ Quantum evolution is inherently reversible; if a state can transition to another
 *   **Exceptions:** Interaction with the environment and measurement introduce irreversibility.
 
 **Superposition:**
-A qubit can exist in a **superposition**, a combination of its |0⟩ and |1⟩ states. However, measuring a qubit in superposition forces it to **collapse** into one of the basis states (e.g., |0⟩ or |1⟩). The outcome is probabilistic; you get a definite "yes" or "no" for a specific state, never a "maybe" or a percentage. Crucially, after measurement, the qubit *is* in the measured state, so subsequent identical measurements yield the same result, offering no new information. While a single measurement's outcome is unpredictable, its probability can be calculated. This unique nature limits single-qubit information capacity but also enables novel system designs.
-For example, a photon's polarization can store a bit (e.g., horizontal for |0⟩, vertical for |1⟩). A recipient (Bob) measures a specific polarization, getting a "yes"/"no" answer. If the sender (Alice) sends an arbitrarily polarized photon, Bob’s measurement is probabilistic, and the photon’s state changes to reflect the measurement outcome. Copying a qubit by measuring and recreating isn't possible due to this measurement disturbance.
+A qubit can exist in a **superposition**, a combination of its $|0⟩$ and $|1⟩$ states. However, measuring a qubit in superposition forces it to **collapse** into one of the basis states (e.g., $|0⟩$ or $|1⟩$). The outcome is probabilistic; you get a definite "yes" or "no" for a specific state, never a "maybe" or a percentage. Crucially, after measurement, the qubit *is* in the measured state, so subsequent identical measurements yield the same result, offering no new information. While a single measurement's outcome is unpredictable, its probability can be calculated. This unique nature limits single-qubit information capacity but also enables novel system designs.
+For example, a photon's polarization can store a bit (e.g., horizontal for $|0⟩$, vertical for $|1⟩$). A recipient (Bob) measures a specific polarization, getting a "yes"/"no" answer. If the sender (Alice) sends an arbitrarily polarized photon, Bob’s measurement is probabilistic, and the photon’s state changes to reflect the measurement outcome. Copying a qubit by measuring and recreating isn't possible due to this measurement disturbance.
 
 *   **Core:** Qubits can exist in a combination of states simultaneously.
 *   **Measurement Property:** Measurement yields a probabilistic, definite outcome, collapsing the superposition and altering the qubit's state. Exact superposition ratios cannot be known, and qubits cannot be perfectly copied via measurement.
@@ -82,9 +82,9 @@ Importantly, if qubits are prepared independently (no entanglement) and restrict
 *   **Summary:** Under specific conditions, qubits can mimic classical bits.
 
 
-量子比特（qubit）是能存储单个比特但受量子力学限制的微小物理模型，其两个基本状态通常表示为 |0⟩ 和 |1⟩。与经典布尔比特相比，量子比特或其集合具有三个显著特性：可逆性、叠加态和纠缠态。
+量子比特（qubit）是能存储单个比特但受量子力学限制的微小物理模型，其两个基本状态通常表示为 $|0⟩$ 和 $|1⟩$。与经典布尔比特相比，量子比特或其集合具有三个显著特性：可逆性、叠加态和纠缠态。
 
-*   **核心**: 基于量子力学原理的比特，用 |0⟩ 和 |1⟩ 表示。
+*   **核心**: 基于量子力学原理的比特，用 $|0⟩$ 和 $|1⟩$ 表示。
 *   **特性**: 可逆性、叠加态、纠缠态使其区别于经典比特。
 
 **可逆性 (Reversibility):**
@@ -94,8 +94,8 @@ Importantly, if qubits are prepared independently (no entanglement) and restrict
 *   **例外**: 与环境交互和测量过程引入不可逆性。
 
 **叠加态 (Superposition):**
-量子比特可以处于 |0⟩ 和 |1⟩ 的某种组合（叠加态）中。然而，对量子比特进行测量时，它会**塌缩**到被测量的特定状态（例如，问“是否为|1⟩?”，答案总是“是”或“否”，而不是概率分布）。测量结果是概率性的，且测量后量子比特的状态会改变为测量结果对应的状态，后续测量不会提供更多信息。因此，无法精确知道叠加的具体组合，也无法通过多次测量求平均或复制量子比特来获取更多信息。
-以光子偏振为例：Alice可以用水平偏振代表|0⟩，垂直偏振代表|1⟩。Bob测量时只能选择一个特定方向问“是否是这个方向偏振？”，得到“是”或“否”的单一比特结果。如果Alice发送的是任意角度偏振的光子，Bob的测量结果是概率性的（概率与实际偏振方向和测量方向夹角的余弦平方有关），且测量后光子偏振方向会变为Bob测量的方向或其垂直方向。
+量子比特可以处于 $|0⟩$ 和 $|1⟩$ 的某种组合（叠加态）中。然而，对量子比特进行测量时，它会**塌缩**到被测量的特定状态（例如，问“是否为$|1⟩$?”，答案总是“是”或“否”，而不是概率分布）。测量结果是概率性的，且测量后量子比特的状态会改变为测量结果对应的状态，后续测量不会提供更多信息。因此，无法精确知道叠加的具体组合，也无法通过多次测量求平均或复制量子比特来获取更多信息。
+以光子偏振为例：Alice可以用水平偏振代表$|0⟩$，垂直偏振代表$|1⟩$。Bob测量时只能选择一个特定方向问“是否是这个方向偏振？”，得到“是”或“否”的单一比特结果。如果Alice发送的是任意角度偏振的光子，Bob的测量结果是概率性的（概率与实际偏振方向和测量方向夹角的余弦平方有关），且测量后光子偏振方向会变为Bob测量的方向或其垂直方向。
 
 *   **核心**: 量子比特可同时处于多种状态的组合。
 *   **测量特性**: 测量会迫使量子比特选择一个确定状态（概率性选择），并改变其原有状态。无法精确得知叠加比例，也无法复制。
@@ -128,8 +128,8 @@ While all physical systems are ultimately governed by quantum mechanics, the cla
 
 与量子比特测量后会改变其状态不同，**经典比特可以被重复测量而不会受到扰动**。这是因为经典比特通常由大量具有相同属性的物理对象来表示（例如，半导体存储器中的一个比特可能由约6万个电子表示，或者无线电通信中使用大量光子）。
 
-由于涉及大量对象，对其测量结果可以是一个**连续的值**（例如0V到1V的电压），而不仅仅是“是”或“否”的二元结果。这允许设定**容错区间**（error margins）：特定电压范围（如0-0.2V代表逻辑0，0.8-1V代表逻辑1）定义比特状态，中间区域则不确定。
-一种关键机制是 **“恢复逻辑”**（restoring logic），电路在信息处理过程中会主动纠正与理想0V和1V之间的微小电压偏差。这确保了现代计算机的**鲁棒性**（robustness）。
+由于涉及大量对象，对其测量结果可以是一个**连续的值**（例如 $0\ V$ 到 $1\ V$ 的电压），而不仅仅是“是”或“否”的二元结果。这允许设定**容错区间**（error margins）：特定电压范围（如 $0-0.2\ V$ 代表逻辑 $0$ ， $0.8-1\ V$ 代表逻辑 $1$ ）定义比特状态，中间区域则不确定。
+一种关键机制是 **“恢复逻辑”**（restoring logic），电路在信息处理过程中会主动纠正与理想 $0\ V$ 和 $1\ V$ 之间的微小电压偏差。这确保了现代计算机的**鲁棒性**（robustness）。
 
 因此，**经典比特是一个抽象概念**：它是一个可以被测量而不受扰动的模型，因此**可以被复制**。这个模型非常适用于使用恢复逻辑的电路。
 
