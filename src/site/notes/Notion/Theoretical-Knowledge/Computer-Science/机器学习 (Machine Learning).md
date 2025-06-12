@@ -112,7 +112,7 @@ $$w^*, b^* = \arg\min_{w, b} L(w, b)$$
     梯度指明了在该点函数值增长最快的方向。
 
 3.  **确定更新量 (Determine Update Amount)**:
-    *   $\eta$ (eta) 代表**学习率 (Learning Rate)**，它是一个超参数，控制每次参数更新的步长。
+    *   $\eta$ (eta) 代表**学习率 (Learning Rate)**，它是一个[[Notion/Theoretical-Knowledge/Computer-Science/Concept/超参数 (Hyperparameters)\|超参数 (Hyperparameters)]]，控制每次参数更新的步长。
     *   参数更新的量由学习率乘以梯度的负值决定（因为我们要向梯度反方向，即下降方向移动）：
         *   对 $w$ 的更新量: $-\eta \frac{\partial L}{\partial w} \Big|_{w=w^t, b=b^t}$
         *   对 $b$ 的更新量: $-\eta \frac{\partial L}{\partial b} \Big|_{w=w^t, b=b^t}$
