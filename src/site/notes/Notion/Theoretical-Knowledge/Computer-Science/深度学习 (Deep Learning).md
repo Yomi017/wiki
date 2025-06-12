@@ -86,7 +86,65 @@
 
 数据从输入层开始，依次通过隐藏层，最后到达输出层，得到最终的预测结果。这个过程称为前向传播。
 
-### 2. 梯度下降 (Gradient Descent)
+### 2. 代价函数 (Cost Function / 损失函数 Loss Function)
+
+**引言 (Introduction):**
+在定义了神经网络的结构之后（即模型如何从输入 $x$ 得到预测输出 $\hat{y}$），我们需要一种方法来**衡量模型的预测结果有多好或多差**。这个衡量标准就是**代价函数 (Cost Function)**，有时也称为**损失函数 (Loss Function)** 或目标函数 (Objective Function)。代价函数量化了模型预测值与真实目标值之间的差异。**我们的目标是通过调整神经网络的参数（权重 $w$ 和偏置 $b$）来最小化这个代价函数。**
+
+---
+
+1.  **作用 (Purpose):**
+    *   **评估模型性能 (Evaluate Model Performance)**: 提供一个量化的指标来判断模型在训练数据上的表现。代价越小，通常意味着模型预测越接近真实值。
+    *   **指导参数优化 (Guide Parameter Optimization)**: 代价函数是梯度下降等优化算法的目标。优化算法通过计算代价函数关于模型参数的梯度，来朝着减小代价的方向更新参数。
+
+---
+
+2.  **定义与表示 (Definition and Notation):**
+    *   代价函数通常表示为 $J(\theta)$ 或 $L(\theta)$，其中 $\theta$ 代表模型的所有可学习参数（例如，神经网络中的所有权重 $w$ 和偏置 $b$）。
+    *   对于单个训练样本 $(x^{(i)}, y^{(i)})$，我们通常先定义一个**损失 (loss)**，它衡量了在该样本上的预测误差，例如 $L(\hat{y}^{(i)}, y^{(i)})$。
+    *   **代价函数 (Cost Function)** 通常是整个训练集上所有样本损失的平均值（或总和）。如果训练集有 $m$ 个样本，则：
+        $$ J(\theta) = \frac{1}{m} \sum_{i=1}^{m} L(\hat{y}^{(i)}(\theta; x^{(i)}), y^{(i)}) $$
+        其中 $\hat{y}^{(i)}(\theta; x^{(i)})$ 表示模型使用参数 $\theta$ 对输入 $x^{(i)}$ 做出的预测。
+
+---
+
+3.  **常见的代价函数 (Common Cost Functions):**
+
+    *   **针对回归问题 (For Regression Problems):**
+        *   **均方误差 (Mean Squared Error, MSE)**:
+            *   **公式**: $J(\theta) = \frac{1}{m} \sum_{i=1}^{m} (\hat{y}^{(i)} - y^{(i)})^2$
+            *   (有时为了求导方便会写成 $J(\theta) = \frac{1}{2m} \sum_{i=1}^{m} (\hat{y}^{(i)} - y^{(i)})^2$)
+            *   **特点**: 对误差进行平方，使得较大的误差受到更大的惩罚。是回归任务中最常用的损失函数之一。
+        *   **平均绝对误差 (Mean Absolute Error, MAE)**:
+            *   **公式**: $J(\theta) = \frac{1}{m} \sum_{i=1}^{m} |\hat{y}^{(i)} - y^{(i)}|$
+            *   **特点**: 对异常值不如 MSE 敏感。
+
+    *   **针对二分类问题 (For Binary Classification Problems):**
+        *   (其中 $y^{(i)} \in \{0, 1\}$，$\hat{y}^{(i)}$ 是模型预测样本为类别 1 的概率，通常是 Sigmoid 函数的输出)
+        *   **二元交叉熵损失 (Binary Cross-Entropy Loss / Log Loss)**:
+            *   **单个样本的损失**: $L(\hat{y}^{(i)}, y^{(i)}) = - [y^{(i)} \log(\hat{y}^{(i)}) + (1 - y^{(i)}) \log(1 - \hat{y}^{(i)})]$
+            *   **整个数据集的代价**: $J(\theta) = - \frac{1}{m} \sum_{i=1}^{m} [y^{(i)} \log(\hat{y}^{(i)}) + (1 - y^{(i)}) \log(1 - \hat{y}^{(i)})]$
+            *   **特点**: 当模型预测正确且置信度高时，损失小；当预测错误或置信度低时，损失大。与 Sigmoid 激活函数配合良好。
+
+    *   **针对多分类问题 (For Multi-class Classification Problems):**
+        *   (其中类别有 $K$ 个，真实标签 $y^{(i)}$ 通常是 one-hot 编码向量，$\hat{y}^{(i)}$ 是模型预测每个类别的概率向量，通常是 Softmax 函数的输出)
+        *   **分类交叉熵损失 (Categorical Cross-Entropy Loss)**:
+            *   **单个样本的损失 (假设 one-hot 编码)**: $L(\hat{y}^{(i)}, y^{(i)}) = - \sum_{k=1}^{K} y_k^{(i)} \log(\hat{y}_k^{(i)})$ (其中 $y_k^{(i)}$ 是真实标签向量的第 $k$ 个元素，$\hat{y}_k^{(i)}$ 是预测概率向量的第 $k$ 个元素)
+            *   **整个数据集的代价**: $J(\theta) = - \frac{1}{m} \sum_{i=1}^{m} \sum_{k=1}^{K} y_k^{(i)} \log(\hat{y}_k^{(i)})$
+            *   **特点**: 多分类问题中最常用的损失函数，与 Softmax 激活函数配合良好。
+
+---
+
+4.  **选择代价函数 (Choosing a Cost Function):**
+    *   代价函数的选择取决于具体的**任务类型**（回归、二分类、多分类等）和模型的**输出层激活函数**。
+    *   一个好的代价函数应该能够准确地反映模型的性能，并且其梯度易于计算（或具有良好的数学性质，有助于优化）。
+
+---
+
+**总结 (Summary):**
+代价函数是连接模型预测与模型优化的桥梁。它告诉我们模型当前表现如何，并通过其梯度告诉我们应该如何调整参数以改进模型。整个训练过程的核心目标就是找到一组参数 $\theta$ 使得代价函数 $J(\theta)$ 最小化。
+
+### 3. 梯度下降 (Gradient Descent)
 
 ![Image/Deep Learning/2.png](/img/user/Image/Deep%20Learning/2.png)
 左侧：最优的梯度下降                                    右侧：随机梯度下降（使用Mini-batch减少了计算量）
@@ -244,7 +302,7 @@
 
 通过使用 Mini-batch 梯度下降，我们能够在大型数据集上以可接受的计算成本和时间高效地训练复杂的神经网络模型，同时还能从梯度的适度噪声中获益。
 
-### 3. 反向传播 (Backpropagation)
+### 4. 反向传播 (Backpropagation)
 
 ![Image/Deep Learning/3.png](/img/user/Image/Deep%20Learning/3.png)
 
@@ -299,3 +357,4 @@
             *   $\frac{\partial J}{\partial b^{(l)}_{j}} = \delta_j^{(l)}$ (即代价函数对第 $l$ 层第 $j$ 个神经元的偏置的梯度)
                 *   写成向量形式：$\frac{\partial J}{\partial b^{(l)}} = \delta^{(l)}$
             *   (注意: 如果是处理一批样本 (mini-batch)，上面的梯度通常是该批次样本梯度的平均值或总和。)
+

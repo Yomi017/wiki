@@ -71,3 +71,7 @@ $$y = b + w x_1$$
 
 **总结来说，将模型看作一个“带有未知参数的函数”是理解许多机器学习方法（包括深度学习）的基石。深度学习可以被视为这种思想的一种更强大、更灵活、更具表现力的实现，它通过构建深层、复杂的参数化函数来解决更具挑战性的问题。**
 
+### 1.2.2 Define Loss from Training Data
+
+**Loss is a function of parameters**$$L(b,w)$$
+**Loss: how good a set of value is.**
