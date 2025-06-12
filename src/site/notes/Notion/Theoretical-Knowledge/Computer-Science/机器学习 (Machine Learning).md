@@ -2,14 +2,6 @@
 {"dg-publish":true,"permalink":"/notion/theoretical-knowledge/computer-science/machine-learning/"}
 ---
 
-# 1. 基本概念
-
-明白了！你是希望我提供一个更根本、更准确的机器学习任务分类框架，而不必强行将结构学习塞入“函数输出 X”这种可能不太适合它的描述中。
-
-好的，那么我们来构建一个更合适的框架。机器学习任务可以从多个维度进行分类，以下是一种常见的、更全面的分类方式：
-
----
-
 # 1. 基本概念 (Basic Concepts)
 
 ## 1.1 主要机器学习任务类型 (Major Types of Machine Learning Tasks)
