@@ -220,8 +220,7 @@ $$w^*, b^* = \arg\min_{w, b} L(w, b)$$
         其中 $w_{ij}$ 是连接第 $j$ 个输入特征 $x_j$ 到第 $i$ 个 Sigmoid 组件的权重。
         *   **矩阵形式 (Vectorized Form):**
             如果我们将所有输入特征表示为向量 $x = [x_1, x_2, \dots, x_N]^T$，所有偏置 $b_i$ 组成向量 $\mathbf{b} = [b_1, b_2, \dots, b_M]^T$，所有权重 $w_{ij}$ 组成权重矩阵 $W$ (其中 $W_{ij}$ 是 $w_{ij}$)，那么所有 $r_i$ 组成的向量 $\mathbf{r} = [r_1, r_2, \dots, r_M]^T$ 可以表示为：
-            $$ \mathbf{r} = \mathbf{b} + W \mathbf{x} $$
-
+            $$ \mathbf{r} = \mathbf{b} + W \mathbf{x} $$ 
     *   **第二步：应用 Sigmoid 激活函数 (Apply Sigmoid Activation Function)**
         将每个 $r_i$ 通过 Sigmoid 函数得到激活值 $a_i$：
         $$ a_i = \text{sigmoid}(r_i) $$
@@ -231,12 +230,15 @@ $$w^*, b^* = \arg\min_{w, b} L(w, b)$$
         这些激活值 $a_i$ 构成了神经网络的**隐藏层 (Hidden Layer)** 的输出。
 
     *   **第三步：组合隐藏层输出得到最终预测 (Combine Hidden Layer Outputs for Final Prediction)
-        最终的输出 $y$ 是这些隐藏层激活值 $a_i$ 的加权和，再加上一个最终的输出层偏置 $b_{output}$ (对应图 `7.png` 中的 $b$)。权重为 $c_i$。$$y = b_{output} + \sum_i c_i a_i$$
+        最终的输出 $y$ 是这些隐藏层激活值 $a_i$ 的加权和，再加上一个最终的输出层偏置 $b_{output}$ (对应图 `7.png` 中的 $b$)。权重为 $c_i$。
+        $$ y = b_{output} + \sum_i c_i a_i$$
         *   **矩阵形式 (Vectorized Form):**
-            如果我们将权重 $c_i$ 组成一个行向量 $\mathbf{c}^T = [c_1, c_2, \dots, c_M]$ (或者列向量 $\mathbf{c}$ 然后取转置)，则：$$ y = b_{output} + \mathbf{c}^T \mathbf{a} $$
+            如果我们将权重 $c_i$ 组成一个行向量 $\mathbf{c}^T = [c_1, c_2, \dots, c_M]$ (或者列向量 $\mathbf{c}$ 然后取转置)，则：
+            $$ y = b_{output} + \mathbf{c}^T \mathbf{a} $$
 
     *   **整合模型 (Putting It All Together):**
-        将以上步骤整合，我们就得到了一个具有单隐藏层的神经网络模型：$$y = b_{output} + \mathbf{c}^T \sigma(\mathbf{b}_{hidden} + W \mathbf{x})$$
+        将以上步骤整合，我们就得到了一个具有单隐藏层的神经网络模型：
+        $$ y = b_{output} + \mathbf{c}^T \sigma(\mathbf{b}_{hidden} + W \mathbf{x}) $$
         这里：
         *   $\mathbf{x}$ 是输入特征向量。
         *   $W$ 是输入层到隐藏层的权重矩阵。
