@@ -221,7 +221,7 @@ $$w^*, b^* = \arg\min_{w, b} L(w, b)$$
         *   **矩阵形式 (Vectorized Form):**
             如果我们将所有输入特征表示为向量 $x = [x_1, x_2, \dots, x_N]^T$，所有偏置 $b_i$ 组成向量 $\mathbf{b} = [b_1, b_2, \dots, b_M]^T$，所有权重 $w_{ij}$ 组成权重矩阵 $W$ (其中 $W_{ij}$ 是 $w_{ij}$)，那么所有 $r_i$ 组成的向量 $\mathbf{r} = [r_1, r_2, \dots, r_M]^T$ 可以表示为：
             $$ \mathbf{r} = \mathbf{b} + W \mathbf{x} $$
-
+即
 $$\begin{pmatrix}
 r_1^{(j+1)} \\
 r_2^{(j+1)} \\
