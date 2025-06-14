@@ -232,9 +232,7 @@ b_1^{(j+1)} \\
 b_2^{(j+1)} \\
 \vdots \\
 b_{N_{j+1}}^{(j+1)}
-\end{pmatrix}
-+
-\begin{pmatrix}
+\end{pmatrix}+\begin{pmatrix}
 W_{1,1}^{(j+1)} & W_{1,2}^{(j+1)} & \cdots & W_{1,N_j}^{(j+1)} \\
 W_{2,1}^{(j+1)} & W_{2,2}^{(j+1)} & \cdots & W_{2,N_j}^{(j+1)} \\
 \vdots & \vdots & \ddots & \vdots \\
