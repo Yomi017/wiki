@@ -248,6 +248,7 @@ a_2^{(j)} \\
 \vdots \\
 a_{N_j}^{(j)}
 \end{pmatrix} $$
+
     *   **第二步：应用 Sigmoid 激活函数 (Apply Sigmoid Activation Function)**
         将每个 $r_i$ 通过 Sigmoid 函数得到激活值 $a_i$：
         $$ a_i = \text{sigmoid}(r_i) $$
