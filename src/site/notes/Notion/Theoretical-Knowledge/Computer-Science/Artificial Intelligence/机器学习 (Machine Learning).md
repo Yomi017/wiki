@@ -242,17 +242,7 @@ $$w^*, b^* = \arg\min_{w, b} L(w, b)$$
         *   **矩阵形式 (Vectorized Form):**
             如果我们将所有输入特征表示为向量 $x = [x_1, x_2, \dots, x_N]^T$，所有偏置 $b_i$ 组成向量 $\mathbf{b} = [b_1, b_2, \dots, b_M]^T$，所有权重 $w_{ij}$ 组成权重矩阵 $W$ (其中 $W_{ij}$ 是 $w_{ij}$)，那么所有 $r_i$ 组成的向量 $\mathbf{r} = [r_1, r_2, \dots, r_M]^T$ 可以表示为：
             $$ \mathbf{r} = \mathbf{b} + W \mathbf{x} $$
-             即：$$\begin{pmatrix}
-             r_1^{(j+1)} \\
-             r_2^{(j+1)} \\
-             \vdots \\
-             r_{N_{j+1}}^{(j+1)}
-             \end{pmatrix}=\begin{pmatrix}
-             b_1^{(j+1)} \\
-             b_2^{(j+1)} \\
-             \vdots \\
-             b_{N_{j+1}}^{(j+1)}
-             \end{pmatrix}$$
+             即：$$ \begin{pmatrix}r_1^{(j+1)} \\r_2^{(j+1)} \\\vdots \\r_{N_{j+1}}^{(j+1)}\end{pmatrix}=\begin{pmatrix}b_1^{(j+1)} \\b_2^{(j+1)} \\\vdots \\b_{N_{j+1}}^{(j+1)}\end{pmatrix}+\begin{pmatrix}W_{1,1}^{(j+1)} & W_{1,2}^{(j+1)} & \cdots & W_{1,N_j}^{(j+1)} \\W_{2,1}^{(j+1)} & W_{2,2}^{(j+1)} & \cdots & W_{2,N_j}^{(j+1)} \\\vdots & \vdots & \ddots & \vdots \\W_{N_{j+1},1}^{(j+1)} & W_{N_{j+1},2}^{(j+1)} & \cdots & W_{N_{j+1},N_j}^{(j+1)} \\\end{pmatrix}\begin{pmatrix}a_1^{(j)} \\a_2^{(j)} \\\vdots \\a_{N_j}^{(j)}\end{pmatrix} $$
     *   **第二步：应用 Sigmoid 激活函数 (Apply Sigmoid Activation Function)**
         将每个 $r_i$ 通过 Sigmoid 函数得到激活值 $a_i$：
         $$ a_i = \text{sigmoid}(r_i) $$
