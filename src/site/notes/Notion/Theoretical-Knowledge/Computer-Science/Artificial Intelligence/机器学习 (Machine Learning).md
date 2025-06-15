@@ -400,13 +400,7 @@ $$ y = f(\mathbf{x}; \theta) $$
 *   **损失函数的角色 (The Role of the Loss Function):**
     损失函数不仅告诉我们当前这组参数 $\theta$ 的表现如何，更重要的是，它的梯度将指导我们如何调整这些参数以改进模型。
 
----
-
-**接下来是步骤三：优化 (Optimization)**
-
-(注意，你笔记中的 "Optimization of New Model" 和后续的梯度下降内容实际上是优化步骤，即步骤三)
-
-## **2.3 步骤三：参数优化 (Step 3: Optimization)**
+## 2.3 步骤三：参数优化 (Step 3: Optimization)
 
 一旦我们定义了模型 $f(\mathbf{x}; \theta)$ 和损失函数 $L(\theta)$，我们的目标就是找到一组最优的参数 $\theta^*$，使得损失函数 $L(\theta)$ 的值最小。这个寻找最优参数的过程称为**优化 (Optimization)**。
 
@@ -452,3 +446,4 @@ $$ \theta^* = \arg\min_{\theta} L(\theta) $$
     *   可以设定最大迭代次数 (或最大 epoch 数)。
     *   可以监控损失函数的值，当其变化很小或不再下降时停止。
     *   可以监控在验证集上的性能，当验证集性能不再提升（甚至开始下降，表明过拟合）时停止（早停法 Early Stopping）。
+![10.png](/img/user/Image/Machine%20Learning/10.png)

@@ -2,4 +2,4 @@
 {"dg-publish":true,"permalink":"/notion/","tags":["gardenEntry"]}
 ---
 
-欢迎来到我的网站
+这是一个基于Obsidian以及Vercel的个人学习知识库
