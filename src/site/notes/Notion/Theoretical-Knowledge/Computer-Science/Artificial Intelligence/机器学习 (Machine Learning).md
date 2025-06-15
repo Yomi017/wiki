@@ -242,8 +242,7 @@ $$w^*, b^* = \arg\min_{w, b} L(w, b)$$
         *   **矩阵形式 (Vectorized Form):**
             如果我们将所有输入特征表示为向量 $x = [x_1, x_2, \dots, x_N]^T$，所有偏置 $b_i$ 组成向量 $\mathbf{b} = [b_1, b_2, \dots, b_M]^T$，所有权重 $w_{ij}$ 组成权重矩阵 $W$ (其中 $W_{ij}$ 是 $w_{ij}$)，那么所有 $r_i$ 组成的向量 $\mathbf{r} = [r_1, r_2, \dots, r_M]^T$ 可以表示为：
             $$ \mathbf{r} = \mathbf{b} + W \mathbf{x} $$
-             即：$$
-             \begin{pmatrix}
+             即：$$ \begin{pmatrix}
              r_1^{(j+1)} \\
              r_2^{(j+1)} \\
              \vdots \\
@@ -267,7 +266,6 @@ $$w^*, b^* = \arg\min_{w, b} L(w, b)$$
              \vdots \\
              a_{N_j}^{(j)}
              \end{pmatrix} $$
-             
 
     *   **第二步：应用 Sigmoid 激活函数 (Apply Sigmoid Activation Function)**
         将每个 $r_i$ 通过 Sigmoid 函数得到激活值 $a_i$：
@@ -462,147 +460,4 @@ $$ \theta^* = \arg\min_{\theta} L(\theta) $$
 **1. 为什么我们要的是 "Deep" 的 network 而不是 "Fat" 的？**
 [[Notion/Theoretical-Knowledge/Computer-Science/Artificial Intelligence/Question/Deep 而非 Fat 的 Neural Network\|Deep 而非 Fat 的 Neural Network]]
 **2. 为什么我们不 "Deeper" ?**
-
-
-
-## 2.1 引入：从线性模型到更灵活的模型 (Introduction: From Linear Models to More Flexible Models)
-
-### 2.1.1 线性模型的局限性 (Model Bias of Linear Models)
-
-线性模型，如 $y = b + wx_1$ 或 $y = b + \sum_j w_j x_j$，在许多情况下非常有用且易于解释。然而，它们具有固有的**模型偏差 (Model Bias)**，这意味着它们只能表示输入和输出之间的线性关系。
-
-*   **局限性 (Limitation):** 如果数据中的真实关系是非线性的，线性模型将无法很好地拟合数据，导致预测性能不佳。
-    *   例如，在你的图示中（第一张图，红色曲线），如果 $y$ 和 $x_1$ 之间的关系是如图所示的折线，那么单一的直线（线性模型）无法准确地捕捉这种模式。
-
-### 2.1.2 构建更灵活的模型：分段线性函数 (Building More Flexible Models: Piecewise Linear Functions)
-
-为了克服线性模型的局限性，我们需要能够表示非线性关系的更灵活的模型。一种方法是使用**分段线性函数 (Piecewise Linear Curves)**。
-
-*   **基本思想 (Core Idea):** 任何复杂的分段线性曲线（如图中的红色曲线）可以被看作是一个**常数 (constant)** 加上一系列更简单的“阶梯状”或“斜坡状”基础函数（如图中右上角示意的小蓝色函数）的**加权和 (sum of a set of blue functions)**。![5.png](/img/user/Image/Machine%20Learning/5.png)![6.png](/img/user/Image/Machine%20Learning/6.png)
-        第一张图展示了一个目标分段线性函数（红色曲线）。
-        第二张图展示了如何将这个红色曲线分解为多个基础的蓝色函数。
-        每个蓝色函数在某个点改变其斜率。
-
-*   **逼近任意连续曲线 (Approximating Arbitrary Continuous Curves):**
-    *   即使目标函数不是严格的分段线性函数，我们也可以通过在其上选择足够多的点，并用连接这些点的折线（即分段线性函数）来近似它。
-    *   **关键**: 要想获得好的近似效果，我们需要足够多的“片段”(pieces) 或基础蓝色函数。
-
-*   **如何表示基础的“蓝色函数” (How to represent the blue function / Hard Sigmoid)?**
-    *   这种在某个点改变斜率，从平坦变为有斜率再变为平坦的基础函数，可以被称为**硬 Sigmoid (Hard Sigmoid)** 或斜坡函数。
-    *   更进一步，我们可以使用平滑的 **Sigmoid 函数**来近似这种硬 Sigmoid 的行为，或者直接用 Sigmoid 函数作为构建块。标准的 Sigmoid 函数定义为：
-        $$ \text{sigmoid}(z) = \frac{1}{1+e^{-z}} $$
-    *   通过调整 Sigmoid 函数的参数，我们可以控制这个“平滑阶梯”的形状：
-        *   考虑一个经过缩放和平移的 Sigmoid 函数： $y = c \cdot \text{sigmoid}(b' + w'x_1)$ (这里为了与你笔记中的 $b_i, w_i$ 对应，我们暂时用 $b', w'$)
-        *   $w'$ (权重, weight): 改变 Sigmoid 函数的**斜率 (slope)** 或陡峭程度。
-        *   $b'$ (偏置, bias): 改变 Sigmoid 函数在 $x_1$ 轴上的**平移 (shift)** 位置。
-        *   $c$ (系数, coefficient): 改变 Sigmoid 函数的**高度 (height)** 或幅度。
-
-*   **用 Sigmoid 函数构建分段线性模型 (Building Piecewise Linear Models with Sigmoid Functions):**
-    *   因此，原始的目标分段线性函数 $y$ (或其近似) 可以被表示为一系列 Sigmoid 函数的加权和，再加上一个整体的偏置：
-        $$ y = b_{overall} + \sum_i c_i \cdot \text{sigmoid}(b_i + w_i x_1) $$
-        这里：
-        *   $b_{overall}$ 是整体的偏置项 (constant)。
-        *   $c_i, b_i, w_i$ 分别是第 $i$ 个 Sigmoid 组件的高度、平移和斜率控制参数。
-        *   **每个 $c_i \cdot \text{sigmoid}(b_i + w_i x_1)$ 就对应于一个“蓝色函数”组件。**
-
-### 2.1.3 推广到多特征输入：构建神经网络模型 (Generalizing to Multiple Features: Building a Neural Network Model)
-
-上面的讨论是基于单个输入特征 $x_1$。现在，我们将这个思想推广到具有多个输入特征 $x_j$ 的情况。
-
-*   **从简单线性模型到 Sigmoid 组合 (From Simple Linear Model to Sigmoid Combination):**
-    *   对于单特征:
-        $$ y = b + wx_1 \quad \Rightarrow \quad y = b_{overall} + \sum_i c_i \cdot \text{sigmoid}(b_i + w_i x_1) $$
-    *   对于多特征，线性模型为: $y = b + \sum_j w_j x_j$
-    *   类比地，我们将每个 Sigmoid 函数的输入从 $b_i + w_i x_1$ 推广为多个特征的线性组合 $b_i + \sum_j w_{ij} x_j$:
-        $$ y = b_{overall} + \sum_i c_i \cdot \text{sigmoid}\left(b_i + \sum_j w_{ij} x_j\right) $$
-
-*   **引入神经网络的表示方法 (Introducing Neural Network Notation):**
-    让我们用更标准的神经网络符号来重写这个模型。
-    *   **第一步：计算每个 Sigmoid 的输入 (通常称为加权输入或 pre-activation)**
-        对于第 $i$ 个 Sigmoid 组件（可以看作是隐藏层的一个神经元），其输入 $r_i$ 是所有输入特征 $x_j$ 的加权和，再加上该组件的偏置 $b_i$:
-        $$ r_i = b_i + \sum_j w_{ij} x_j $$
-        其中 $w_{ij}$ 是连接第 $j$ 个输入特征 $x_j$ 到第 $i$ 个 Sigmoid 组件的权重。
-        *   **矩阵形式 (Vectorized Form):**
-            如果我们将所有输入特征表示为向量 $x = [x_1, x_2, \dots, x_N]^T$，所有偏置 $b_i$ 组成向量 $\mathbf{b} = [b_1, b_2, \dots, b_M]^T$，所有权重 $w_{ij}$ 组成权重矩阵 $W$ (其中 $W_{ij}$ 是 $w_{ij}$)，那么所有 $r_i$ 组成的向量 $\mathbf{r} = [r_1, r_2, \dots, r_M]^T$ 可以表示为：
-            $$ \mathbf{r} = \mathbf{b} + W \mathbf{x} $$
-             即：$$
-             \begin{pmatrix}
-             r_1^{(j+1)} \\
-             r_2^{(j+1)} \\
-             \vdots \\
-             r_{N_{j+1}}^{(j+1)}
-             \end{pmatrix}
-             =
-             \begin{pmatrix}
-             b_1^{(j+1)} \\
-             b_2^{(j+1)} \\
-             \vdots \\
-             b_{N_{j+1}}^{(j+1)}
-             \end{pmatrix}+\begin{pmatrix}
-             W_{1,1}^{(j+1)} & W_{1,2}^{(j+1)} & \cdots & W_{1,N_j}^{(j+1)} \\
-             W_{2,1}^{(j+1)} & W_{2,2}^{(j+1)} & \cdots & W_{2,N_j}^{(j+1)} \\
-             \vdots & \vdots & \ddots & \vdots \\
-             W_{N_{j+1},1}^{(j+1)} & W_{N_{j+1},2}^{(j+1)} & \cdots & W_{N_{j+1},N_j}^{(j+1)} \\
-             \end{pmatrix}
-             \begin{pmatrix}
-             a_1^{(j)} \\
-             a_2^{(j)} \\
-             \vdots \\
-             a_{N_j}^{(j)}
-             \end{pmatrix} $$
-             
-
-    *   **第二步：应用 Sigmoid 激活函数 (Apply Sigmoid Activation Function)**
-        将每个 $r_i$ 通过 Sigmoid 函数得到激活值 $a_i$：
-        $$ a_i = \text{sigmoid}(r_i) $$
-        *   **矩阵形式 (Vectorized Form):**
-            如果 $\sigma(\cdot)$ 表示逐元素应用 Sigmoid 函数，那么激活向量 $\mathbf{a} = [a_1, a_2, \dots, a_M]^T$ 可以表示为：
-            $$ \mathbf{a} = \sigma(\mathbf{r}) = \sigma(\mathbf{b} + W \mathbf{x}) $$
-        这些激活值 $a_i$ 构成了神经网络的**隐藏层 (Hidden Layer)** 的输出。
-
-    *   **第三步：组合隐藏层输出得到最终预测 (Combine Hidden Layer Outputs for Final Prediction)
-        最终的输出 $y$ 是这些隐藏层激活值 $a_i$ 的加权和，再加上一个最终的输出层偏置 $b_{output}$ (对应图 `7.png` 中的 $b$)。权重为 $c_i$。
-        $$ y = b_{output} + \sum_i c_i a_i$$
-        *   **矩阵形式 (Vectorized Form):**
-            如果我们将权重 $c_i$ 组成一个行向量 $\mathbf{c}^T = [c_1, c_2, \dots, c_M]$ (或者列向量 $\mathbf{c}$ 然后取转置)，则：
-            $$ y = b_{output} + \mathbf{c}^T \mathbf{a} $$
-
-    *   **整合模型 (Putting It All Together):**
-        将以上步骤整合，我们就得到了一个具有单隐藏层的神经网络模型：
-        $$ y = b_{output} + \mathbf{c}^T \sigma(\mathbf{b}_{hidden} + W \mathbf{x}) $$
-        这里：
-        *   $\mathbf{x}$ 是输入特征向量。
-        *   $W$ 是输入层到隐藏层的权重矩阵。
-        *   $\mathbf{b}_{hidden}$ 是隐藏层的偏置向量。
-        *   $\sigma(\cdot)$ 是 Sigmoid 激活函数（或其他非线性激活函数）。
-        *   $\mathbf{c}^T$ 是隐藏层到输出层的权重向量。
-        *   $b_{output}$ 是输出层的偏置。
-        *   所有 $W, \mathbf{b}_{hidden}, \mathbf{c}^T, b_{output}$ 都是模型需要从数据中学习的**未知参数**。
-
-    *   ![7.png](/img/user/Image/Machine%20Learning/7.png)
-        这张图完美地展示了这个单隐藏层神经网络的结构：
-        *   **输入层 (Input Layer)**: $x_1, x_2, x_3$。
-        *   **隐藏层 (Hidden Layer)**:
-            *   三个神经元（用黑色圆圈1, 2, 3表示）。
-            *   每个神经元首先计算加权输入 $r_i = b_i + \sum_j w_{ij}x_j$ (图中 $b_1, b_2, b_3$ 是隐藏层偏置，通过连接值为1的绿色方块引入；$w_{11}, w_{12}, \dots$ 是权重)。
-            *   然后通过 Sigmoid 激活函数（蓝色弯曲符号）得到激活值 $a_1, a_2, a_3$。
-        *   **输出层 (Output Layer)**:
-            *   计算 $y = b + c_1 a_1 + c_2 a_2 + c_3 a_3$ (图中 $b$ 是输出层偏置，通过连接值为1的绿色方块引入；$c_1, c_2, c_3$ 是隐藏层到输出层的权重)。
-
--   **随机性**: 当我们刚开始训练一个神经网络时，我们并不知道参数 $w,b,c$ (以及更复杂的网络中的所有权重和偏置) 应该是什么值。
--   因此，我们通常会用**小的随机数**来初始化这些参数。比如，从一个均值为0，方差很小的高斯分布中采样，或者在一个小的区间内均匀采样
-*   所以最初，表达式 $c_i \cdot \text{sigmoid}(b_i + w_i x_1)$ （以及整个模型）是一个包含**未知参数**的**函数模板**或**函数蓝图**。
-*   通过**训练数据和优化算法**（反向传播等操作），我们**学习（确定）了这些未知参数 $w_i, b_i, c_i$ 的具体数值。
-*   一旦这些参数的数值被学习确定下来，整个模型就变成了一个**具体的、参数已知的函数**。
-*   我们**使用这个参数已知的函数和学习到的参数值**来对新的输入数据进行**预测**。
-
-### 2.1.3 Unknown Parameters
-
-Unknown Parameters: $W$, **$b$**, **$c^T$**, $b$
- ![8.png](/img/user/Image/Machine%20Learning/8.png)
- make them into a vector $$\theta=\begin{pmatrix}
-\theta_1 \\
-\theta_2 \\
-\theta_3 \\
-\vdots \end{pmatrix}$$
-首先把2.1.3改成和上面类似的形式，以及根据学习视频，上面的都是step1：function with unknown parameters，那标题要怎么改，你只要给我改的地方就行
+[[Notion/Theoretical-Knowledge/Computer-Science/Artificial Intelligence/Question/不一直 Deeper 的神经网络\|不一直 Deeper 的神经网络]]
