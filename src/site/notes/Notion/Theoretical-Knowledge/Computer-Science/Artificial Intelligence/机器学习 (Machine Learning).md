@@ -161,9 +161,9 @@ $$w^*, b^* = \arg\min_{w, b} L(w, b)$$
 ---
 ## 2. 深度学习基本概念 (Basic Concepts of Deep Learning)
 
-## 2.1 引入：从线性模型到更灵活的模型 (Introduction: From Linear Models to More Flexible Models)
+## 2.1 步骤一：定义带有未知参数的函数/模型 (Step 1: Define a Function/Model with Unknown Parameters)
 
-### 2.1.1 线性模型的局限性 (Model Bias of Linear Models)
+### 2.1.1 动机：线性模型的局限性 (Model Bias of Linear Models)
 
 线性模型，如 $y = b + wx_1$ 或 $y = b + \sum_j w_j x_j$，在许多情况下非常有用且易于解释。然而，它们具有固有的**模型偏差 (Model Bias)**，这意味着它们只能表示输入和输出之间的线性关系。
 
@@ -201,6 +201,27 @@ $$w^*, b^* = \arg\min_{w, b} L(w, b)$$
         *   $c_i, b_i, w_i$ 分别是第 $i$ 个 Sigmoid 组件的高度、平移和斜率控制参数。
         *   **每个 $c_i \cdot \text{sigmoid}(b_i + w_i x_1)$ 就对应于一个“蓝色函数”组件。**
 
+    *   **其他激活函数 (Other Activation Functions) - 例如 ReLU:**
+        除了 Sigmoid 函数，还有许多其他的**激活函数 (Activation Functions)** 可以用来在神经网络中引入非线性，从而构建能够拟合复杂模式的模型。
+        *   **ReLU (Rectified Linear Unit)** 是目前深度学习中最常用的一种激活函数。其定义为：
+            $$ \text{ReLU}(z) = \max(0, z) $$
+        *   如果使用 ReLU 作为激活函数，并且考虑到多特征输入（即每个 ReLU 单元的输入是 $\sum_j w_{ij}x_j + b_i$），那么模型可以表示为：
+            $$ y = b_{output} + \sum_i c_i \cdot \text{ReLU}\left(b_{hidden,i} + \sum_j w_{ij} x_j\right) $$
+            或者更简洁地写成：
+            $$ y = b_{output} + \sum_i c_i \cdot \max\left(0, b_{hidden,i} + \sum_j w_{ij} x_j\right) $$
+        *   **为什么 ReLU 常用？**
+            *   **计算简单高效**: ReLU 的计算非常快（只是一个取最大值的操作）。
+            *   **缓解梯度消失问题**: 对于正输入，ReLU 的梯度是1，这有助于在深层网络中更好地传播梯度，缓解了 Sigmoid 等函数在输入值很大或很小时梯度接近0（梯度消失）的问题。
+            *   **稀疏性**: ReLU 会使一部分神经元的输出为0（当输入为负时），这可以带来一定的网络稀疏性，有时被认为有助于特征学习。
+        *   当然，ReLU 也有其缺点，比如“Dying ReLU”问题（神经元可能永久失活）。
+
+    *   **激活函数的角色**: [[Notion/Theoretical-Knowledge/Computer-Science/Artificial Intelligence/深度学习 (Deep Learning)#^c0241b\|深度学习 (Deep Learning)#^c0241b]] 
+        无论是 Sigmoid, ReLU, Tanh 还是其他激活函数，它们的核心作用都是在神经网络的每一层（或特定层）引入**非线性**，使得网络能够学习和表示输入与输出之间复杂的、非线性的映射关系。没有非线性激活函数，多层神经网络将退化为一个等效的单层线性模型。
+
+    *   **哪个更好 (Which is better)?**
+        *   激活函数的选择取决于具体的应用场景、网络结构和经验。
+        *   在许多现代深度学习应用中，**ReLU 及其变体 (如 Leaky ReLU, PReLU, ELU 等) 通常是隐藏层的首选激活函数**，因为它们往往能带来更好的训练动态和性能。
+        *   Sigmoid 和 Tanh 仍然在某些特定场景下使用，例如 Sigmoid 常用于二分类问题的输出层（输出概率），Tanh 有时用于隐藏层（其输出范围在-1到1之间，中心对称）。
 ### 2.1.3 推广到多特征输入：构建神经网络模型 (Generalizing to Multiple Features: Building a Neural Network Model)
 
 上面的讨论是基于单个输入特征 $x_1$。现在，我们将这个思想推广到具有多个输入特征 $x_j$ 的情况。
@@ -292,6 +313,142 @@ $$w^*, b^* = \arg\min_{w, b} L(w, b)$$
 *   一旦这些参数的数值被学习确定下来，整个模型就变成了一个**具体的、参数已知的函数**。
 *   我们**使用这个参数已知的函数和学习到的参数值**来对新的输入数据进行**预测**。
 
-### 2.1.3 Unknown Parameters
+#### 2.1.4 模型的未知参数集 ($\theta$) (The Set of Unknown Parameters in the Model, $\theta$)
 
-Unknown Para
+在我们定义的神经网络模型中，例如单隐藏层网络：
+$$ y = f(\mathbf{x}; W, \mathbf{b}_{hidden}, \mathbf{c}^T, b_{output}) = \mathbf{c}^T \sigma(W \mathbf{x} + \mathbf{b}_{hidden}) + b_{output} $$
+存在一系列需要通过从数据中学习来确定的**未知参数 (Unknown parameters)**。
+
+这些参数具体包括：
+
+1.  **输入层到隐藏层的权重矩阵 ($W$)**:
+    *   这是一个矩阵，其维度通常是 (隐藏层神经元数量 $N_1$) $\times$ (输入特征数量 $N_0$)。
+    *   它包含了连接每个输入特征到每个隐藏层神经元的所有权重。
+
+2.  **隐藏层的偏置向量 ($\mathbf{b}_{hidden}$)**:
+    *   这是一个列向量，其维度是 (隐藏层神经元数量 $N_1$) $\times 1$。
+    *   图 `8.png` 中用绿色的 `b` 表示（为了区分，我们这里用 $\mathbf{b}_{hidden}$）。
+    *   它包含了每个隐藏层神经元的偏置项。
+
+3.  **隐藏层到输出层的权重向量 ($\mathbf{c}^T$ 或 $\mathbf{c}$)**:
+    *   如果输出 $y$ 是一个标量（如回归或二分类的logit），那么 $\mathbf{c}^T$ 是一个行向量，维度是 $1 \times$ (隐藏层神经元数量 $N_1$)。或者其转置 $\mathbf{c}$ 是一个列向量，维度是 ($N_1 \times 1$)。
+    *   图 `8.png` 中用橙色的 `c^T` 表示。
+    *   它包含了连接每个隐藏层神经元到输出单元的权重。
+
+4.  **输出层的偏置 ($b_{output}$)**:
+    *   这是一个标量值。
+    *   图 `8.png` 中用灰色的 `b` 表示（为了区分，我们这里用 $b_{output}$）。
+    *   它是输出单元的偏置项。
+
+**将所有参数集合为单一向量 $\theta$:**
+
+![8.png](/img/user/Image/Machine%20Learning/8.png)
+
+为了在后续的优化过程中（例如使用梯度下降）更方便地处理这些不同形状和类型的参数，通常会将它们全部 **“展平 (flattened)”** 并按特定顺序串联起来，形成一个单一的、非常长的参数向量 $\theta$**。
+
+如图 `8.png` 所示，这个参数向量 $\theta$ 可以这样构成：
+*   首先是权重矩阵 $W$ 的所有元素（例如，可以逐行或逐列展开）。
+*   然后是隐藏层偏置向量 $\mathbf{b}_{hidden}$ 的所有元素。
+*   接着是输出层权重向量 $\mathbf{c}^T$ (或 $\mathbf{c}$) 的所有元素。
+*   最后是输出层偏置 $b_{output}$。
+
+所以，这个参数向量 $\theta$ 可以表示为：
+$$ \theta = \begin{pmatrix} \theta_1 \\ \theta_2 \\ \theta_3 \\ \vdots \\ \theta_K \end{pmatrix} $$
+其中 $K$ 是模型中所有独立参数的总数量。例如，如果 $W$ 是 $N_1 \times N_0$，$b_{hidden}$ 是 $N_1 \times 1$，$\mathbf{c}^T$ 是 $1 \times N_1$，$b_{output}$ 是标量，则 $K = N_1 \cdot N_0 + N_1 + N_1 + 1$。
+
+**模型函数以 $\theta$ 为参数:**
+通过这种方式，我们可以将整个神经网络模型函数 $f$ 视为以输入 $\mathbf{x}$ 和这个单一的参数向量 $\theta$ 为参数的函数：
+$$ y = f(\mathbf{x}; \theta) $$
+
+**下一步：**
+在明确了模型的函数形式 $f(\mathbf{x}; \theta)$ 并识别出所有未知参数 $\theta$ 之后，机器学习的下一步骤将是定义一个代价函数来评估使用特定 $\theta$ 时模型的表现，然后使用优化算法来找到使代价函数最小化的最优 $\theta^*$。
+
+## 2.2 步骤二：定义代价函数/损失函数以评估模型 (Step 2: Define Cost/Loss Function to Evaluate the Model)
+
+在**步骤一 (2.1)** 中，我们定义了一个带有未知参数 $\theta$ 的模型函数 $y = f(\mathbf{x}; \theta)$。现在，我们需要一种方法来衡量这个模型在使用特定参数集 $\theta$ 时，其预测结果与真实目标值之间的差异有多大。这个衡量标准就是**代价函数 (Cost Function)** 或 **损失函数 (Loss Function)**。
+
+### 2.2.1 代价函数/损失函数 (Cost Function / Loss Function)
+
+*   **定义 (Definition):**
+    *   损失函数 $L(\theta)$ 是一个关于模型参数 $\theta$ 的函数。
+    *   它量化了模型在使用当前参数 $\theta$ 时，在整个训练数据集上预测的好坏程度 (Loss means how good a set of value is / how bad the current set of parameters is)。
+    *   损失值越小，表示模型的预测越接近真实值，即当前这组参数 $\theta$ 的表现越好。
+
+*   **计算方法 (How it's Calculated):**
+    1.  **单个样本的损失 (Loss for a single example):**
+        对于训练集中的每一个样本 $(x^{(n)}, y_{true}^{(n)})$ (其中 $n$ 是样本索引)，我们首先计算模型在该样本上的预测值 $\hat{y}^{(n)} = f(x^{(n)}; \theta)$。
+        然后，我们使用一个**损失度量 (loss metric)** $e_n$ 来计算预测值 $\hat{y}^{(n)}$ 与真实值 $y_{true}^{(n)}$ 之间的差异。常见的损失度量有：
+        *   **均方误差 (Mean Squared Error, MSE)**: $e_n = (\hat{y}^{(n)} - y_{true}^{(n)})^2$
+        *   **交叉熵 (Cross-Entropy)** (常用于分类): 具体形式取决于任务。
+
+    2.  **整个训练集的总损失/平均损失 (Total/Average Loss over the Training Set):**
+        代价函数 $L(\theta)$ 通常是所有训练样本损失的**平均值**（或总和）。如果训练集有 $N_{total}$ 个样本：
+        $$ L(\theta) = \frac{1}{N_{total}} \sum_{n=1}^{N_{total}} e_n = \frac{1}{N_{total}} \sum_{n=1}^{N_{total}} \text{loss-metric}(f(x^{(n)}; \theta), y_{true}^{(n)}) $$
+
+*   **损失函数的具体例子**: (这里可以链接到你之前整理的更详细的损失函数列表，或者简要重述)
+    *   回归问题: 均方误差 (MSE)
+    *   二分类问题: 二元交叉熵 (Binary Cross-Entropy)
+    *   多分类问题: 分类交叉熵 (Categorical Cross-Entropy)
+
+*   **使用 Mini-batch 计算损失 (Calculating Loss using Mini-batches):**
+    在实际训练深度神经网络时，由于训练数据集通常非常大，一次性计算整个数据集上的损失 $L(\theta)$ 可能会非常耗时且占用大量内存。因此，我们通常采用 **Mini-batch 梯度下降** [[Notion/Theoretical-Knowledge/Computer-Science/Artificial Intelligence/深度学习 (Deep Learning)#2.1. Mini-batch 梯度下降 (Mini-batch Gradient Descent)\|深度学习 (Deep Learning)#2.1. Mini-batch 梯度下降 (Mini-batch Gradient Descent)]]。
+    *   **Mini-batch Loss**: 在每次迭代中，我们从训练数据中抽取一小批样本 (a mini-batch)，例如包含 $B$ 个样本。然后，我们计算模型在这 $B$ 个样本上的**平均损失**，并将其作为对整个训练集损失 $L(\theta)$ 的一个估计或代理 (proxy)。
+        $$ L_{batch}(\theta) = \frac{1}{B} \sum_{k=1}^{B} \text{loss-metric}(f(x_{batch}^{(k)}; \theta), y_{true,batch}^{(k)}) $$
+        优化算法将尝试最小化这个 $L_{batch}(\theta)$。
+    *   **Epoch**: 当算法处理完训练数据集中所有的 mini-batches，即对整个训练数据集完整地过了一遍之后，称为完成了一个 **epoch** (1 epoch = see all the batches once)。
+
+*   **损失函数的角色 (The Role of the Loss Function):**
+    损失函数不仅告诉我们当前这组参数 $\theta$ 的表现如何，更重要的是，它的梯度将指导我们如何调整这些参数以改进模型。
+
+---
+
+**接下来是步骤三：优化 (Optimization)**
+
+(注意，你笔记中的 "Optimization of New Model" 和后续的梯度下降内容实际上是优化步骤，即步骤三)
+
+## **2.3 步骤三：参数优化 (Step 3: Optimization)**
+
+一旦我们定义了模型 $f(\mathbf{x}; \theta)$ 和损失函数 $L(\theta)$，我们的目标就是找到一组最优的参数 $\theta^*$，使得损失函数 $L(\theta)$ 的值最小。这个寻找最优参数的过程称为**优化 (Optimization)**。
+
+数学上，我们可以表示为：
+$$ \theta^* = \arg\min_{\theta} L(\theta) $$
+这意味着我们要寻找使损失函数 $L$ 达到最小值的参数向量 $\theta$。
+
+### 2.3.1 梯度下降 (Gradient Descent)
+
+梯度下降是一种广泛应用于机器学习和深度学习中的迭代优化算法，用于寻找函数的最小值。其基本思想是沿着损失函数梯度下降最快的方向逐步调整参数。
+
+**梯度下降的步骤:**
+
+1.  **初始化参数 (Initialize Parameters)**:
+    *   随机选择或根据某种策略设定参数向量 $\theta$ 的初始值，记为 $\theta^0$。(Randomly) Pick initial values $\theta^0$.
+
+2.  **迭代更新 (Iteratively Update):** 重复以下操作直到满足停止条件：
+    *   a. **计算梯度 (Compute Gradient)**:
+        *   计算损失函数 $L(\theta)$ 在当前参数点 $\theta^t$ (其中 $t$ 是迭代次数) 关于参数向量 $\theta$ 中每一个分量 $\theta_k$ 的偏导数。这些偏导数共同构成了损失函数在 $\theta^t$ 处的**梯度向量 (gradient vector)** $\mathbf{g}$ (或 $\nabla L(\theta^t)$)。
+            $$ \mathbf{g} = \nabla L(\theta^t) = \begin{pmatrix}
+            \frac{\partial L}{\partial \theta_1} \\
+            \frac{\partial L}{\partial \theta_2} \\
+            \vdots \\
+            \frac{\partial L}{\partial \theta_K}
+            \end{pmatrix}_{\theta=\theta^t} $$
+        *   在神经网络中，这个梯度通常通过**反向传播 (Backpropagation)** 算法高效计算。
+        *   当使用 mini-batch 时，计算的是 $L_{batch}(\theta)$ 的梯度。
+           ![9.png](/img/user/Image/Machine%20Learning/9.png) 
+        * (图示：梯度指向函数增加最快的方向)
+
+    *   b. **更新参数 (Update Parameters)**:
+        *   根据梯度信息，沿着梯度的**反方向**更新参数，以减小损失函数的值。
+            $$ \theta^{t+1} \leftarrow \theta^t - \eta \cdot \mathbf{g} $$
+            或者写成：
+            $$ \theta^{t+1} \leftarrow \theta^t - \eta \nabla L(\theta^t) $$
+        *   其中：
+            *   $\theta^{t+1}$ 是更新后的参数向量。
+            *   $\theta^t$ 是当前迭代的参数向量。
+            *   $\eta$ (eta) 是**学习率 (Learning Rate)**，它是一个正的小值（超参数），控制每次参数更新的“步长”或幅度。学习率的选择对训练过程至关重要。
+            *   $\mathbf{g}$ (或 $\nabla L(\theta^t)$) 是在 $\theta^t$ 处计算得到的梯度向量。
+
+3.  **停止条件 (Stopping Condition)**:
+    *   可以设定最大迭代次数 (或最大 epoch 数)。
+    *   可以监控损失函数的值，当其变化很小或不再下降时停止。
+    *   可以监控在验证集上的性能，当验证集性能不再提升（甚至开始下降，表明过拟合）时停止（早停法 Early Stopping）。
