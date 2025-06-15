@@ -4,6 +4,8 @@
 
 # 1. 机器学习基本概念 (Basic Concepts)
 
+**Video: https://www.youtube.com/watch?v=Ye018rCVvOo
+
 ## 1.1 主要机器学习任务类型 (Major Types of Machine Learning Tasks)
 
 机器学习算法可以根据其学习目标和所处理的数据类型大致分为以下几类：
@@ -160,6 +162,8 @@ $$w^*, b^* = \arg\min_{w, b} L(w, b)$$
 
 ---
 ## 2. 深度学习基本概念 (Basic Concepts of Deep Learning)
+
+**Video: https://www.youtube.com/watch?v=bHcJCp2Fyxs
 
 ## 2.1 步骤一：定义带有未知参数的函数/模型 (Step 1: Define a Function/Model with Unknown Parameters)
 

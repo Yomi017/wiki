@@ -4,6 +4,8 @@
 
 ### 1. 神经网络 (Neural Network)
 
+**Video: https://www.bilibili.com/video/BV1bx411M7Zx/?spm_id_from=333.337.search-card.all.click&vd_source=32e3f9ea159201343145d8b8f8b9eb02
+
 ![Image/Deep Learning/1.png](/img/user/Image/Deep%20Learning/1.png)
 从左往右依次是：**输入层 (Input Layer)**   **隐藏层 (Hidden Layer)**   **输出层 (Output Layer)**
 
@@ -152,6 +154,8 @@
 代价函数是连接模型预测与模型优化的桥梁。它告诉我们模型当前表现如何，并通过其梯度告诉我们应该如何调整参数以改进模型。整个训练过程的核心目标就是找到一组参数 $\theta$ 使得代价函数 $J(\theta)$ 最小化。
 
 ### 3. 梯度下降 (Gradient Descent)
+
+**Video: https://www.bilibili.com/video/BV1bx411M7Zx/?spm_id_from=333.337.search-card.all.click&vd_source=32e3f9ea159201343145d8b8f8b9eb02
 
 ![Image/Deep Learning/2.png](/img/user/Image/Deep%20Learning/2.png)
 左侧：最优的梯度下降                                    右侧：随机梯度下降（使用Mini-batch减少了计算量）
@@ -310,6 +314,8 @@ Mini-batch 梯度下降是实际训练神经网络时非常关键和常用的技
 通过使用 Mini-batch 梯度下降，我们能够在大型数据集上以可接受的计算成本和时间高效地训练复杂的神经网络模型，同时还能从梯度的适度噪声中获益。
 
 ### 4. 反向传播 (Backpropagation)
+
+**Video: https://www.bilibili.com/video/BV16x411V7Qg/?spm_id_from=333.788.recommend_more_video.-1&vd_source=32e3f9ea159201343145d8b8f8b9eb02
 
 ![Image/Deep Learning/3.png](/img/user/Image/Deep%20Learning/3.png)
 
