@@ -112,7 +112,7 @@ $$w^*, b^* = \arg\min_{w, b} L(w, b)$$
     梯度指明了在该点函数值增长最快的方向。
 
 3.  **确定更新量 (Determine Update Amount)**:
-    *   $\eta$ (eta) 代表**学习率 (Learning Rate)**，它是一个[[Notion/Theoretical-Knowledge/Computer-Science/Concept/超参数 (Hyperparameters)\|超参数 (Hyperparameters)]]，控制每次参数更新的步长。
+    *   $\eta$ (eta) 代表**学习率 (Learning Rate)**，它是一个[[Notion/Theoretical-Knowledge/Computer-Science/Artificial Intelligence/Concept/超参数 (Hyperparameters)\|超参数 (Hyperparameters)]]，控制每次参数更新的步长。
     *   参数更新的量由学习率乘以梯度的负值决定（因为我们要向梯度反方向，即下降方向移动）：
         *   对 $w$ 的更新量: $-\eta \frac{\partial L}{\partial w} \Big|_{w=w^t, b=b^t}$
         *   对 $b$ 的更新量: $-\eta \frac{\partial L}{\partial b} \Big|_{w=w^t, b=b^t}$
@@ -242,8 +242,7 @@ $$w^*, b^* = \arg\min_{w, b} L(w, b)$$
         *   **矩阵形式 (Vectorized Form):**
             如果我们将所有输入特征表示为向量 $x = [x_1, x_2, \dots, x_N]^T$，所有偏置 $b_i$ 组成向量 $\mathbf{b} = [b_1, b_2, \dots, b_M]^T$，所有权重 $w_{ij}$ 组成权重矩阵 $W$ (其中 $W_{ij}$ 是 $w_{ij}$)，那么所有 $r_i$ 组成的向量 $\mathbf{r} = [r_1, r_2, \dots, r_M]^T$ 可以表示为：
             $$ \mathbf{r} = \mathbf{b} + W \mathbf{x} $$
-             即：$$
-             \begin{pmatrix}
+             即：$$\begin{pmatrix}
              r_1^{(j+1)} \\
              r_2^{(j+1)} \\
              \vdots \\
@@ -447,3 +446,16 @@ $$ \theta^* = \arg\min_{\theta} L(\theta) $$
     *   可以监控损失函数的值，当其变化很小或不再下降时停止。
     *   可以监控在验证集上的性能，当验证集性能不再提升（甚至开始下降，表明过拟合）时停止（早停法 Early Stopping）。
 ![10.png](/img/user/Image/Machine%20Learning/10.png)
+**注：**
+- 一个**神经元 (Neurou)**是一个基本的计算单元。
+- 一个**激活函数**（如 Sigmoid）是神经元计算过程中的一个关键组成部分，它引入非线性。
+- 当我们说“一个 Sigmoid 神经元”或在图中画一个 Sigmoid 符号时，我们通常指的就是一个以 Sigmoid 作为其激活函数的神经元/单元。
+- **这整个体系，即由相互连接的“神经元”（或单元，每个单元执行加权求和与非线性激活函数如 Sigmoid、ReLU 等操作）组成的、分层的结构，就叫做神经网络 (Neural Network)。**
+- 如果这个网络包含多个隐藏层，它就是一个**深度神经网络 (Deep Neural Network, DNN)**
+**对应关系是：**
+- 一个 Sigmoid (或其他激活函数) 是**一个神经元计算的一部分**。
+- **多个神经元**可以组成**一个隐藏层 (Hidden Layer)**。
+- **多个隐藏层**构成了**一个深度神经网络**
+
+**拓展：为什么我们要的是 "Deep" 的 network 而不是 "Fat" 的？**
+[[Notion/Theoretical-Knowledge/Computer-Science/Artificial Intelligence/Question/Deep 而非 Fat 的 Neural Network\|Deep 而非 Fat 的 Neural Network]]
