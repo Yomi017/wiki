@@ -222,30 +222,32 @@ $$w^*, b^* = \arg\min_{w, b} L(w, b)$$
             如果我们将所有输入特征表示为向量 $x = [x_1, x_2, \dots, x_N]^T$，所有偏置 $b_i$ 组成向量 $\mathbf{b} = [b_1, b_2, \dots, b_M]^T$，所有权重 $w_{ij}$ 组成权重矩阵 $W$ (其中 $W_{ij}$ 是 $w_{ij}$)，那么所有 $r_i$ 组成的向量 $\mathbf{r} = [r_1, r_2, \dots, r_M]^T$ 可以表示为：
             $$ \mathbf{r} = \mathbf{b} + W \mathbf{x} $$
              即：
-             $$ \begin{pmatrix}
-r_1^{(j+1)} \\
-r_2^{(j+1)} \\
-\vdots \\
-r_{N_{j+1}}^{(j+1)}
-\end{pmatrix}
-=
-\begin{pmatrix}
-b_1^{(j+1)} \\
-b_2^{(j+1)} \\
-\vdots \\
-b_{N_{j+1}}^{(j+1)}
-\end{pmatrix}+\begin{pmatrix}
-W_{1,1}^{(j+1)} & W_{1,2}^{(j+1)} & \cdots & W_{1,N_j}^{(j+1)} \\
-W_{2,1}^{(j+1)} & W_{2,2}^{(j+1)} & \cdots & W_{2,N_j}^{(j+1)} \\
-\vdots & \vdots & \ddots & \vdots \\
-W_{N_{j+1},1}^{(j+1)} & W_{N_{j+1},2}^{(j+1)} & \cdots & W_{N_{j+1},N_j}^{(j+1)} \\
-\end{pmatrix}
-\begin{pmatrix}
-a_1^{(j)} \\
-a_2^{(j)} \\
-\vdots \\
-a_{N_j}^{(j)}
-\end{pmatrix} $$
+             $$\begin{pmatrix} 
+         r_0^{(j+1)} \\
+         r_1^{(j+1)} \\
+         \vdots \\
+         r_n^{(j+1)}
+         \end{pmatrix}
+         =
+         \begin{pmatrix} 
+         \omega_{0,0} & \omega_{0,1} & \cdots & \omega_{0,n} \\
+         \omega_{1,0} & \omega_{1,1} & \cdots & \omega_{1,n} \\
+         \omega_{2,0} & \omega_{2,1} & \cdots & \omega_{2,n} \\
+         \vdots & \vdots & \ddots & \vdots \\
+         \omega_{k,0} & \omega_{k,1} & \cdots & \omega_{k,n} \\
+         \end{pmatrix}
+         \begin{pmatrix} 
+         a_0^{(j)} \\
+         a_1^{(j)} \\
+         \vdots \\
+         a_n^{(j)}
+         \end{pmatrix}+\begin{pmatrix} 
+         b_0 \\
+         b_1 \\
+         \vdots \\
+         b_n
+         \end{pmatrix}
+         $$
              
 
     *   **第二步：应用 Sigmoid 激活函数 (Apply Sigmoid Activation Function)**
@@ -291,3 +293,7 @@ a_{N_j}^{(j)}
 *   通过**训练数据和优化算法**（反向传播等操作），我们**学习（确定）了这些未知参数 $w_i, b_i, c_i$ 的具体数值。
 *   一旦这些参数的数值被学习确定下来，整个模型就变成了一个**具体的、参数已知的函数**。
 *   我们**使用这个参数已知的函数和学习到的参数值**来对新的输入数据进行**预测**。
+
+### 2.1.3 Unknown Parameters
+
+Unknown Para
