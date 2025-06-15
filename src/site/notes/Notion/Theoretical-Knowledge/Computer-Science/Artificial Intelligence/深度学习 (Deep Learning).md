@@ -4,7 +4,7 @@
 
 ### 1. 神经网络 (Neural Network)
 
-**Video: https://www.bilibili.com/video/BV1bx411M7Zx/?spm_id_from=333.337.search-card.all.click&vd_source=32e3f9ea159201343145d8b8f8b9eb02
+**Video:** https://www.bilibili.com/video/BV1bx411M7Zx/?spm_id_from=333.337.search-card.all.click&vd_source=32e3f9ea159201343145d8b8f8b9eb02
 
 ![Image/Deep Learning/1.png](/img/user/Image/Deep%20Learning/1.png)
 从左往右依次是：**输入层 (Input Layer)**   **隐藏层 (Hidden Layer)**   **输出层 (Output Layer)**
@@ -155,7 +155,7 @@
 
 ### 3. 梯度下降 (Gradient Descent)
 
-**Video: https://www.bilibili.com/video/BV1bx411M7Zx/?spm_id_from=333.337.search-card.all.click&vd_source=32e3f9ea159201343145d8b8f8b9eb02
+**Video:** https://www.bilibili.com/video/BV1bx411M7Zx/?spm_id_from=333.337.search-card.all.click&vd_source=32e3f9ea159201343145d8b8f8b9eb02
 
 ![Image/Deep Learning/2.png](/img/user/Image/Deep%20Learning/2.png)
 左侧：最优的梯度下降                                    右侧：随机梯度下降（使用Mini-batch减少了计算量）
@@ -315,7 +315,7 @@ Mini-batch 梯度下降是实际训练神经网络时非常关键和常用的技
 
 ### 4. 反向传播 (Backpropagation)
 
-**Video: https://www.bilibili.com/video/BV16x411V7Qg/?spm_id_from=333.788.recommend_more_video.-1&vd_source=32e3f9ea159201343145d8b8f8b9eb02
+**Video:** https://www.bilibili.com/video/BV16x411V7Qg/?spm_id_from=333.788.recommend_more_video.-1&vd_source=32e3f9ea159201343145d8b8f8b9eb02
 
 ![Image/Deep Learning/3.png](/img/user/Image/Deep%20Learning/3.png)
 
