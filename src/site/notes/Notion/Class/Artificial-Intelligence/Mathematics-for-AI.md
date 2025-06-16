@@ -218,7 +218,7 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 	    *   **Equivalence:** Two matrices are **row equivalent** if one can be transformed into the other using a sequence of elementary row transformations. Row equivalent matrices have the same row space, null space, and therefore the same rank.
 	*   **Importance:**
 		* If the matrix is:
-		$$\begin{bmatrix}
+			$$\begin{bmatrix}
 		    \mathbf{1} & 0 & 0 & 5 & \bigm| & 10 \\
 		    0 & \mathbf{1} & 0 & -2 & \bigm| & 7 \\
 		    0 & 0 & 0 & 0 & \bigm| & a+1
