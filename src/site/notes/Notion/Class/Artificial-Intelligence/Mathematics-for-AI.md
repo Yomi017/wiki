@@ -39,7 +39,8 @@
 *   **Matrix Inverse:** For $A,B\in R^{n\times n}$ is called the inverse of $A$ if $B$ if $AB=I_n=BA$. Denoted as $A^{-1}$
 	* **Invertibility:** $A$ is called regular/invertible/nonsingular if $A^{-1}$ exists. Otherwise, it is singular/noninvertible.
 	* **Uniqueness:** If $A^{-1}$ exists, it is unique.
-	* $A^{-1}$ exists $\iff$ $|A|\neq 0:$ $$A^{-1}=\dfrac{1}{|A|}\text{adj}(A)$$
+	* $A^{-1}$ exists $\iff$ $|A|\neq 0:$ 
+	$$A^{-1}=\dfrac{1}{|A|}\text{adj}(A)$$
 	* **Properties:**
 		* $AA^{-1}=I=A^{-1}A$
 		* $(AB)^{-1}=B^{-1}A^{-1}$
