@@ -89,8 +89,7 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 	*   **Thus, $[42, 8, 0, 0]^T$ is a particular solution (also called a special solution).**
 	*   To find the **general solution** for the non-homogeneous system `Ax = b` (which describes *all* infinitely many solutions), we need to understand the solutions to the associated **homogeneous system**: `Ax = 0`.
 	*   **Consider the homogeneous system:**
-	    $$
-	    \begin{bmatrix}
+	$$\begin{bmatrix}
 	    1 & 0 & 8 & -4 \\
 	    0 & 1 & 2 & 12
 	    \end{bmatrix}
@@ -125,4 +124,35 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 	    \mathbf{x} = \begin{bmatrix} 42 \\ 8 \\ 0 \\ 0 \end{bmatrix} + s \begin{bmatrix} -8 \\ -2 \\ 1 \\ 0 \end{bmatrix} + t \begin{bmatrix} 4 \\ -12 \\ 0 \\ 1 \end{bmatrix} \quad \text{for any } s, t \in \mathbb{R}
 	    $$
 	    This formula describes all the infinitely many solutions to the original system `Ax = b`.
+*  **Rank-Nullity Theorem**
+
+	*   **Theorem Statement:**
+	    For an $m \times n$ matrix $A$, the **rank** of $A$ plus the **nullity** of $A$ equals the number of columns $n$.
+	    That is:
+	    `rank(A) + nullity(A) = n`
+	    This also implies:
+	    `nullity(A) = n - rank(A)`
 	
+	*   **Explanation of Terms:**
+	    *   **Rank of A (rank(A)):**
+	        *   Definition: The dimension of the **Column Space (Col(A))** of matrix $A$. It is equal to the number of **pivot variables** in the Reduced Row Echelon Form (RREF) of $A$.
+	    *   **Nullity of A (nullity(A)):**
+	        *   Definition: The dimension of the **Null Space (Nul(A))** of matrix $A$. It is equal to the number of **free variables** in the Reduced Row Echelon Form (RREF) of $A$.
+	    *   **$n$ (Number of Columns / Variables):**
+	        *   Definition: The number of columns of matrix $A$, which represents the total number of unknowns in the system.
+	
+	*   **Intuitive Meaning:**
+	    This theorem fundamentally shows that the total number of variables in a system ($n$) is divided into two parts: one part is constrained by the equations, whose count is the **rank**; the other part consists of variables that can be freely chosen in the solution, whose count is the **nullity**. That is, **(Number of Pivot Variables) + (Number of Free Variables) = (Total Number of Variables)**.
+	
+	*   **Example (Using the 2x4 Matrix):**
+	    *   Consider the matrix $A = \begin{bmatrix} 1 & 0 & 8 & -4 \\ 0 & 1 & 2 & 12 \end{bmatrix}$ from our previous discussion.
+	    *   Here, the number of columns $n = 4$ (as there are four unknowns $x_1, x_2, x_3, x_4$).
+	    *   This matrix is already in Reduced Row Echelon Form.
+	        *   **Pivot Variables:** $x_1, x_2$ (corresponding to the leading 1s in each row). Thus, `rank(A) = 2`.
+	        *   **Free Variables:** $x_3, x_4$ (variables not corresponding to pivot positions). Thus, `nullity(A) = 2`.
+	    *   **Verifying the Theorem:**
+	        *   `rank(A) + nullity(A) = 2 + 2 = 4`. This matches the number of columns $n=4$.
+	        *   `nullity(A) = n - rank(A) \implies 2 = 4 - 2`. This also holds perfectly true.
+	    *   This example perfectly illustrates the Rank-Nullity Theorem.
+	
+	---
