@@ -20,7 +20,37 @@
 	*   **No solution (inconsistent)**
 	*   **Exactly one solution (unique)**
 	*   **Infinity solutions (underdetermined)**
-*   **Matrix Notation**![Pasted image 20250616183101.png](/img/user/Pasted%20image%2020250616183101.png)
+*   **Matrix Notation:**
+![Pasted image 20250616183101.png](/img/user/Pasted%20image%2020250616183101.png)
+    A system of linear equations can be compactly represented using matrix multiplication. For a system of $m$ linear equations in $n$ unknowns:
+$$\begin{aligned}
+    a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n &= b_1 \\
+    a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n &= b_2 \\
+    \vdots \\
+    a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n &= b_m
+    \end{aligned}
+    $$
+    *   **could be written as:** $Ax=b$
+        Where:
+        *   $A = \begin{bmatrix} a_{11} & a_{12} & \cdots & a_{1n} \\ a_{21} & a_{22} & \cdots & a_{2n} \\ \vdots & \vdots & \ddots & \vdots \\ a_{m1} & a_{m2} & \cdots & a_{mn} \end{bmatrix}$ is the **coefficient matrix**.
+        *   $x = \begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{bmatrix}$ is the **variable vector** (or unknowns vector).
+        *   $b = \begin{bmatrix} b_1 \\ b_2 \\ \vdots \\ b_m \end{bmatrix}$ is the **constant vector** (or right-hand side vector).
+
+*   **Augmented Matrix (增广矩阵):**
+    When solving a system of linear equations $Ax=b$ using row operations (like Gaussian elimination), it's convenient to combine the coefficient matrix $A$ and the constant vector $b$ into a single matrix called the **augmented matrix**.
+    *   **Notation:** It is typically written as `[A | b]`, where the vertical line separates the coefficient matrix from the constant vector.
+    *   **Structure:**
+        If $A$ is an $m \times n$ matrix and $b$ is an $m \times 1$ column vector, then the augmented matrix `[A | b]` is an $m \times (n+1)$ matrix.
+        $$
+        [A | b] = \begin{bmatrix}
+        a_{11} & a_{12} & \cdots & a_{1n} & \bigm| & b_1 \\
+        a_{21} & a_{22} & \cdots & a_{2n} & \bigm| & b_2 \\
+        \vdots & \vdots & \ddots & \vdots & \bigm| & \vdots \\
+        a_{m1} & a_{m2} & \cdots & a_{mn} & \bigm| & b_m
+        \end{bmatrix}
+        $$
+    *   **Purpose:**
+        This notation allows us to perform elementary row operations on the entire system (both coefficients and constants) simultaneously, simplifying the process of finding the solutions. Each row of the augmented matrix directly corresponds to an equation in the linear system.**
 
 	* **could be written as:** $Wx=b$
 
@@ -179,8 +209,7 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 	        *   **Description:** Add a scalar multiple of one row to another row. The row being added to is replaced by the result.
 	        *   **Notation:** $R_i + k R_j \to R_i$ (add $k$ times Row $j$ to Row $i$, and replace Row $i$)
 	        *   **Example:**
-	            $$
-	            \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{bmatrix} \xrightarrow{R_2 - 4R_1 \to R_2} \begin{bmatrix} 1 & 2 & 3 \\ 0 & -3 & -6 \\ 7 & 8 & 9 \end{bmatrix}
+	        $$\begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{bmatrix} \xrightarrow{R_2 - 4R_1 \to R_2} \begin{bmatrix} 1 & 2 & 3 \\ 0 & -3 & -6 \\ 7 & 8 & 9 \end{bmatrix}
 	            $$
 	
 	*   **Purpose and Importance:**
