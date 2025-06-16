@@ -260,3 +260,25 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 	    $$
 	    Thus, $A \sim \begin{bmatrix} 1 & 2 \\ 0 & 0 \end{bmatrix}$. These two matrices are row equivalent.
 	
+*   **Calculating the Inverse via Augmented Matrix:**
+    The Reduced Row Echelon Form (RREF) is extremely useful for inverting matrices. This strategy is also known as the **Gauss-Jordan elimination method for inverses**.
+
+    *   **Requirement:** For this strategy, we need the matrix **A to be square** ($A \in \mathbb{R}^{n \times n}$). An inverse only exists for square matrices.
+    *   **Core Idea:** To compute the inverse $A^{-1}$ of an $n \times n$ matrix $A$, we essentially solve the matrix equation $AX = I_n$ for the unknown matrix $X$. The solution $X$ will be $A^{-1}$. Each column of $X$ represents the solution to $A \mathbf{x}_j = \mathbf{e}_j$, where $\mathbf{e}_j$ is the $j$-th standard basis vector (a column of $I_n$).
+    *   **Procedure:**
+        1.  **Write the augmented matrix `[A | I_n]`:**
+            *   **Definition:** This is an augmented matrix formed by concatenating the square matrix $A$ on the left side with the $n \times n$ identity matrix $I_n$ on the right side.
+            *   **Purpose:** This unified matrix allows us to perform elementary row operations on $A$ and, simultaneously, apply the *same* operations to $I_n$. Each row operation on $[A | I_n]$ is equivalent to multiplying the original matrix $A$ (and $I_n$) by an elementary matrix from the left. By transforming $A$ into $I_n$, we are effectively finding the product of elementary matrices that "undo" $A$, which is precisely $A^{-1}$.
+            *   **Example for a 2x2 matrix:** If $A = \begin{bmatrix} a & b \\ c & d \end{bmatrix}$, then $[A | I_2] = \begin{bmatrix} a & b & \bigm| & 1 & 0 \\ c & d & \bigm| & 0 & 1 \end{bmatrix}$.
+        2.  **Perform Gaussian Elimination (Row Reduction):** Use elementary row transformations to bring the augmented matrix to its reduced row-echelon form. The goal is to transform the left block (where $A$ was) into the identity matrix $I_n$.
+            $$
+            [A | I_n] \xrightarrow{\text{Gauss Elimination}} [I_n | A^{-1}]
+            $$
+        3.  **Read the Inverse:** If the left block successfully transforms into $I_n$, then the right block of the final matrix will be $A^{-1}$.
+        4.  **Case of Non-Invertibility:** If, during the row reduction process, you cannot transform the left block into $I_n$ (e.g., if you end up with a row of zeros in the left block), then the matrix $A$ is singular (non-invertible), and $A^{-1}$ does not exist.
+        5.  **Proof:**
+	        $$C[A|I_n]=[CA|CI_n]=[I_n|C]\Rightarrow C=A^{-1}$$
+
+    *   **Limitation:** For non-square matrices, the augmented matrix method (to find a traditional inverse) is not defined because non-square matrices do not have inverses.
+
+---
