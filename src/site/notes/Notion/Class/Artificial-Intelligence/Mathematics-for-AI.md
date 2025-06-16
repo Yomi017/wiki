@@ -116,12 +116,10 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 	
 	*   **The General Solution for `Ax = b`:**
 	    The complete set of solutions for a consistent linear system `Ax = b` is the sum of any particular solution $x_p$ and the entire null space $N(A)$.
-	    $$
-	    \mathbf{x} = x_p + x_h = x_p + N(A)
+	$$\mathbf{x} = x_p + x_h = x_p + N(A)
 	    $$
 	    Using our specific example:
-	    $$
-	    \mathbf{x} = \begin{bmatrix} 42 \\ 8 \\ 0 \\ 0 \end{bmatrix} + s \begin{bmatrix} -8 \\ -2 \\ 1 \\ 0 \end{bmatrix} + t \begin{bmatrix} 4 \\ -12 \\ 0 \\ 1 \end{bmatrix} \quad \text{for any } s, t \in \mathbb{R}
+	$$\mathbf{x} = \begin{bmatrix} 42 \\ 8 \\ 0 \\ 0 \end{bmatrix} + s \begin{bmatrix} -8 \\ -2 \\ 1 \\ 0 \end{bmatrix} + t \begin{bmatrix} 4 \\ -12 \\ 0 \\ 1 \end{bmatrix} \quad \text{for any } s, t \in \mathbb{R}
 	    $$
 	    This formula describes all the infinitely many solutions to the original system `Ax = b`.
 *  **Rank-Nullity Theorem**
