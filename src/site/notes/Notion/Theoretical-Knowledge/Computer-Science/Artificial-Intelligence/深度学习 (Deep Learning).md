@@ -6,7 +6,7 @@
 
 **Video:** https://www.bilibili.com/video/BV1bx411M7Zx/?spm_id_from=333.337.search-card.all.click&vd_source=32e3f9ea159201343145d8b8f8b9eb02
 
-![Image/Deep Learning/1.png](/img/user/Image/Deep%20Learning/1.png)
+![Image/Computer-Science/Deep Learning/1.png](/img/user/Image/Computer-Science/Deep%20Learning/1.png)
 从左往右依次是：**输入层 (Input Layer)**   **隐藏层 (Hidden Layer)**   **输出层 (Output Layer)**
 
 1. **输入层 (Input Layer)**
@@ -157,7 +157,7 @@
 
 **Video:** https://www.bilibili.com/video/BV1bx411M7Zx/?spm_id_from=333.337.search-card.all.click&vd_source=32e3f9ea159201343145d8b8f8b9eb02
 
-![Image/Deep Learning/2.png](/img/user/Image/Deep%20Learning/2.png)
+![Image/Computer-Science/Deep Learning/2.png](/img/user/Image/Computer-Science/Deep%20Learning/2.png)
 左侧：最优的梯度下降                                    右侧：随机梯度下降（使用Mini-batch减少了计算量）
 
 **引言 (Introduction):**
@@ -317,7 +317,7 @@ Mini-batch 梯度下降是实际训练神经网络时非常关键和常用的技
 
 **Video:** https://www.bilibili.com/video/BV16x411V7Qg/?spm_id_from=333.788.recommend_more_video.-1&vd_source=32e3f9ea159201343145d8b8f8b9eb02
 
-![Image/Deep Learning/3.png](/img/user/Image/Deep%20Learning/3.png)
+![Image/Computer-Science/Deep Learning/3.png](/img/user/Image/Computer-Science/Deep%20Learning/3.png)
 
 **引言 (Introduction):**
 在梯度下降中，我们需要计算代价函数 $J$ 对于网络中所有权重 $\omega$ 和偏置 $b$ 的偏导数（即梯度 $\frac{\partial J}{\partial \omega}$ 和 $\frac{\partial J}{\partial b}$）。对于只有少量参数的简单模型，我们可以手动推导这些梯度。但是，对于拥有成千上万甚至数百万参数的深度神经网络，手动计算变得不可行。**反向传播 (Backpropagation)** 是一种高效计算这些梯度的算法，它利用了微积分中的**链式法则 (Chain Rule)**，系统地将输出层的误差反向传播到网络中的每一层，从而计算出每个参数对总误差的贡献（即梯度）。

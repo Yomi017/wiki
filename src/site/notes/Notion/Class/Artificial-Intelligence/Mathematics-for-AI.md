@@ -20,7 +20,7 @@
 	*   **No solution (inconsistent)**
 	*   **Exactly one solution (unique)**
 	*   **Infinity solutions (underdetermined)**
-*   **Matrix Notation:**![Pasted image 20250616183101.png](/img/user/Pasted%20image%2020250616183101.png)
+*   **Matrix Notation:**![Image/Class/Mathematics-for-AI/1.png](/img/user/Image/Class/Mathematics-for-AI/1.png)
     A system of linear equations can be compactly represented using matrix multiplication. For a system of $m$ linear equations in $n$ unknowns:
     $$\begin{aligned}
     a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n &= b_1 \\
@@ -338,6 +338,6 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 	*   The set of non-zero rational numbers $\mathbb{Q}^*$ under multiplication $(\times)$ is an Abelian group.
 	*   The set of all invertible $n \times n$ matrices under matrix multiplication is a non-Abelian group (for $n \ge 2$). This is called the general linear group $GL_n(\mathbb{R})$.
 
-![Pasted image 20250616210635.png](/img/user/Pasted%20image%2020250616210635.png)
-![Pasted image 20250616210657.png](/img/user/Pasted%20image%2020250616210657.png)
-![Pasted image 20250616210712.png](/img/user/Pasted%20image%2020250616210712.png)
+![Image/Class/Mathematics-for-AI/2.png](/img/user/Image/Class/Mathematics-for-AI/2.png)
+![Image/Class/Mathematics-for-AI/3.png](/img/user/Image/Class/Mathematics-for-AI/3.png)
+![Image/Class/Mathematics-for-AI/4.png](/img/user/Image/Class/Mathematics-for-AI/4.png)

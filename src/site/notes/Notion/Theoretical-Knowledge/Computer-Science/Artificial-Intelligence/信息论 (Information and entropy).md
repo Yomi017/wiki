@@ -12,9 +12,9 @@ Video: [MIT6.050J information and entropy 001_哔哩哔哩_bilibili](https://www
 # Chapter 1: Bits
 
 ## 1.1 The Boolean Bit (布尔比特)
-![Image/Information and entropy/1.png](/img/user/Image/Information%20and%20entropy/1.png)
-![Image/Information and entropy/2.png](/img/user/Image/Information%20and%20entropy/2.png)
-![Image/Information and entropy/3.png](/img/user/Image/Information%20and%20entropy/3.png)
+![Image/Computer-Science/Information and entropy/1.png](/img/user/Image/Computer-Science/Information%20and%20entropy/1.png)
+![Image/Computer-Science/Information and entropy/2.png](/img/user/Image/Computer-Science/Information%20and%20entropy/2.png)
+![Image/Computer-Science/Information and entropy/3.png](/img/user/Image/Computer-Science/Information%20and%20entropy/3.png)
 ## 1.2 The Circuit Bit (电路比特)
 
 Combinational logic circuits graphically represent Boolean expressions. Each Boolean function (NOT, AND, XOR, etc.) corresponds to a "combinational gate" with inputs and an output. Gates are connected by lines, forming circuits. A key property is that combinational circuits **have no feedback loops**; an output never feeds back into an input earlier in its own causal chain. Circuits with loops are called sequential logic, which Boolean algebra alone cannot describe. For instance, a NOT gate with its output connected directly to its input creates a contradiction under Boolean analysis.
@@ -408,7 +408,7 @@ In Chapter 2 we considered systems of the sort shown in Figure 3.1, in which sym
 本章将探讨可用于生成特别高效表示的压缩技术。第4章中我们将研究避免错误的技术。
 第2章中我们讨论了如图3.1所示的系统，其中符号被编码成比特串，然后（在空间和/或时间上）传输给解码器，解码器再重构出原始符号。
 
-![Image/Information and entropy/4.png](/img/user/Image/Information%20and%20entropy/4.png)
+![Image/Computer-Science/Information and entropy/4.png](/img/user/Image/Computer-Science/Information%20and%20entropy/4.png)
 
 Typically the same code is used for a sequence of symbols, one after another. The role of data compression is to convert the string of bits representing a succession of symbols into a shorter string for more economical transmission, storage, or processing. The result is the system in Figure 3.2, with both a compressor and an expander. Ideally, the expander would exactly reverse the action of the compressor so that the coder and decoder could be unchanged.
 On first thought, this approach might seem surprising. Why is there any reason to believe that the same information could be contained in a smaller number of bits? We will look at two types of compression, using different approaches:
@@ -422,7 +422,7 @@ Six techniques are described below which are astonishingly effective in compress
 *   有损或不可逆压缩，其中原始符号或其编码表示无法从较小的版本中精确重建，而是由解压器产生一个“足够好”的近似值。
 下面将描述六种在压缩数据文件方面效果惊人的技术。前五种是可逆的，最后一种是不可逆的。每种技术都有其特别适用的情况（最佳情况）和不适用的情况（最差情况）。
 
-![Image/Information and entropy/5.png](/img/user/Image/Information%20and%20entropy/5.png)
+![Image/Computer-Science/Information and entropy/5.png](/img/user/Image/Computer-Science/Information%20and%20entropy/5.png)
 
 ## 3.1 Variable-Length Encoding (变长编码)
 
@@ -638,14 +638,14 @@ The initial set of dictionary entries is 8-bit character code with code points 0
 考虑文本消息“itty bitty bit bin”的编码和解码（这个特殊的短语被设计成包含重复字符串，以便字典快速构建）。
 字典条目的初始集合是8位字符代码，代码点为0-255，其中ASCII作为前128个字符，包括表3.1中出现在上述字符串中的字符。字典条目256定义为“清除字典”或“开始”，257定义为“传输结束”或“停止”。编码消息是一系列数字，这些代码表示字典条目。最初，大多数字典条目由单个字符组成，但随着消息的分析，会定义新的条目，代表两个或更多字符的字符串。结果总结在表3.2中。
 
-![Image/Information and entropy/6.png](/img/user/Image/Information%20and%20entropy/6.png)
+![Image/Computer-Science/Information and entropy/6.png](/img/user/Image/Computer-Science/Information%20and%20entropy/6.png)
 
 Encoding algorithm: Define a place to keep new dictionary entries while they are being constructed and call it new-entry. Start with new-entry empty, and send the start code. Then append to the new-entry the characters, one by one, from the string being compressed. As soon as new-entry fails to match any existing dictionary entry, put new-entry into the dictionary, using the next available code point, and send the code for the string without the last character (this entry is already in the dictionary). Then use the last character received as the first character of the next new-entry. When the input string ends, send the code for whatever is in new-entry followed by the stop code. That’s all there is to it.
 
 编码算法：定义一个用于保存正在构建的新字典条目的位置，并称之为new-entry。从new-entry为空开始，并发送起始代码。然后，将要压缩的字符串中的字符逐一附加到new-entry中。一旦new-entry无法匹配任何现有字典条目，就将new-entry放入字典中，使用下一个可用的代码点，并发送不包含最后一个字符的字符串的代码（此条目已在字典中）。然后使用接收到的最后一个字符作为下一个new-entry的第一个字符。当输入字符串结束时，发送new-entry中的任何内容的代码，然后发送停止代码。就是这样。
 
-![Image/Information and entropy/7.png](/img/user/Image/Information%20and%20entropy/7.png)
-![Image/Information and entropy/8.png](/img/user/Image/Information%20and%20entropy/8.png)
+![Image/Computer-Science/Information and entropy/7.png](/img/user/Image/Computer-Science/Information%20and%20entropy/7.png)
+![Image/Computer-Science/Information and entropy/8.png](/img/user/Image/Computer-Science/Information%20and%20entropy/8.png)
 
 For the benefit of those who appreciate seeing algorithms written like a computer program, this encoding algorithm is shown in Figure 3.5. When this procedure is applied to the string in question, the first character is “i” and the string consisting of just that character is already in the dictionary. So the next character is appended to new-entry, and the result is “it” which is not in the dictionary. Therefore the string which was in the dictionary, “i,” is sent and the string “i t” is added to the dictionary, at the next available position, which is 258. The new-entry is reset to be just the last character, which was not sent, so it is “t”. The next character “t” is appended and the result is “tt” which is not in the dictionary. The process repeats until the end of the string is reached.
 For a while at the beginning the additional dictionary entries are all two-character strings, and there is a string transmitted for every new character encountered. However, the first time one of those two-character strings is repeated, its code gets sent (using fewer bits than would be required for two characters sent separately) and a new three-character dictionary entry is defined. In this example it happens with the string “i t t” (this message was designed to make this happen earlier than would be expected with normal text). Later in this example, the code for a three-character string gets transmitted, and a four-character dictionary entry defined.
@@ -659,7 +659,7 @@ Decoding algorithm: If the start code is received, clear the dictionary and set 
 
 解码算法：如果接收到起始代码，清除字典并将new-entry设为空。对于下一个接收到的代码，输出该代码所表示的字符，并将其放入new-entry中。然后对于后续接收到的代码，将该代码所表示字符串的第一个字符附加到new-entry中，将结果插入字典，然后输出接收到代码所代表的字符串，并将其放入new-entry以开始下一个字典条目。当接收到停止代码时，无需执行任何操作；new-entry可以被放弃。
 
-![Image/Information and entropy/9.png](/img/user/Image/Information%20and%20entropy/9.png)
+![Image/Computer-Science/Information and entropy/9.png](/img/user/Image/Computer-Science/Information%20and%20entropy/9.png)
 
 This algorithm is shown in program format in Figure 3.6.
 Note that the coder and decoder each create the dictionary on the fly; the dictionary therefore does not have to be explicitly transmitted, and the coder deals with the text in a single pass.
@@ -685,7 +685,7 @@ The initial set of dictionary entries include the characters in Table 3.3, which
 编码和解码文本消息$$itty\ bitty\ nitty\ grrritty\ bit\ bin$$（同样，这个特殊的短语被设计成具有重复字符串，以便字典快速形成；它还包含一个由三个“r”组成的序列，这说明了该算法的一个方面）。
 字典条目的初始集合包括表3.3中的字符，这些字符在该字符串中找到，以及用于开始和停止的控制字符。
 
-![Image/Information and entropy/10.png](/img/user/Image/Information%20and%20entropy/10.png)
+![Image/Computer-Science/Information and entropy/10.png](/img/user/Image/Computer-Science/Information%20and%20entropy/10.png)
 
 The same algorithms used in Example 1 can be applied here. The result is shown in Table 3.4. Note that the dictionary builds up quite rapidly, and there is one instance of a four-character dictionary entry transmitted. Was this compression effective? Definitely. A total of 33 8-bit characters (264 bits) were sent in 22 9-bit transmissions (198 bits, even including the start and stop characters), for a saving of 25% in bits.
 There is one place in this example where the decoder needs to do something unusual. Normally, on receipt of a transmitted codeword, the decoder can look up its string in the dictionary and then output it and use its first character to complete the partially formed last dictionary entry, and then start the next dictionary entry. Thus only one dictionary lookup is needed. However, the algorithm presented above uses two lookups, one for the first character, and a later one for the entire string. Why not use just one lookup for greater efficiency?
@@ -695,7 +695,7 @@ There is a special case illustrated by the transmission of code 271 in this exam
 在这个例子中，解码器有一个地方需要进行不寻常的操作。通常，在收到传输的码字后，解码器可以在字典中查找其字符串，然后输出它，并使用其第一个字符来完成部分形成的最后一个字典条目，然后开始下一个字典条目。这样只需要一次字典查找。然而，上面介绍的算法使用了两次查找，一次用于第一个字符，另一次用于整个字符串。为什么不只使用一次查找以提高效率呢？
 此示例中代码271的传输就说明了一个特殊情况，即接收到的代码对应的字符串不完整。可以找到第一个字符，但在检索整个字符串之前，必须先完成该条目。当一个字符或字符串第一次连续出现三次时，就会发生这种情况，因此这种情况很少见。上述算法可以正确工作，但代价是额外的一次查找，这很少需要，并可能减慢算法的速度。一个使用单次字典查找的更快算法只有在检测到这种情况并将其作为特殊情况处理时才能可靠工作。
 
-![11.png](/img/user/Image/Information%20and%20entropy/11.png)
+![11.png](/img/user/Image/Computer-Science/Information%20and%20entropy/11.png)
 
 *   **Core:** Demonstrates LZW's effectiveness for longer, repetitive strings, showing rapid dictionary growth and significant bit savings (e.g., 25% for the given example).
 *   **Distinction:** Highlights a rare "special case" in decoding (e.g., code 271) where the received string is incomplete, requiring a second dictionary lookup for correctness, which can impact efficiency if not optimized.
@@ -815,7 +815,7 @@ With this equation, we can compute the set of base matrices of the DCT, that is:
 `X = CYCT`。(3.15)
 利用这个方程，我们可以计算DCT的基矩阵集，即：Y的每个元素通过DCT对应的矩阵集。让我们构建一组所有可能的图像，每个图像只有一个非零像素。这些图像将代表矩阵Y的各个系数。
 
-![12.png](/img/user/Image/Information%20and%20entropy/12.png)
+![12.png](/img/user/Image/Computer-Science/Information%20and%20entropy/12.png)
 
 Figure 3.7(a) shows the set for 4×4 pixel images. Figure 3.7(b) shows the result of applying the IDCT to the images in Figure 3.7(a). The set of images in Figure 3.7(b) are called basis because the DCT of any of them will yield a matrix Y that has a single non-zero coefficient, and thus they represent the base images in which the DCT “decomposes” any input image.
 Recalling our overview of Discrete Linear Transformations above, should we want to recover an image X from its DCT Y we would just take each element of Y and multiply it by the corresponding matrix from 3.7(b). Indeed, Figure 3.7(b) introduces a very remarkable property of the DCT basis: it encodes spatial frequency. Compression can be achieved by ignoring those spatial frequencies that have smaller DCT coefficients. Think about the image of a chessboard—it has a high spatial frequency component, and almost all of the low frequency components can be removed. Conversely, blurred images tend to have fewer higher spatial frequency components, and then high frequency components, lower right in the Figure 3.7(b), can be set to zero as an “acceptable approximation”. This is the principle for irreversible compression behind JPEG.
@@ -823,7 +823,7 @@ Recalling our overview of Discrete Linear Transformations above, should we want 
 图3.7(a)显示了4×4像素图像的集合。图3.7(b)显示了将IDCT应用于图3.7(a)中图像的结果。图3.7(b)中的图像集合被称为基，因为其中任何一个图像的DCT都会产生一个只有一个非零系数的矩阵Y，因此它们代表了DCT“分解”任何输入图像的基图像。
 回顾我们上面对离散线性变换的概述，如果我们要从其DCT Y中恢复图像X，我们只需取出Y的每个元素并将其乘以图3.7(b)中对应的矩阵。实际上，图3.7(b)引入了DCT基的一个非常显著的特性：它编码空间频率。通过忽略具有较小DCT系数的空间频率可以实现压缩。想想棋盘图像——它具有高空间频率分量，几乎所有低频分量都可以被去除。相反，模糊图像往往具有较少的高空间频率分量，此时高频分量（在图3.7(b)的右下角）可以设置为零，作为“可接受的近似”。这就是JPEG背后不可逆压缩的原理。
 
-![13.png](/img/user/Image/Information%20and%20entropy/13.png)
+![13.png](/img/user/Image/Computer-Science/Information%20and%20entropy/13.png)
 
 *   **Core:** Discrete Cosine Transformation (DCT) is a specific type of discrete linear transformation (`Y = CᵀXC`) used in JPEG, where the transformation matrix C is defined using cosine functions and its inverse is its transpose (`C⁻¹ = Cᵀ`). This allows images (X) to be transformed into a matrix of coefficients (Y) in the spatial frequency domain.
 *   **Distinction:** The key advantage of DCT for compression is that its basis matrices (representing spatial frequencies) allow for **lossy compression**: coefficients corresponding to less perceptible high-frequency components (which have smaller values) can be discarded or set to zero, leading to an "acceptable approximation" (e.g., in JPEG).

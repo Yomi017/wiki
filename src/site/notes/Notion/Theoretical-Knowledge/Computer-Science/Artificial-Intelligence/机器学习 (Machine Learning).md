@@ -16,11 +16,11 @@
         *   **回归 (Regression)**:
             *   **目标输出**: 连续的数值 (a continuous scalar value)。
             *   **例子**: 预测房价、股票价格、温度。
-        ![Image/Machine Learning/1.png](/img/user/Image/Machine%20Learning/1.png)
+        ![Image/Computer-Science/Machine Learning/1.png](/img/user/Image/Computer-Science/Machine%20Learning/1.png)
         *   **分类 (Classification)**:
             *   **目标输出**: 离散的类别标签 (a discrete class label) from a predefined set.
-            *   **例子**: 图像识别（猫/狗）、邮件分类（垃圾/非垃圾）、疾病诊断（有病/无病）。![Image/Machine Learning/2.png](/img/user/Image/Machine%20Learning/2.png)
-            ![3.jpg](/img/user/Image/Machine%20Learning/3.jpg)
+            *   **例子**: 图像识别（猫/狗）、邮件分类（垃圾/非垃圾）、疾病诊断（有病/无病）。![Image/Computer-Science/Machine Learning/2.png](/img/user/Image/Computer-Science/Machine%20Learning/2.png)
+            ![3.jpg](/img/user/Image/Computer-Science/Machine%20Learning/3.jpg)
 
 2.  **无监督学习 (Unsupervised Learning)**
     *   **目标**: 从未带标签的数据中发现隐藏的模式、结构或关系。算法自行探索数据。
@@ -89,7 +89,7 @@ $$L(w, b) = \frac{1}{N} \sum_{n=1}^{N} e_n$$
 
 **误差平面 (Error Surface):**
 我们可以将损失函数 $L(w, b)$ 想象成一个多维空间中的曲面，其中参数（如 $w$ 和 $b$）是坐标轴，损失函数的值是高度。这个曲面被称为**误差平面 (Error Surface)** 或损失平面。
-![4.png](/img/user/Image/Machine%20Learning/4.png) *(图示：损失值如何随着参数变化而变化，目标是找到曲面的最低点)*
+![Image/Computer-Science/Machine Learning/4.png](/img/user/Image/Computer-Science/Machine%20Learning/4.png) *(图示：损失值如何随着参数变化而变化，目标是找到曲面的最低点)*
 
 ### 1.2.3 参数优化 (Optimization)
 
@@ -178,7 +178,7 @@ $$w^*, b^* = \arg\min_{w, b} L(w, b)$$
 
 为了克服线性模型的局限性，我们需要能够表示非线性关系的更灵活的模型。一种方法是使用**分段线性函数 (Piecewise Linear Curves)**。
 
-*   **基本思想 (Core Idea):** 任何复杂的分段线性曲线（如图中的红色曲线）可以被看作是一个**常数 (constant)** 加上一系列更简单的“阶梯状”或“斜坡状”基础函数（如图中右上角示意的小蓝色函数）的**加权和 (sum of a set of blue functions)**。![5.png](/img/user/Image/Machine%20Learning/5.png)![6.png](/img/user/Image/Machine%20Learning/6.png)
+*   **基本思想 (Core Idea):** 任何复杂的分段线性曲线（如图中的红色曲线）可以被看作是一个**常数 (constant)** 加上一系列更简单的“阶梯状”或“斜坡状”基础函数（如图中右上角示意的小蓝色函数）的**加权和 (sum of a set of blue functions)**。![Image/Computer-Science/Machine Learning/5.png](/img/user/Image/Computer-Science/Machine%20Learning/5.png)![Image/Computer-Science/Machine Learning/6.png](/img/user/Image/Computer-Science/Machine%20Learning/6.png)
         第一张图展示了一个目标分段线性函数（红色曲线）。
         第二张图展示了如何将这个红色曲线分解为多个基础的蓝色函数。
         每个蓝色函数在某个点改变其斜率。
@@ -300,7 +300,7 @@ $$w^*, b^* = \arg\min_{w, b} L(w, b)$$
         *   $b_{output}$ 是输出层的偏置。
         *   所有 $W, \mathbf{b}_{hidden}, \mathbf{c}^T, b_{output}$ 都是模型需要从数据中学习的**未知参数**。
 
-    *   ![7.png](/img/user/Image/Machine%20Learning/7.png)
+    *   ![Image/Computer-Science/Machine Learning/7.png](/img/user/Image/Computer-Science/Machine%20Learning/7.png)
         这张图完美地展示了这个单隐藏层神经网络的结构：
         *   **输入层 (Input Layer)**: $x_1, x_2, x_3$。
         *   **隐藏层 (Hidden Layer)**:
@@ -346,7 +346,7 @@ $$ y = f(\mathbf{x}; W, \mathbf{b}_{hidden}, \mathbf{c}^T, b_{output}) = \mathbf
 
 **将所有参数集合为单一向量 $\theta$:**
 
-![8.png](/img/user/Image/Machine%20Learning/8.png)
+![Image/Computer-Science/Machine Learning/8.png](/img/user/Image/Computer-Science/Machine%20Learning/8.png)
 
 为了在后续的优化过程中（例如使用梯度下降）更方便地处理这些不同形状和类型的参数，通常会将它们全部 **“展平 (flattened)”** 并按特定顺序串联起来，形成一个单一的、非常长的参数向量 $\theta$**。
 
@@ -432,7 +432,7 @@ $$ \theta^* = \arg\min_{\theta} L(\theta) $$
             \end{pmatrix}_{\theta=\theta^t} $$
         *   在神经网络中，这个梯度通常通过**反向传播 (Backpropagation)** 算法高效计算。
         *   当使用 mini-batch 时，计算的是 $L_{batch}(\theta)$ 的梯度。
-           ![9.png](/img/user/Image/Machine%20Learning/9.png) 
+           ![Image/Computer-Science/Machine Learning/9.png](/img/user/Image/Computer-Science/Machine%20Learning/9.png) 
         * (图示：梯度指向函数增加最快的方向)
 
     *   b. **更新参数 (Update Parameters)**:
@@ -450,7 +450,7 @@ $$ \theta^* = \arg\min_{\theta} L(\theta) $$
     *   可以设定最大迭代次数 (或最大 epoch 数)。
     *   可以监控损失函数的值，当其变化很小或不再下降时停止。
     *   可以监控在验证集上的性能，当验证集性能不再提升（甚至开始下降，表明过拟合）时停止（早停法 Early Stopping）。
-![10.png](/img/user/Image/Machine%20Learning/10.png)
+![Image/Computer-Science/Machine Learning/10.png](/img/user/Image/Computer-Science/Machine%20Learning/10.png)
 **注：**
 - 一个**神经元 (Neurou)**是一个基本的计算单元。
 - 一个**激活函数**（如 Sigmoid）是神经元计算过程中的一个关键组成部分，它引入非线性。
