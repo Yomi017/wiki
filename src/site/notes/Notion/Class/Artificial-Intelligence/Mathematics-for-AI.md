@@ -280,4 +280,64 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 	        $$C[A|I_n]=[CA|CI_n]=[I_n|C]\Rightarrow C=A^{-1}$$
 
     *   **Limitation:** For non-square matrices, the augmented matrix method (to find a traditional inverse) is not defined because non-square matrices do not have inverses.
-    
+* **Algorithms for Solving Linear Systems (`Ax = b`): Direct Methods**
+	
+	This section outlines various direct algorithms used to find solutions for the linear system `Ax = b`.
+	
+	*   **1. Direct Inversion:**
+	    *   **Applicability:** This method is used if the coefficient matrix $A$ is **square and invertible** (i.e., non-singular).
+	    *   **Formula:** The solution $x$ is directly computed as:
+	        $$x = A^{-1}b$$
+	    *   **Mechanism:** If $A$ is invertible, its inverse $A^{-1}$ exists, and multiplying both sides of $Ax = b$ by $A^{-1}$ from the left yields $A^{-1}Ax = A^{-1}b \implies I_nx = A^{-1}b \implies x = A^{-1}b$.
+	
+	*   **2. Pseudo-inverse ([[Notion/Class/Proof/Moore-Penrose-Pseudo-inverse\|Moore-Penrose-Pseudo-inverse]]):**
+	    *   **Applicability:** This method is used if $A$ is **not square but has linearly independent columns** (i.e., full column rank). This is common in overdetermined systems (more equations than unknowns, $m > n$) where an exact solution might not exist, but we seek a "best fit" solution.
+	    *   **Formula:** The solution $x$ is given by:
+	        $$x = (A^T A)^{-1} A^T b$$
+	    *   **Result:** This formula provides the **minimum-norm least-squares solution**. It finds the vector $x$ that minimizes the Euclidean norm of the residual, $\|Ax - b\|_2^2$. If an exact solution exists, this method finds it. If not, it finds the solution that is "closest" to satisfying the equations in a least-squares sense.
+	
+	*   **Limitations (Common to Inversion and Pseudo-inversion Methods):**
+	    *   **Computationally Expensive:** Calculating matrix inverses or pseudo-inverses is generally **computationally expensive**, especially for large systems. The computational cost typically scales with $O(n^3)$ for an $n \times n$ matrix.
+	    *   **Numerically Unstable:** These methods can be **numerically unstable** for large or ill-conditioned systems, meaning small errors in input data or floating-point arithmetic can lead to large errors in the computed inverse and solution.
+	
+	*   **3. Gaussian Elimination:**
+	    *   **Mechanism:** This is a systematic method that **reduces the augmented matrix `[A | b]` to row-echelon form or reduced row-echelon form** to solve `Ax = b`. It involves a series of elementary row operations.
+	    *   **Scalability:** Gaussian elimination is generally **efficient for thousands of variables**. However, it is **not practical for very large systems** (e.g., millions of variables) because its computational cost scales cubically with the number of variables ($O(n^3)$), making it too slow and memory-intensive for extremely large problems.
+
+## Part III: Vector Spaces and Groups
+*   **Group:**
+	A **group** is a set $G$ together with a binary operation $*$ (that combines any two elements of $G$ to form a third element also in $G$) that satisfies the following four axioms:
+	
+	1.  **Closure:** For all $a, b \in G$, the result of the operation $a * b$ is also in $G$.
+	    *   (Formally: $\forall a, b \in G, \quad a * b \in G$)
+	
+	2.  **Associativity:** For all $a, b, c \in G$, the order in which multiple operations are performed does not affect the result.
+	    *   (Formally: $\forall a, b, c \in G, \quad (a * b) * c = a * (b * c)$)
+	
+	3.  **Identity Element:** There exists an element $e \in G$ (called the identity element) such that for every element $a \in G$, operating $e$ with $a$ (in any order) leaves $a$ unchanged.
+	    *   (Formally: $\exists e \in G \text{ s.t. } \forall a \in G, \quad a * e = e * a = a$)
+	
+	4.  **Inverse Element:** For every element $a \in G$, there exists an element $a^{-1} \in G$ (called the inverse of $a$) such that operating $a$ with $a^{-1}$ (in any order) yields the identity element $e$.
+	    *   (Formally: $\forall a \in G, \quad \exists a^{-1} \in G \text{ s.t. } a * a^{-1} = a^{-1} * a = e$)
+	
+	---
+	
+	**Additional Terminology:**
+	
+	*   **Abelian Group (Commutative Group):** If, in addition to the four axioms above, the operation $*$ is also **commutative** (i.e., $a * b = b * a$ for all $a, b \in G$), then the group is called an Abelian group.
+	
+	*   **Order of a Group:** The number of elements in a group $G$ is called its **order**, denoted by $|G|$. If the number of elements is finite, it's a **finite group**; otherwise, it's an **infinite group**.
+	
+	**Examples of Groups:**
+	
+	*   The set of integers $\mathbb{Z}$ under addition $(+)$ is an Abelian group.
+	    *   (Closure: $m+n \in \mathbb{Z}$)
+	    *   (Associativity: $(m+n)+p = m+(n+p)$)
+	    *   (Identity: $0 \in \mathbb{Z}$, $m+0=m$)
+	    *   (Inverse: for $m$, $-m \in \mathbb{Z}$, $m+(-m)=0$)
+	*   The set of non-zero rational numbers $\mathbb{Q}^*$ under multiplication $(\times)$ is an Abelian group.
+	*   The set of all invertible $n \times n$ matrices under matrix multiplication is a non-Abelian group (for $n \ge 2$). This is called the general linear group $GL_n(\mathbb{R})$.
+
+![Pasted image 20250616210635.png](/img/user/Pasted%20image%2020250616210635.png)
+![Pasted image 20250616210657.png](/img/user/Pasted%20image%2020250616210657.png)
+![Pasted image 20250616210712.png](/img/user/Pasted%20image%2020250616210712.png)
