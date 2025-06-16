@@ -276,9 +276,8 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
             $$
         3.  **Read the Inverse:** If the left block successfully transforms into $I_n$, then the right block of the final matrix will be $A^{-1}$.
         4.  **Case of Non-Invertibility:** If, during the row reduction process, you cannot transform the left block into $I_n$ (e.g., if you end up with a row of zeros in the left block), then the matrix $A$ is singular (non-invertible), and $A^{-1}$ does not exist.
-        5.  **Proof:**
+        5.  **Proof:** [[Notion/Class/Proof/Compatibility-of-Matrix-Multiplication-with-Partitioned-Matrices\|Compatibility-of-Matrix-Multiplication-with-Partitioned-Matrices]]
 	        $$C[A|I_n]=[CA|CI_n]=[I_n|C]\Rightarrow C=A^{-1}$$
 
     *   **Limitation:** For non-square matrices, the augmented matrix method (to find a traditional inverse) is not defined because non-square matrices do not have inverses.
-
----
+    
