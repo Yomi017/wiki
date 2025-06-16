@@ -67,11 +67,7 @@
 $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 *  **Solution:**
 	*   **Consider the system:**
-	    $$
-	    \begin{bmatrix}
-	    1 & 0 & 8 & -4 \\
-	    0 & 1 & 2 & 12
-	    \end{bmatrix}
+	$$ \begin{bmatrix}1 & 0 & 8 & -4 \\ 0 & 1 & 2 & 12 \end{bmatrix}
 	    \begin{bmatrix}
 	    x_1 \\
 	    x_2 \\
