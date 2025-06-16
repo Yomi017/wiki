@@ -217,3 +217,14 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 	    *   **Determining Rank:** They help in finding the rank of a matrix (number of pivots/non-zero rows in REF/RREF [[Notion/Class/Concept/REF, RREF\|REF, RREF]]).
 	    *   **Finding Null Space Basis:** They are essential for transforming the matrix to RREF to identify free variables and determine the basis for the null space.
 	    *   **Equivalence:** Two matrices are **row equivalent** if one can be transformed into the other using a sequence of elementary row transformations. Row equivalent matrices have the same row space, null space, and therefore the same rank.
+	*   **Importance:**
+		* If the matrix is:
+	$$\begin{bmatrix}
+    \mathbf{1} & 0 & 0 & 5 & \bigm| & 10 \\
+    0 & \mathbf{1} & 0 & -2 & \bigm| & 7 \\
+    0 & 0 & 0 & 0 & \bigm| & a+1
+    \end{bmatrix}$$
+		* If and only if $a=-1$ , it is sovlable.
+		*  **What does the row `[0 0 0 0 | 0]` mean?**
+		    *   A row of all zeros, including the constant term, means that the original equation corresponding to this row was a **linear combination of other equations** in the system. In other words, this equation was redundant and provides no new information about the variables.
+		    *   Crucially, `0 = 0` is always a true statement. This indicates that the system is **consistent** (it has solutions). It does **not** imply that there are no solutions (an inconsistent system would have a row like `[0 0 0 0 | c]` where `c ≠ 0`).
