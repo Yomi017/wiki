@@ -218,7 +218,7 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 	    *   **Equivalence:** Two matrices are **row equivalent** if one can be transformed into the other using a sequence of elementary row transformations. Row equivalent matrices have the same row space, null space, and therefore the same rank.
 	*   **Importance:**
 		* If the matrix is:
-			$$\begin{bmatrix}
+		$$\begin{bmatrix}
 		    \mathbf{1} & 0 & 0 & 5 & \bigm| & 10 \\
 		    0 & \mathbf{1} & 0 & -2 & \bigm| & 7 \\
 		    0 & 0 & 0 & 0 & \bigm| & a+1
@@ -228,3 +228,38 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 		*  **What does the row `[0 0 0 0 | 0]` mean?**
 		    *   A row of all zeros, including the constant term, means that the original equation corresponding to this row was a **linear combination of other equations** in the system. In other words, this equation was redundant and provides no new information about the variables.
 		    *   Crucially, `0 = 0` is always a true statement. This indicates that the system is **consistent** (it has solutions). It does **not** imply that there are no solutions (an inconsistent system would have a row like `[0 0 0 0 | c]` where `c ≠ 0`).
+Okay, I will add notes on **Row Equivalent Matrices** to your document, explicitly mentioning the `A ~ B` notation. I'll place this section after "Elementary Row Transformations" as it directly builds upon that concept.
+
+* **Row Equivalent Matrices**
+	
+	*   **Definition:**
+	    Two matrices are said to be **row equivalent** if one can be obtained from the other by a finite sequence of elementary row transformations.
+	
+	*   **Mechanism:**
+	    The concept is built upon the three **Elementary Row Transformations** (Row Swap, Row Scaling, Row Addition), which were previously discussed. Applying these operations one or more times will transform a matrix into a row equivalent one.
+	
+	*   **Notation:**
+	    If matrix $A$ is row equivalent to matrix $B$, we write $A \sim B$.
+	
+	*   **Key Properties of Row Equivalent Matrices (What is Preserved):**
+	    Elementary row transformations are powerful because they preserve several fundamental properties of a matrix, which are critical for solving linear systems and understanding matrix spaces:
+	
+	    1.  **Same Solution Set for Linear Systems:** If an augmented matrix $[A | b]$ is row equivalent to another augmented matrix $[A' | b']$, then the linear system $Ax=b$ has exactly the same set of solutions as $A'x=b'$. This is the underlying principle that allows us to solve systems by row reducing their augmented matrices.
+	    2.  **Same Row Space:** The row space (the vector space spanned by the row vectors of the matrix) remains unchanged under elementary row transformations.
+	    3.  **Same Null Space:** The null space (the set of all solutions to the homogeneous equation $Ax=0$) remains unchanged.
+	    4.  **Same Rank:** Since the dimension of the row space and the dimension of the null space are preserved, the rank of the matrix (which is the dimension of the column space, and equals the dimension of the row space) is also preserved.
+	    5.  **Same Reduced Row Echelon Form (RREF):** Every matrix is row equivalent to a unique Reduced Row Echelon Form (RREF). This unique RREF is often used as a canonical (standard) form for a matrix.
+	
+	*   **Importance and Applications:**
+	    *   **Solving Linear Systems:** By transforming an augmented matrix into its RREF, we can directly read off the solutions, because the RREF is row equivalent to the original matrix and thus has the same solution set.
+	    *   **Finding Matrix Inverse:** A square matrix $A$ is invertible if and only if it is row equivalent to the identity matrix $I$.
+	    *   **Basis for Subspaces:** Row operations are used to find bases for the row space, column space, and null space of a matrix.
+	
+	*   **Example:**
+	    Consider matrix $A = \begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$.
+	    We can perform the elementary row operation $R_2 - 2R_1 \to R_2$:
+	    $$
+	    \begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix} \xrightarrow{R_2 - 2R_1 \to R_2} \begin{bmatrix} 1 & 2 \\ 0 & 0 \end{bmatrix}
+	    $$
+	    Thus, $A \sim \begin{bmatrix} 1 & 2 \\ 0 & 0 \end{bmatrix}$. These two matrices are row equivalent.
+	
