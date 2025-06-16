@@ -29,10 +29,10 @@
 	* For $A,B\in \mathbb R^{n\times m}$:$$(A+B)_{ij}=a_{ij}+b_{ij}$$
 *   **Matrix Multiplication**
 	* For $A\in\mathbb R^{m\times n},B\in\mathbb R^{n\times k},C=AB\in\mathbb R^{m\times k}$:$$c_{ij}=\sum_{l=1}^na_{il}b_{lj}$$
-	* **Multiplication is only defined if the inner dimensions match:  $$A_{m\times n}B_{n\times k}$$
-	* **Elementwise multiplication** is called the **Hadamard product: $$(A\circ B)_{ij}=a_{ij}b_{ij}$$
-	* **Identity matrix: $$l_n=\begin{pmatrix}1 & 0 & \cdots & 0 \\ 0 & 1 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & 1\end{pmatrix}\in \mathbb R^{n\times n}$$
-	* **Multiplicative identity:$$I_nA=AI_n=A\in \mathbb R^{m\times n}$$
+	* **Multiplication is only defined if the inner dimensions match:**  $$A_{m\times n}B_{n\times k}$$
+	* **Elementwise multiplication** is called the **Hadamard product:** $$(A\circ B)_{ij}=a_{ij}b_{ij}$$
+	* **Identity matrix:** $$l_n=\begin{pmatrix}1 & 0 & \cdots & 0 \\ 0 & 1 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & 1\end{pmatrix}\in \mathbb R^{n\times n}$$
+	* **Multiplicative identity:**$$I_nA=AI_n=A\in \mathbb R^{m\times n}$$
 	* **Algebraic properties:**
 		* Associativity: $(AB)C=A(BC)$
 		* Distributivity: $(A+B)C=AC+BC,A(C+D)=AC+AD$
