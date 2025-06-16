@@ -4,7 +4,7 @@
 
 # Lecture 1: Linear Algebra: Systems of Linear Equations, Matrices, Vector Spaces, Linear Independence
 
-## Part I
+## Part I: Concept
 
 *   **Vector:**
     Objects that can be added together and scaled (multiplied by scalars). These operations must satisfy certain axioms (e.g., commutativity of addition, distributivity of scalar multiplication over vector addition).
@@ -24,7 +24,8 @@
 
 	* **could be written as:** $Wx=b$
 
-## Part II
+## Part II: Matrix Operation
+
 *   **Matrix Addition:**
 	* For $A,B\in \mathbb R^{n\times m}$:$$(A+B)_{ij}=a_{ij}+b_{ij}$$
 *   **Matrix Multiplication**
@@ -152,5 +153,39 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 	        *   `rank(A) + nullity(A) = 2 + 2 = 4`. This matches the number of columns $n=4$.
 	        *   `nullity(A) = n - rank(A) \implies 2 = 4 - 2`. This also holds perfectly true.
 	    *   This example perfectly illustrates the Rank-Nullity Theorem.
+
+* **Elementary Row Transformations (Elementary Row Operations)**
+	*   **Definition:**
+	    Elementary row transformations are a set of operations that can be performed on the rows of a matrix. These operations are crucial because they transform a matrix into an equivalent matrix (meaning they preserve the solution set of the corresponding linear system, and the row space, column space dimension, and null space of the matrix).
 	
-	---
+	*   **Types of Elementary Row Transformations:**
+	    There are three fundamental types of elementary row transformations:
+	
+	    1.  **Row Swap (Interchange Two Rows):**
+	        *   **Description:** Exchange the positions of two rows.
+	        *   **Notation:** $R_i \leftrightarrow R_j$ (swap Row $i$ with Row $j$)
+	        *   **Example:**
+	        $$ \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{bmatrix} \xrightarrow{R_1 \leftrightarrow R_2} \begin{bmatrix} 4 & 5 & 6 \\ 1 & 2 & 3 \\ 7 & 8 & 9 \end{bmatrix}
+	            $$
+	
+	    2.  **Row Scaling (Multiply a Row by a Non-zero Scalar):**
+	        *   **Description:** Multiply all entries in a row by a non-zero constant scalar.
+	        *   **Notation:** $k R_i \to R_i$ (multiply Row $i$ by scalar $k$, where $k \neq 0$)
+	        *   **Example:**
+	        $$ \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{bmatrix} \xrightarrow{2R_1 \to R_1} \begin{bmatrix} 2 & 4 & 6 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{bmatrix}
+	            $$
+	
+	    3.  **Row Addition (Add a Multiple of One Row to Another Row):**
+	        *   **Description:** Add a scalar multiple of one row to another row. The row being added to is replaced by the result.
+	        *   **Notation:** $R_i + k R_j \to R_i$ (add $k$ times Row $j$ to Row $i$, and replace Row $i$)
+	        *   **Example:**
+	            $$
+	            \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{bmatrix} \xrightarrow{R_2 - 4R_1 \to R_2} \begin{bmatrix} 1 & 2 & 3 \\ 0 & -3 & -6 \\ 7 & 8 & 9 \end{bmatrix}
+	            $$
+	
+	*   **Purpose and Importance:**
+	    *   **Solving Linear Systems:** Elementary row transformations are the foundation of **Gaussian elimination** and **Gauss-Jordan elimination**, which are algorithms used to solve systems of linear equations by transforming the augmented matrix into row echelon form or reduced row echelon form.
+	    *   **Finding Matrix Inverse:** They can be used to find the inverse of a square matrix.
+	    *   **Determining Rank:** They help in finding the rank of a matrix (number of pivots/non-zero rows in REF/RREF).
+	    *   **Finding Null Space Basis:** They are essential for transforming the matrix to RREF to identify free variables and determine the basis for the null space.
+	    *   **Equivalence:** Two matrices are **row equivalent** if one can be transformed into the other using a sequence of elementary row transformations. Row equivalent matrices have the same row space, null space, and therefore the same rank.
