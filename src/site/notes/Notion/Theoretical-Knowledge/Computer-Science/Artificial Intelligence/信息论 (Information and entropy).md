@@ -325,6 +325,7 @@ Some objects for which codes may be needed include:
 *   **1的补码 (1’s Complement)**:
     *   **用途**: 有符号整数。
     *   **特性**: n比特表示 -(2^(n-1) − 1) 到 2^(n-1) − 1。MSB为0表示正；负数通过对应正数每位取反得到。不常用且不便，存在+0和-0两种表示。
+    [[Notion/Theoretical-Knowledge/Computer-Science/Artificial Intelligence/Concept/原码、补码与反码  (Sign-Magnitude Representation, One's Complement and Two's Complement)\|原码、补码与反码  (Sign-Magnitude Representation, One's Complement and Two's Complement)]]
 
 ## 2.7 Detail: The Genetic Code (遗传密码的详细说明)
 
