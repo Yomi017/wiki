@@ -41,8 +41,7 @@ $$\begin{aligned}
     *   **Notation:** It is typically written as `[A | b]`, where the vertical line separates the coefficient matrix from the constant vector.
     *   **Structure:**
         If $A$ is an $m \times n$ matrix and $b$ is an $m \times 1$ column vector, then the augmented matrix `[A | b]` is an $m \times (n+1)$ matrix.
-        $$
-        [A | b] = \begin{bmatrix}
+    $$[A | b] = \begin{bmatrix}
         a_{11} & a_{12} & \cdots & a_{1n} & \bigm| & b_1 \\
         a_{21} & a_{22} & \cdots & a_{2n} & \bigm| & b_2 \\
         \vdots & \vdots & \ddots & \vdots & \bigm| & \vdots \\
