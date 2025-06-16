@@ -20,10 +20,9 @@
 	*   **No solution (inconsistent)**
 	*   **Exactly one solution (unique)**
 	*   **Infinity solutions (underdetermined)**
-*   **Matrix Notation:**
-![Pasted image 20250616183101.png](/img/user/Pasted%20image%2020250616183101.png)
+*   **Matrix Notation:**![Pasted image 20250616183101.png](/img/user/Pasted%20image%2020250616183101.png)
     A system of linear equations can be compactly represented using matrix multiplication. For a system of $m$ linear equations in $n$ unknowns:
-$$\begin{aligned}
+    $$\begin{aligned}
     a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n &= b_1 \\
     a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n &= b_2 \\
     \vdots \\
@@ -224,6 +223,7 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
     0 & \mathbf{1} & 0 & -2 & \bigm| & 7 \\
     0 & 0 & 0 & 0 & \bigm| & a+1
     \end{bmatrix}$$
+    
 		* If and only if $a=-1$ , it is sovlable.
 		*  **What does the row `[0 0 0 0 | 0]` mean?**
 		    *   A row of all zeros, including the constant term, means that the original equation corresponding to this row was a **linear combination of other equations** in the system. In other words, this equation was redundant and provides no new information about the variables.
