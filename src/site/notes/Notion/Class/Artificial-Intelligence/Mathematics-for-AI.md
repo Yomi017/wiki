@@ -214,6 +214,6 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 	*   **Purpose and Importance:**
 	    *   **Solving Linear Systems:** Elementary row transformations are the foundation of **Gaussian elimination** and **Gauss-Jordan elimination**, which are algorithms used to solve systems of linear equations by transforming the augmented matrix into row echelon form or reduced row echelon form.
 	    *   **Finding Matrix Inverse:** They can be used to find the inverse of a square matrix.
-	    *   **Determining Rank:** They help in finding the rank of a matrix (number of pivots/non-zero rows in REF/RREF).
+	    *   **Determining Rank:** They help in finding the rank of a matrix (number of pivots/non-zero rows in REF/RREF [[Notion/Class/Concept/REF, RREF\|REF, RREF]]).
 	    *   **Finding Null Space Basis:** They are essential for transforming the matrix to RREF to identify free variables and determine the basis for the null space.
 	    *   **Equivalence:** Two matrices are **row equivalent** if one can be transformed into the other using a sequence of elementary row transformations. Row equivalent matrices have the same row space, null space, and therefore the same rank.
