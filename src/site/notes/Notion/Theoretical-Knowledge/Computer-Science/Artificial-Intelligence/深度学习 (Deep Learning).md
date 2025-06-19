@@ -419,8 +419,6 @@ CNN的典型架构通常由三种主要类型的层构成：**卷积层 (Convolu
 **计算 (Computation):**
 卷积核在输入图像上滑动，每到一个位置，就将其权重与对应的输入像素值进行**逐元素相乘再求和**，最后加上一个偏置项。这个结果会经过一个激活函数（通常是 **ReLU**），形成输出特征图中的一个像素。
 
-![[Image/Computer-Science/Deep Learning/CNN_Convolution.gif\|Image/Computer-Science/Deep Learning/CNN_Convolution.gif]] (此为示意，您可以替换为自己的动图)
-
 ---
 
 #### 2.2.2 池化层 (Pooling Layer)
@@ -446,8 +444,6 @@ CNN的典型架构通常由三种主要类型的层构成：**卷积层 (Convolu
 *   **步长 (Stride):** 池化窗口滑动的步长，通常设置为与窗口大小相同（如`2`），以确保窗口不重叠。
 
 **注意**: 池化层**没有可学习的参数**（权重和偏置），它只是一个固定的下采样操作。
-
-![[Image/Computer--Science/Deep-Learning/CNN_Pooling.png\|Image/Computer--Science/Deep-Learning/CNN_Pooling.png]]
 
 ---
 
