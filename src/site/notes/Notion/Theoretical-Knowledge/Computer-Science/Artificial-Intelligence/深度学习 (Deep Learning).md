@@ -2,7 +2,8 @@
 {"dg-publish":true,"permalink":"/notion/theoretical-knowledge/computer-science/artificial-intelligence/deep-learning/"}
 ---
 
-### 1. 神经网络 (Neural Network)
+# 1. 深度神经网络 (DNN)
+### 1.1 神经网络 (Neural Network)
 
 **Video:** https://www.bilibili.com/video/BV1bx411M7Zx/?spm_id_from=333.337.search-card.all.click&vd_source=32e3f9ea159201343145d8b8f8b9eb02
 
@@ -95,7 +96,7 @@
 
 数据从输入层开始，依次通过隐藏层，最后到达输出层，得到最终的预测结果。这个过程称为前向传播。
 
-### 2. 代价函数 (Cost Function / 损失函数 Loss Function)
+### 1.2 代价函数 (Cost Function / 损失函数 Loss Function)
 
 **引言 (Introduction):**
 在定义了神经网络的结构之后（即模型如何从输入 $x$ 得到预测输出 $\hat{y}$），我们需要一种方法来**衡量模型的预测结果有多好或多差**。这个衡量标准就是**代价函数 (Cost Function)**，有时也称为**损失函数 (Loss Function)** 或目标函数 (Objective Function)。代价函数量化了模型预测值与真实目标值之间的差异。**我们的目标是通过调整神经网络的参数（权重 $w$ 和偏置 $b$）来最小化这个代价函数。**
@@ -153,7 +154,7 @@
 **总结 (Summary):**
 代价函数是连接模型预测与模型优化的桥梁。它告诉我们模型当前表现如何，并通过其梯度告诉我们应该如何调整参数以改进模型。整个训练过程的核心目标就是找到一组参数 $\theta$ 使得代价函数 $J(\theta)$ 最小化。
 
-### 3. 梯度下降 (Gradient Descent)
+### 1.3 梯度下降 (Gradient Descent)
 
 **Video:** https://www.bilibili.com/video/BV1bx411M7Zx/?spm_id_from=333.337.search-card.all.click&vd_source=32e3f9ea159201343145d8b8f8b9eb02
 
@@ -239,7 +240,7 @@ Mini-batch 梯度下降是实际训练神经网络时非常关键和常用的技
 
 ---
 
-#### 2.1. Mini-batch 梯度下降 (Mini-batch Gradient Descent)
+#### 1.3.1 Mini-batch 梯度下降 (Mini-batch Gradient Descent)
 
 **引言 (Introduction):**
 在前面讨论的“基础梯度下降”中，我们提到计算梯度是基于整个训练数据集的（这通常被称为**批量梯度下降 Batch Gradient Descent**）。当训练数据集非常庞大时，每次迭代都对所有数据计算梯度会导致计算成本极高，训练速度缓慢。另一方面，如果我们极端一些，每次只用一个样本来计算梯度并更新参数（这被称为**随机梯度下降 Stochastic Gradient Descent, SGD**），虽然更新快，但梯度估计的方差很大，可能导致收敛过程非常震荡。**Mini-batch 梯度下降 (Mini-batch Gradient Descent)** 是一种非常实用且广泛应用的折衷方案，它试图平衡计算效率和梯度估计的稳定性。
@@ -313,7 +314,7 @@ Mini-batch 梯度下降是实际训练神经网络时非常关键和常用的技
 
 通过使用 Mini-batch 梯度下降，我们能够在大型数据集上以可接受的计算成本和时间高效地训练复杂的神经网络模型，同时还能从梯度的适度噪声中获益。
 
-### 4. 反向传播 (Backpropagation)
+### 1.4 反向传播 (Backpropagation)
 
 **Video:** https://www.bilibili.com/video/BV16x411V7Qg/?spm_id_from=333.788.recommend_more_video.-1&vd_source=32e3f9ea159201343145d8b8f8b9eb02
 
@@ -371,3 +372,116 @@ Mini-batch 梯度下降是实际训练神经网络时非常关键和常用的技
                 *   写成向量形式：$\frac{\partial J}{\partial b^{(l)}} = \delta^{(l)}$
             *   (注意: 如果是处理一批样本 (mini-batch)，上面的梯度通常是该批次样本梯度的平均值或总和。)
 
+## 2. 卷积神经网络 (CNN)
+
+### 2.1 卷积神经网络简介 (Introduction to CNN)
+
+**引言 (Introduction):**
+在处理图像、视频等具有空间结构的数据时，传统的深度神经网络（DNN，特指全连接网络）会遇到两个主要问题：**1) 参数数量爆炸**，导致模型巨大且难以训练；**2) 丢失空间信息**，因为它将输入的图像“压平”成一维向量。**卷积神经网络 (Convolutional Neural Network, CNN)** 是一种特殊类型的深度神经网络，它通过引入**卷积层 (Convolutional Layer)** 和**池化层 (Pooling Layer)** 来专门解决这些问题。CNN能够高效地从图像中提取空间层次的特征（从边缘、角点到物体的部分，再到整个物体），使其在计算机视觉领域取得了巨大成功。
+
+---
+
+### 2.2 CNN核心组件 (Core Components of CNN)
+
+CNN的典型架构通常由三种主要类型的层构成：**卷积层 (Convolutional Layer)**, **池化层 (Pooling Layer)**, 和**全连接层 (Fully Connected Layer)**。
+
+#### 2.2.1 卷积层 (Convolutional Layer)
+
+**作用 (Purpose):**
+卷积层是CNN的核心，其主要作用是通过**卷积操作 (Convolution Operation)** 从输入数据（通常是图像或前一层的特征图）中提取局部特征。
+
+**核心思想 (Core Ideas):**
+
+1.  **局部感受野 (Local Receptive Fields):**
+    *   卷积层中的每个神经元只与输入的一个小区域（局部感受野）相连接，而不是像全连接层那样连接到所有输入。这符合图像处理的直觉：一个像素的含义主要由其周围的像素决定。
+
+2.  **权值共享 (Weight Sharing):**
+    *   一个卷积核（或称为滤波器, Filter）在整个输入图像上滑动，它使用**同一组权重**来检测图像不同位置的同一个特征（例如，一个用于检测垂直边缘的卷积核，在图像的左上角和右下角都使用相同的权重）。
+    *   **优点**:
+        *   **大幅减少参数数量**: 一个`5x5`的卷积核，无论输入图像多大，都只有`5*5+1=26`个参数（+1是偏置）。
+        *   **平移不变性 (Translation Invariance)**: 即使物体在图像中的位置发生变化，由于使用了相同的卷积核，模型仍然能够识别出该特征。
+
+**关键参数 (Key Parameters):**
+
+*   **卷积核/滤波器 (Kernels / Filters):**
+    *   一个小型的权重矩阵（例如 `3x3`, `5x5`）。每个卷积核负责学习并检测一种特定的局部特征（如边缘、颜色、纹理等）。
+    *   一个卷积层通常包含多个卷积核，以学习多种不同的特征。
+*   **深度 (Depth) / 通道数 (Channels):**
+    *   输出特征图的数量，等于该卷积层中使用的卷积核的数量。
+*   **步长 (Stride):**
+    *   卷积核每次滑动的像素距离。步长为1表示逐像素滑动，步长为2表示每次跳过一个像素。较大的步长会减小输出特征图的尺寸。
+*   **填充 (Padding):**
+    *   在输入图像的边界周围添加额外的像素（通常是0）。
+    *   **作用**:
+        *   **保持边界信息**: 如果没有填充，边界像素被卷积核扫描的次数会少于中心像素，导致信息丢失。
+        *   **控制输出尺寸**: 使用适当的填充（如"Same" Padding）可以使输出特征图的尺寸与输入特征图保持一致。
+
+**计算 (Computation):**
+卷积核在输入图像上滑动，每到一个位置，就将其权重与对应的输入像素值进行**逐元素相乘再求和**，最后加上一个偏置项。这个结果会经过一个激活函数（通常是 **ReLU**），形成输出特征图中的一个像素。
+
+![[Image/Computer-Science/Deep Learning/CNN_Convolution.gif\|Image/Computer-Science/Deep Learning/CNN_Convolution.gif]] (此为示意，您可以替换为自己的动图)
+
+---
+
+#### 2.2.2 池化层 (Pooling Layer)
+
+**作用 (Purpose):**
+池化层（也称为下采样层, Subsampling Layer）通常紧跟在卷积层之后，其主要作用是**减小特征图的空间尺寸（宽度和高度）**，从而：
+1.  **减少计算量和参数数量**，降低后续层的计算复杂度。
+2.  **增强模型的平移不变性**，使得模型对特征的微小位置变化不那么敏感，更具鲁棒性。
+3.  **增大感受野**，让后续的卷积层能看到更广阔的原始输入区域。
+
+**常见类型 (Common Types):**
+
+*   **最大池化 (Max Pooling):**
+    *   **计算**: 在一个窗口（如`2x2`）内，只保留该窗口中的最大值作为输出。这是最常用的池化方法。
+    *   **特点**: 倾向于保留最显著的特征（最强的激活信号）。
+*   **平均池化 (Average Pooling):**
+    *   **计算**: 计算窗口内所有值的平均值作为输出。
+    *   **特点**: 保留了窗口内的整体背景信息。
+
+**关键参数 (Key Parameters):**
+
+*   **窗口大小 (Filter/Window Size):** 池化操作的区域大小，常用 `2x2`。
+*   **步长 (Stride):** 池化窗口滑动的步长，通常设置为与窗口大小相同（如`2`），以确保窗口不重叠。
+
+**注意**: 池化层**没有可学习的参数**（权重和偏置），它只是一个固定的下采样操作。
+
+![[Image/Computer--Science/Deep-Learning/CNN_Pooling.png\|Image/Computer--Science/Deep-Learning/CNN_Pooling.png]]
+
+---
+
+#### 2.2.3 全连接层 (Fully Connected Layer)
+
+**作用 (Purpose):**
+在经过多个卷积层和池化层的特征提取后，我们得到了一组高度抽象的特征图。全连接层的作用是将这些二维的特征图**“压平”成一维向量**，并像传统的DNN一样，对这些高级特征进行最终的**分类或回归**。
+
+**计算 (Computation):**
+1.  **展平 (Flatten):** 将最后一个池化层的输出（一个三维张量 `height x width x channels`）展平成一个长长的一维向量。
+2.  **全连接**: 将这个一维向量送入一个或多个全连接层。在这些层中，每个神经元都与前一层的所有神经元相连接，进行加权求和并通过激活函数，最终连接到输出层。
+3.  **输出层**: 输出层的设计与DNN完全相同，根据任务类型（分类或回归）选择合适的神经元数量和激活函数（如 **Softmax** 用于多分类）。
+
+---
+
+### 2.3 经典CNN架构 (Classic CNN Architectures)
+
+一个典型的CNN架构通常遵循以下模式：
+`INPUT -> [[CONV -> RELU] * N -> POOL?] * M -> [FC -> RELU] * K -> FC`
+
+*   `[CONV -> RELU]`：一个卷积层后接一个ReLU激活函数。
+*   `POOL?`：一个可选的池化层。
+*   `*N`, `*M`, `*K`：表示这些模块可以重复多次。
+*   `FC`：全连接层。
+
+**示例：LeNet-5**
+这是最早成功应用的CNN之一，用于手写数字识别。
+`INPUT -> CONV1 -> POOL1 -> CONV2 -> POOL2 -> FC3 -> FC4 -> OUTPUT`
+
+**示例：AlexNet**
+在2012年ImageNet竞赛中取得突破性成果，标志着深度学习时代的到来。它比LeNet更深更宽，并首次使用了ReLU激活函数和Dropout。
+
+**示例：VGGNet**
+探索了网络深度的影响，其特点是使用非常小的`3x3`卷积核堆叠来代替大的卷积核，结构非常规整。
+
+**示例：[[Notion/Theoretical-Knowledge/Computer-Science/Artificial-Intelligence/Concept/残差学习 (ResNet)\|残差学习 (ResNet)]] (Residual Network)**
+通过引入**残差块 (Residual Block)** 和**快捷连接 (Shortcut Connection)**，成功解决了深度网络中的“网络退化”问题，使得训练数百甚至上千层的网络成为可能。这是现代CNN架构的基石。

@@ -4,6 +4,14 @@
 
 # 1. 基本操作
 
+## 1.0 Tool
+```
+dir(package) # list all in this package (e.g. dir(p): 1, 2, 3)
+dir(package.x) # list all in x, which is a part of package (e.g. dir(p.3): a, b)
+# if the list like: __xxx__, __yyy__, it mean that the package.x is a function
+help(package.x) # tell how to use this function or package
+```
+
 ## 1.1 Load Data
 ```
 torch.utils.data.Dataset & torch.utils.data.DataLoader
@@ -31,3 +39,5 @@ class MyDataset(Dataset):
 	def __len__(self):
 		return len(self.data)       # Returns the size of the dataset
 ```
+
+## 1.2
