@@ -530,22 +530,377 @@ writer.close()
 print("\nAll data logged (or attempted). Writer closed.")
 ```
 
-**启动 TensorBoard 查看结果**
+### 1.3.3 TensorBoard 工作流与实时监控
 
-1.  打开你的终端或命令行。
-2.  导航到包含 `runs` 目录（或其他你指定的 `log_dir`）的父目录。
-3.  运行命令:
+理解 TensorBoard 的关键在于，它是一个独立的、基于 Web 的可视化工具，与你的 Python 训练脚本通过日志文件进行解耦。
+
+#### 核心工作流程 (Core Workflow)
+
+整个过程分为三个独立但相互关联的步骤：
+
+1.  **在 Python 脚本中记录 (Record in Python)**
+    *   **做什么**: 在你的训练代码中，使用 `SummaryWriter` 将需要监控的指标（如 `loss`, `accuracy`）在每个训练步骤（epoch 或 batch）中写入到指定的日志目录（如 `runs/`）。
+    *   **关键代码**: `writer.add_scalar('tag', value, step)`
+
+2.  **在终端中启动服务 (Launch Service in Terminal)**
+    *   **做什么**: 打开一个**独立的终端窗口**，运行 `tensorboard` 命令，并指向你的日志目录。这将启动一个本地 Web 服务器。
+    *   **关键命令**:
+        ```bash
+        # 确保你的终端位于能看到 runs 目录的位置
+        tensorboard --logdir=runs
+        ```
+
+3.  **在浏览器中查看 (View in Browser)**
+    *   **做什么**: 复制终端中显示的 URL (通常是 `http://localhost:6006`)，在浏览器中打开它，即可看到可视化的图表。
+
+#### 如何实现“边训练边查看” (Live Monitoring)
+
+TensorBoard 最强大的功能之一就是实时监控。这是通过并行处理实现的：
+
+1.  **终端 1: 运行训练脚本**
+    ```bash
+    python your_training_script.py
+    ```
+    这个脚本开始运行，并持续地向 `runs/` 目录下的日志文件中追加新的数据点。
+
+2.  **终端 2: 运行 TensorBoard 服务**
     ```bash
     tensorboard --logdir=runs
     ```
-    或者，如果你指定了不同的 `log_dir`，例如 `SummaryWriter('my_custom_logs')`，则运行：
-    ```bash
-    tensorboard --logdir=my_custom_logs
-    ```
-4.  TensorBoard 会输出一个 URL，通常是 `http://localhost:6006`。在你的浏览器中打开这个 URL 即可查看可视化界面。
+    这个服务在后台持续运行，它会定时检查日志文件是否有更新。
+
+3.  **浏览器: 刷新查看**
+    *   你可以在模型训练的**任何时候**打开或刷新浏览器中的 TensorBoard 页面。
+    *   **你不需要关闭或重启任何东西。** 每当你想查看最新进展时，只需点击 TensorBoard 页面右上角的**刷新按钮**。
+    *   TensorBoard 会读取最新的日志数据，并将新产生的点绘制到图表上。你会眼看着损失曲线一点点地向右下方延伸，就像在看一场体育比赛的实时比分更新一样。
+
+#### 数据的动态获取 (How Data is Acquired Dynamically)
+
+你可能会问，`add_scalar()` 中的数值是从哪里来的？它们并非手动输入，而是从训练循环中**动态捕获**的。
+
+让我们再看一下这段核心代码：
+```python
+# ... 在训练循环内部 ...
+for epoch in range(num_epochs):
+    # 1. 模型计算，得到当前轮次的预测和损失
+    y_predicted = model(X)
+    loss = criterion(y_predicted, y)
+
+    # 2. 将当前轮次的动态值，传递给 writer
+    #    - loss.item(): 从 PyTorch 张量中提取出当前的损失值 (一个浮点数)
+    #    - epoch: 当前的训练轮数 (一个整数)
+    writer.add_scalar('Training/Loss', loss.item(), epoch)
+    writer.add_scalar('Parameters/Weight', model.weight.item(), epoch)
+
+    # ... 继续训练 ...
+```
+
+**这里的关键机制是：**
+
+*   **动态捕获 (Dynamic Capture)**: `loss` 和 `model.weight` 的值在每次迭代中都会因为模型的优化而改变。代码捕获的是**当前这一步**的瞬时值。
+*   **自动记录 (Automatic Recording)**: `writer.add_scalar()` 函数像一个忠实的记录员，将你提供的瞬时值和对应的步骤（`epoch`）打包成一个数据点，并存入日志。
+*   **迭代累积 (Iterative Accumulation)**: 随着 `for` 循环的推进，成百上千个这样的数据点被连续记录下来，最终汇集成你在 TensorBoard 中看到的平滑曲线。
+
+#### 要点回顾
+
+*   `for n_iter in range(100): loss = 0.99**n_iter ...` 这类代码只是用于演示的**模拟**。
+*   在**实际应用**中，`n_iter` 是你的 `epoch` 或 `batch` 计数器，而 `loss`, `accuracy` 等数值是你模型在当前训练步骤**真实计算**出来的结果。
+*   你只需将 `writer.add_scalar()` 嵌入到训练循环中，就能实现对模型状态的全自动、实时监控。
+
+## 1.4 Transforms
+
+`torchvision.transforms` 是一个包含常见图像转换操作的模块，这些操作对于数据预处理和数据增强至关重要。
+
+### 1.4.1 介绍 (Introduction)
+
+**为什么需要 Transforms？**
+
+1.  **数据预处理 (Preprocessing)**: 神经网络模型通常要求输入数据具有特定的格式。例如：
+    *   **类型转换**: 原始图像数据（如 PIL.Image 对象或 NumPy 数组）必须转换为 `torch.Tensor`。
+    *   **尺寸统一**: 一个批次内的所有图像通常需要有相同的尺寸。
+    *   **归一化 (Normalization)**: 将像素值调整到特定范围和分布，这有助于模型更快、更稳定地收敛。
+
+2.  **数据增强 (Data Augmentation)**:
+    *   **目的**: 通过对训练图像进行随机的、微小的改动（如旋转、翻转、裁剪、颜色抖动等），人为地增加训练数据的多样性。
+    *   **好处**: 这相当于免费扩充了训练集，可以有效**减少模型过拟合**，提高模型的泛化能力。
+    *   **注意**: 数据增强通常只在**训练集**上使用，而不在验证集和测试集上使用，以保证评估标准的一致性。
+
+### 1.4.2 Transforms 内核源码解析 (Source Code Deep Dive)
+
+要理解 `transforms` 的内核，最关键的一点是：`torchvision.transforms` 的设计采用了**类包装器 + 函数式后端**的模式。
+
+*   **类包装器 (Class Wrappers)**: 我们通常使用的 `transforms.ToTensor`, `transforms.Resize` 等是面向用户的类。它们的主要职责是**存储配置参数**（通过 `__init__`）并提供一个简单的调用接口（通过 `__call__`）。
+*   **函数式后端 (Functional Backend)**: 真正的图像处理逻辑位于 `torchvision.transforms.functional` 模块中（通常我们将其简写为 `F`）。这个模块里的函数是**无状态的**，它们接收图像和所有必要的参数，并返回处理后的图像。
+
+**这个设计的核心思想是：将“配置”与“执行”分离。**
+
+让我们通过剖析几个关键 `transform` 的源码来彻底理解这一点。
+
+---
+
+#### **深度解析 1: `transforms.ToTensor`**
+
+这是最基础也最重要的 `transform`。
+
+##### **第 1 步: 查看类包装器 `transforms.ToTensor` 的源码**
 
 ```python
-print("\nTo view results in TensorBoard, run the following command in your terminal:")
-print("tensorboard --logdir=runs")
-print("Then open http://localhost:6006 (or the URL shown in the terminal) in your browser.")
+# (这是 torchvision/transforms/transforms.py 中 ToTensor 类的简化源码)
+import torchvision.transforms.functional as F
+
+class ToTensor:
+    """Convert a PIL Image or numpy.ndarray to tensor."""
+
+    def __init__(self):
+        # 这个 transform 是无状态的，不需要任何配置，所以 init 是空的。
+        pass
+
+    def __call__(self, pic):
+        """
+        Args:
+            pic (PIL Image or numpy.ndarray): Image to be converted to tensor.
+        Returns:
+            Tensor: Converted image.
+        """
+        # __call__ 方法的核心就是调用 functional 后端的 to_tensor 函数
+        return F.to_tensor(pic)
+
+    def __repr__(self):
+        # 这是 print(transforms.ToTensor()) 时显示的字符串
+        return self.__class__.__name__ + '()'
 ```
+**源码分析**:
+*   `ToTensor` 类本身非常简单，它几乎不做任何工作。
+*   它的 `__call__` 方法只是一个“传球手”，把接到的图像 `pic` 直接传给了 `F.to_tensor` 函数。
+*   **真正的“内核”是 `F.to_tensor`。**
+
+##### **第 2 步: 剖析内核函数 `F.to_tensor`**
+
+```python
+# (这是 torchvision/transforms/functional.py 中 to_tensor 函数的简化源码)
+import torch
+import numpy as np
+from PIL import Image
+
+def to_tensor(pic):
+    """Convert a ``PIL Image`` or ``numpy.ndarray`` to tensor.
+    """
+    # 1. 输入类型检查
+    if not isinstance(pic, (Image.Image, np.ndarray)):
+        raise TypeError(f'pic should be PIL Image or ndarray. Got {type(pic)}')
+
+    # 2. 如果是 PIL Image，先转为 numpy.ndarray
+    if isinstance(pic, Image.Image):
+        # 如果是 'I' (32位整型), 'F' (32位浮点型) 等特殊模式，直接转换
+        if pic.mode in ('I', 'F'):
+             # ... 省略特殊模式处理 ...
+             pass
+        # 将 PIL Image 对象转换为 numpy 数组
+        np_img = np.array(pic, dtype=np.uint8, copy=True)
+    else: # 如果已经是 numpy.ndarray
+        np_img = pic
+
+    # --- 到这里，我们确保输入已经是一个 numpy 数组 (np_img) ---
+
+    # 3. 将 numpy 数组转换为 PyTorch Tensor
+    #    注意：此时的维度还是 HWC (Height, Width, Channel)
+    tensor = torch.from_numpy(np_img)
+
+    # 4. 核心步骤：维度重排 (HWC -> CHW)
+    #    .permute(2, 0, 1) 的意思是：
+    #    - 把原来的第2个维度(C)放到新张量的第0个位置
+    #    - 把原来的第0个维度(H)放到新张量的第1个位置
+    #    - 把原来的第1个维度(W)放到新张量的第2个位置
+    if tensor.ndim == 3: # 如果是彩色图像 (H, W, C)
+        tensor = tensor.permute(2, 0, 1).contiguous()
+    elif tensor.ndim == 2: # 如果是灰度图像 (H, W)
+        # 增加一个通道维度，变为 (1, H, W)
+        tensor = tensor.unsqueeze(0).contiguous()
+
+    # 5. 核心步骤：像素值缩放 (从 [0, 255] 缩放到 [0.0, 1.0])
+    #    检查张量是否已经是浮点型，如果不是，则进行转换和缩放
+    if not tensor.is_floating_point():
+        return tensor.float().div(255.0)
+    else:
+        # 如果已经是浮点型，则假定它已经在 [0.0, 1.0] 范围内，直接返回
+        return tensor
+```
+**内核总结**:
+`F.to_tensor` 这个“内核”函数，精确地完成了三件大事：
+1.  **统一类型**: 将所有输入（PIL Image 或 NumPy Array）统一转换成 `torch.Tensor`。
+2.  **维度重排**: 将 `(H, W, C)` 的数据布局调整为 PyTorch 卷积层所期望的 `(C, H, W)`。
+3.  **数值缩放**: 将 `[0, 255]` 的整数像素值标准化为 `[0.0, 1.0]` 的浮点数。
+
+---
+
+#### **深度解析 2: `transforms.Normalize`**
+
+这个 `transform` 演示了“有状态”的类如何与函数式后端协作。
+
+##### **第 1 步: 查看类包装器 `transforms.Normalize`**
+
+```python
+# (torchvision/transforms/transforms.py 中 Normalize 类的简化源码)
+class Normalize:
+    def __init__(self, mean, std, inplace=False):
+        # 1. __init__: 存储配置参数 (mean 和 std)
+        self.mean = mean
+        self.std = std
+        self.inplace = inplace
+
+    def __call__(self, tensor):
+        """
+        Args:
+            tensor (Tensor): Tensor image of size (C, H, W) to be normalized.
+        """
+        # 2. __call__: 调用 functional 后端，并传入存储的配置
+        return F.normalize(tensor, self.mean, self.std, self.inplace)
+```
+**源码分析**:
+*   `Normalize` 类在 `__init__` 中接收并保存了 `mean` 和 `std` 这两个重要的配置参数。
+*   在 `__call__` 中，它将待处理的 `tensor` 和自己保存的 `self.mean`, `self.std` 一起传递给内核函数 `F.normalize`。
+
+##### **第 2 步: 剖析内核函数 `F.normalize`**
+
+```python
+# (torchvision/transforms/functional.py 中 normalize 函数的简化源码)
+def normalize(tensor, mean, std, inplace=False):
+    # 1. 输入类型检查
+    if not isinstance(tensor, torch.Tensor):
+        raise TypeError('tensor is not a torch Tensor.')
+
+    # 2. 如果不是原地操作(inplace=False)，先复制一份，避免修改原始张量
+    if not inplace:
+        tensor = tensor.clone()
+
+    # 3. 将 mean 和 std 转换为与 tensor 维度匹配的张量
+    #    这是为了利用 PyTorch 的广播机制 (broadcasting)
+    #    例如，mean=[0.5, 0.5, 0.5] -> tensor([[[0.5]], [[0.5]], [[0.5]]])
+    #    这样它就可以和 (C, H, W) 的图像张量进行逐元素的减法和除法
+    dtype = tensor.dtype
+    mean = torch.as_tensor(mean, dtype=dtype, device=tensor.device)
+    std = torch.as_tensor(std, dtype=dtype, device=tensor.device)
+    # .view(-1, 1, 1) 是关键，它将 (C,) 的向量变为 (C, 1, 1) 的张量
+    mean = mean.view(-1, 1, 1)
+    std = std.view(-1, 1, 1)
+
+    # 4. 执行归一化数学运算: tensor = (tensor - mean) / std
+    tensor.sub_(mean).div_(std) # sub_ 和 div_ 是原地操作(in-place)
+
+    return tensor
+```
+**内核总结**:
+`F.normalize` 的核心是利用 PyTorch 的张量运算和广播机制高效地完成数学计算。它通过 `view` 方法巧妙地解决了 `mean/std` 向量和图像张量之间的维度匹配问题。
+
+---
+
+#### **深度解析 3: `transforms.Compose`**
+
+`Compose` 是一个特殊的 `transform`，它本身不处理图像，而是将其他 `transform` 串联起来。它的实现非常优雅。
+
+```python
+# (torchvision/transforms/transforms.py 中 Compose 类的简化源码)
+class Compose:
+    def __init__(self, transforms):
+        # __init__: 接收一个 transform 实例的列表并保存
+        self.transforms = transforms
+
+    def __call__(self, img):
+        # __call__: 遍历列表，将上一个 transform 的输出作为下一个的输入
+        for t in self.transforms:
+            img = t(img)
+        return img
+```
+**源码分析**:
+`Compose` 的实现简洁明了。它的 `__call__` 方法就是一个简单的 for 循环，完美地实现了“管道式”的处理流程。
+
+### 结论
+
+通过深入源码，我们可以清晰地看到 `torchvision.transforms` 的设计哲学：
+1.  **职责分离**: 用户交互的**类**负责存储配置，而核心逻辑的**函数**负责执行计算。
+2.  **原子操作**: `functional` 模块中的函数都是原子化的、无状态的，易于测试和复用。
+3.  **优雅组合**: `Compose` 提供了一个简单而强大的机制，可以将任意原子操作组合成复杂的处理流水线。
+
+### 1.4.3 常用 Transforms 函数及用法
+
+`torchvision.transforms` 提供了丰富的预定义转换。下面是一些最常用的：
+
+#### 1. 尺寸变换 (Sizing)
+
+*   `transforms.Resize(size)`: 将输入图像的尺寸调整为 `size`。如果 `size` 是一个整数，则图像的短边会被缩放到该尺寸，长边按比例缩放。如果 `size` 是一个元组 `(h, w)`，则图像会被直接调整到该高和宽。
+*   `transforms.CenterCrop(size)`: 以图像中心为原点，裁剪出 `size` 大小的区域。
+*   `transforms.RandomCrop(size, padding=None, ...)`: 从图像的随机位置裁剪出 `size` 大小的区域。常用于数据增强。
+
+#### 2. 翻转与旋转 (Flipping & Rotation)
+
+*   `transforms.RandomHorizontalFlip(p=0.5)`: 以概率 `p` (默认为 50%) 水平翻转图像。
+*   `transforms.RandomVerticalFlip(p=0.5)`: 以概率 `p` 垂直翻转图像。
+*   `transforms.RandomRotation(degrees, ...)`: 在 `(-degrees, +degrees)` 范围内随机旋转图像。
+
+#### 3. 类型转换与归一化 (Type Conversion & Normalization)
+
+*   `transforms.ToTensor()`: **核心中的核心**。它执行三个操作：
+    1.  将输入的 `PIL.Image` 或 `numpy.ndarray` 转换为 `torch.Tensor`。
+    2.  将维度顺序从 **HWC** (Height, Width, Channel) 调整为 **CHW** (Channel, Height, Width)。
+    3.  将像素值从 `[0, 255]` 的整数范围，按比例缩放到 `[0.0, 1.0]` 的浮点数范围。
+*   `transforms.Normalize(mean, std)`: 对一个 **CHW** 格式的 Tensor 进行归一化。公式为 `output[channel] = (input[channel] - mean[channel]) / std[channel]`。`mean` 和 `std` 都是对应通道数的序列（如 3 通道图像的 `[r_mean, g_mean, b_mean]`）。
+    *   **常用值 (ImageNet)**: `mean=[0.485, 0.456, 0.406]`, `std=[0.229, 0.224, 0.225]`
+
+#### 4. 组合多个 Transforms
+
+在实际应用中，我们需要将多个操作串联起来。`transforms.Compose` 就是用来做这件事的。
+
+*   `transforms.Compose([transform_1, transform_2, ...])`: 它接收一个由 transform 实例组成的列表。当对图像应用这个 `Compose` 对象时，它会按照列表中的顺序，依次执行每一个 transform。
+
+#### 5. 在 Dataset 中使用
+
+这是 `transforms` 最典型的应用场景：将定义好的转换流程传递给 `Dataset`。
+
+```python
+from torchvision import transforms
+from torch.utils.data import Dataset, DataLoader
+
+# 1. 定义一个用于训练的转换流程 (包含数据增强)
+train_transforms = transforms.Compose([
+    transforms.Resize(256),
+    transforms.RandomCrop(224),
+    transforms.RandomHorizontalFlip(),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+
+# 2. 定义一个用于验证/测试的转换流程 (无数据增强)
+test_transforms = transforms.Compose([
+    transforms.Resize(224), # 或者 Resize(256) + CenterCrop(224)
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+
+
+# 3. 将 transform 传递给 Dataset 实例
+# (这里使用一个伪代码的 MyImageDataset)
+class MyImageDataset(Dataset):
+    def __init__(self, file_list, transform=None):
+        self.files = file_list
+        self.transform = transform
+
+    def __getitem__(self, index):
+        # 伪代码: 加载图像
+        image = Image.open(self.files[index]).convert("RGB")
+        if self.transform:
+            image = self.transform(image) # <-- 在这里应用
+        return image, 0 # 返回图像和标签
+
+    def __len__(self):
+        return len(self.files)
+
+# 实例化 Dataset
+# train_dataset = MyImageDataset(train_files, transform=train_transforms)
+# test_dataset = MyImageDataset(test_files, transform=test_transforms)
+
+# 4. 创建 DataLoader
+# train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+# test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+```
+
+这样，`DataLoader` 在每次从 `Dataset` 中取出一个样本时，都会自动地、高效地应用你所定义的 `transforms` 流程。
