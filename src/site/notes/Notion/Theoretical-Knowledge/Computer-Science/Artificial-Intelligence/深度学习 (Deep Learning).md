@@ -406,7 +406,7 @@ CNN的典型架构通常由三种主要类型的层构成：**卷积层 (Convolu
 *   **卷积核/滤波器 (Kernels / Filters):**
     *   一个小型的权重矩阵（例如 `3x3`, `5x5`）。每个卷积核负责学习并检测一种特定的局部特征（如边缘、颜色、纹理等）。
     *   一个卷积层通常包含多个卷积核，以学习多种不同的特征。
-*   **深度 (Depth) / 通道数 (Channels):**
+*   **深度 (Depth) / 通道数 (Channels) [[Notion/Theoretical-Knowledge/Computer-Science/Artificial-Intelligence/Concept/通道 (Channel)\|通道 (Channel)]]:**
     *   输出特征图的数量，等于该卷积层中使用的卷积核的数量。
 *   **步长 (Stride):**
     *   卷积核每次滑动的像素距离。步长为1表示逐像素滑动，步长为2表示每次跳过一个像素。较大的步长会减小输出特征图的尺寸。
