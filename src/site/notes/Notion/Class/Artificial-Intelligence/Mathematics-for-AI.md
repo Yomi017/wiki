@@ -463,7 +463,7 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 
 # Lecture 2: Linear Algebra: Basis and Rank, Linear Mappings, Affine Spaces
 
-## Basis and Rank
+## Part I: Basis and Rank
 
 *   **Generating Set (or Spanning Set)**
     *   **Definition:** A set of vectors $S$ is called a **generating set** for a vector space $V$ if $\text{Span}(S) = V$.
@@ -534,3 +534,23 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
     4.  The **number of pivots** is the **rank** of the matrix $A$.
     5.  This rank is also the **dimension** of the subspace spanned by the original vectors.
     6.  The **original vectors** corresponding to the **pivot columns** form a **basis** for that subspace.
+
+## Part II: Linear Mappings
+
+*   **Linear Mappings (Linear Transformations)**
+    *   **Definition:** A mapping (or function) $\Phi: V \to W$ from a vector space $V$ to a vector space $W$ is called **linear** if it preserves the two fundamental vector space operations:
+        1.  **Additivity:** $\Phi(\mathbf{x} + \mathbf{y}) = \Phi(\mathbf{x}) + \Phi(\mathbf{y})$ for all $\mathbf{x}, \mathbf{y} \in V$.
+        2.  **Homogeneity:** $\Phi(\lambda\mathbf{x}) = \lambda\Phi(\mathbf{x})$ for any scalar $\lambda$.
+    *   **Matrix Representation:** Any linear mapping between finite-dimensional vector spaces can be represented by matrix multiplication: $\Phi(\mathbf{x}) = A\mathbf{x}$ for some matrix $A$.
+
+*   **Properties of Mappings: Injective, Surjective, Bijective**
+    *   **Injective (One-to-one):** A mapping is injective if distinct inputs always map to distinct outputs. Formally, if $\Phi(\mathbf{x}) = \Phi(\mathbf{y})$, then it must be that $\mathbf{x} = \mathbf{y}$.
+    *   **Surjective (Onto):** A mapping is surjective if its range is equal to its codomain. This means every element in the target space $W$ is the image of at least one element from the starting space $V$.
+    *   **Bijective:** A mapping is bijective if it is **both injective and surjective**. A bijective mapping has a unique inverse mapping, denoted $\Phi^{-1}$.
+
+*   **Special Types of Linear Mappings**
+    *   **Homomorphism:** For vector spaces, a homomorphism is simply another term for a **linear mapping**. It's a map that preserves the algebraic structure (addition and scalar multiplication).
+    *   **Isomorphism:** A linear mapping that is also **bijective**. Isomorphic vector spaces are structurally identical, just with potentially different-looking elements.
+    *   **Endomorphism:** A linear mapping from a vector space **to itself** ($\Phi: V \to V$). It does not need to be invertible.
+    *   **Automorphism:** An endomorphism that is also **bijective**. It is an isomorphism from a vector space to itself (e.g., a rotation or reflection).
+    *   **Identity Mapping:** The map defined by $\text{id}(\mathbf{x}) = \mathbf{x}$. It leaves every vector unchanged and is the simplest example of an automorphism.
