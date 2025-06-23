@@ -584,56 +584,51 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 
 ## Part III: Basis Change and Transformation Matrices
 
-This section explains how to represent abstract linear mappings and changes of coordinate systems using concrete matrices.
+This section covers the representation of abstract linear mappings as matrices and the mechanics of changing coordinate systems.
 
 ### 1. The Transformation Matrix for a Linear Map
 
-This matrix allows us to compute the result of a linear mapping by performing a simple matrix multiplication on coordinate vectors.
+A transformation matrix provides a concrete computational representation for an abstract linear mapping, relative to chosen bases.
 
-*   **Setup:**
-    *   A linear mapping $\Phi: V \to W$.
-    *   An ordered basis $B = (\mathbf{b}_1, \ldots, \mathbf{b}_n)$ for the input space $V$.
-    *   An ordered basis $C = (\mathbf{c}_1, \ldots, \mathbf{c}_m)$ for the output space $W$.
+*   **Definition and Context:**
+    We are given a linear map $\Phi: V \to W$, an ordered basis $B = (\mathbf{b}_1, \ldots, \mathbf{b}_n)$ for the vector space $V$, and an ordered basis $C = (\mathbf{c}_1, \ldots, \mathbf{c}_m)$ for the vector space $W$.
 
-*   **How to Construct the Transformation Matrix $A_\Phi$:**
-    The matrix $A_\Phi$ is built column by column. The $j$-th column of $A_\Phi$ is the coordinate vector of the image of the $j$-th input basis vector, expressed in the output basis.
-
-    1.  Take the $j$-th vector from the input basis, $\mathbf{b}_j$.
-    2.  Apply the linear map to it to get its image in $W$: $\Phi(\mathbf{b}_j)$.
-    3.  Express this image vector as a linear combination of the output basis vectors from $C$:
-        $\Phi(\mathbf{b}_j) = \alpha_{1j}\mathbf{c}_1 + \alpha_{2j}\mathbf{c}_2 + \cdots + \alpha_{mj}\mathbf{c}_m$.
-    4.  The coefficients form the $j$-th column of $A_\Phi$.
+*   **Construction of the Transformation Matrix ($A_\Phi$):**
+    The transformation matrix $A_\Phi$ is an $m \times n$ matrix whose columns describe how the input basis vectors are transformed by $\Phi$. It is constructed as follows:
+    1.  For each input basis vector $\mathbf{b}_j$ (from $j=1$ to $n$):
+    2.  Apply the linear map to get its image: $\Phi(\mathbf{b}_j) \in W$.
+    3.  Express this image as a unique linear combination of the output basis vectors from $C$:
+        $$ \Phi(\mathbf{b}_j) = \alpha_{1j}\mathbf{c}_1 + \alpha_{2j}\mathbf{c}_2 + \cdots + \alpha_{mj}\mathbf{c}_m $$
+    4.  The coefficients from this combination form the $j$-th column of the matrix $A_\Phi$. This column is the coordinate vector of $\Phi(\mathbf{b}_j)$ with respect to basis $C$:
         $$ \text{Column } j \text{ of } A_\Phi = [\Phi(\mathbf{b}_j)]_C = \begin{pmatrix} \alpha_{1j} \\ \alpha_{2j} \\ \vdots \\ \alpha_{mj} \end{pmatrix} $$
 
-*   **How to Use the Transformation Matrix:**
-    To find the coordinates of the image vector $\Phi(\mathbf{v})$ in basis $C$, you multiply the transformation matrix $A_\Phi$ by the coordinate vector of $\mathbf{v}$ in basis $B$.
+*   **Usage and Interpretation:**
+    This matrix maps the coordinate vector of any $\mathbf{v} \in V$ (relative to basis $B$) to the coordinate vector of its image $\Phi(\mathbf{v}) \in W$ (relative to basis $C$). The core operational formula is:
     $$ [\Phi(\mathbf{v})]_C = A_\Phi [\mathbf{v}]_B $$
-    This formula translates the abstract operation $\Phi(\mathbf{v})$ into a concrete matrix-vector multiplication.
+    This formula translates the abstract function application into a concrete matrix-vector multiplication. The matrix $A_\Phi$ is the representation of the map $\Phi$ *with respect to the chosen bases*; changing either basis will result in a different transformation matrix for the same underlying linear map.
 
-*   **Invertibility:** The mapping $\Phi$ can only be inverted if the transformation matrix $A_\Phi$ is **square and invertible**.
+*   **Invertibility:**
+    The linear map $\Phi$ is an invertible isomorphism if and only if its transformation matrix $A_\Phi$ is square ($m=n$) and invertible.
 
 ### 2. The Change of Basis Matrix
 
-This is a special case of a transformation matrix where the linear mapping is the **identity map** ($\Phi(\mathbf{x}) = \mathbf{x}$), but we are changing the coordinate system from a "new" basis back to an "old" (often standard) basis.
+This is a special application of the transformation matrix, used to convert a vector's coordinates from one basis to another within the *same* vector space. This process is equivalent to finding the transformation matrix for the **identity map** ($\text{id}: V \to V$, where $\text{id}(\mathbf{x}) = \mathbf{x}$).
 
-*   **Setup:**
-    *   An "old" basis $B$ for a vector space $V$.
-    *   A "new" basis $B' = (\mathbf{b}'_1, \ldots, \mathbf{b}'_n)$ for the same space $V$.
+*   **The Change of Basis Matrix ($P_{B \leftarrow B'}$):**
+    This matrix converts coordinates from a new basis $B'$ to an old basis $B$. Its columns are the coordinate vectors of the new basis vectors, expressed in the old basis.
+    $$ P_{B \leftarrow B'} = \Big[ \ [\mathbf{b}'_1]_B \ \ \ [\mathbf{b}'_2]_B \ \ \cdots \ \ [\mathbf{b}'_n]_B \ \Big] $$
+    *Note: If the "old" basis $B$ is the standard basis in $\mathbb{R}^n$, the columns of this matrix are simply the vectors of the new basis $B'$ themselves.*
 
-*   **Change of Basis Matrix ($P_{B \leftarrow B'}$):**
-    This matrix transforms coordinates from the new basis $B'$ to the old basis $B$. Its columns are simply the vectors of the new basis $B'$ expressed in the coordinates of the old basis $B$.
-    $$ P_{B \leftarrow B'} = [[\mathbf{b}'_1]_B, [\mathbf{b}'_2]_B, \ldots, [\mathbf{b}'_n]_B] $$
-    *If the "old" basis $B$ is the standard basis in $\mathbb{R}^n$, this is very simple: the columns of $P$ are just the vectors of the new basis $B'$ themselves.*
+*   **Usage Formulas:**
+    *   To convert coordinates **from new ($B'$) to old ($B$)**:
+        $$ [\mathbf{x}]_B = P_{B \leftarrow B'} \ [\mathbf{x}]_{B'} $$
+    *   To convert coordinates **from old ($B$) to new ($B'$)**:
+        $$ [\mathbf{x}]_{B'} = (P_{B \leftarrow B'})^{-1} \ [\mathbf{x}]_B $$
 
-*   **How to Use the Change of Basis Matrix:**
-    *   **From New to Old Coordinates:**
-        $$ [\mathbf{x}]_B = P_{B \leftarrow B'} [\mathbf{x}]_{B'} $$
-    *   **From Old to New Coordinates (more common):**
-        $$ [\mathbf{x}]_{B'} = (P_{B \leftarrow B'})^{-1} [\mathbf{x}]_B $$
-
-*   **Example:**
-    Let the old basis be the standard basis $B$ in $\mathbb{R}^2$, and a new basis be $B' = \left( \begin{pmatrix} 1 \\ 1 \end{pmatrix}, \begin{pmatrix} -1 \\ 2 \end{pmatrix} \right)$.
-    The change of basis matrix from $B'$ to $B$ is:
-    $$ P = \begin{pmatrix} 1 & -1 \\ 1 & 2 \end{pmatrix} $$
-    To find the coordinates of the vector $\mathbf{x} = \begin{pmatrix} 3 \\ 4 \end{pmatrix}$ in the new basis $B'$:
-    $$ [\mathbf{x}]_{B'} = P^{-1} \mathbf{x} = \frac{1}{3}\begin{pmatrix} 2 & 1 \\ -1 & 1 \end{pmatrix} \begin{pmatrix} 3 \\ 4 \end{pmatrix} = \begin{pmatrix} 10/3 \\ 1/3 \end{pmatrix} $$
+*   **Example: Change of Basis in $\mathbb{R}^2$**
+    *   **Old Basis (Standard):** $B = (\mathbf{e}_1, \mathbf{e}_2)$
+    *   **New Basis:** $B' = \left( \mathbf{b}_1 = \begin{pmatrix} 1 \\ 1 \end{pmatrix}, \mathbf{b}_2 = \begin{pmatrix} -1 \\ 2 \end{pmatrix} \right)$
+    *   **Change of Basis Matrix from $B'$ to $B$:**
+        $$ P = \begin{pmatrix} 1 & -1 \\ 1 & 2 \end{pmatrix} $$
+    *   To express a vector $\mathbf{x} = \begin{pmatrix} 3 \\ 4 \end{pmatrix}$ (whose coordinates are given in the standard basis $B$) in the new basis $B'$:
+        $$ [\mathbf{x}]_{B'} = P^{-1} [\mathbf{x}]_B = \frac{1}{3}\begin{pmatrix} 2 & 1 \\ -1 & 1 \end{pmatrix} \begin{pmatrix} 3 \\ 4 \end{pmatrix} = \begin{pmatrix} 10/3 \\ 1/3 \end{pmatrix} $$
