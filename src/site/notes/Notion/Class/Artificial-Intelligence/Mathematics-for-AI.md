@@ -461,5 +461,76 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 
     6.  **Draw the Conclusion:** Because the columns of $\Lambda$ (which are the coefficient vectors $\{\boldsymbol{\lambda}_j\}$) form a linearly dependent set, the set of new vectors $\{\mathbf{x}_j\}$ that they define must also be **linearly dependent**. Q.E.D.
 
-# Lecture 2: Linear Algebra: Basis and Rank, Linear Mappings, Affine Space
+# Lecture 2: Linear Algebra: Basis and Rank, Linear Mappings, Affine Spaces
 
+## Basis and Rank
+
+*   **Generating Set (or Spanning Set)**
+    *   **Definition:** A set of vectors $S$ is called a **generating set** for a vector space $V$ if $\text{Span}(S) = V$.
+    *   **Key Idea:** A generating set can be **redundant**; it may contain linearly dependent vectors.
+    *   **Example:** The set $S = \{(1, 0), (0, 1), (1, 1)\}$ is a generating set for $\mathbb{R}^2$. It is redundant because $(1, 1)$ is a linear combination of the other two vectors.
+
+*   **Span (Additional Property)**
+    *   **Connection to Linear Systems:** A system of linear equations $A\mathbf{x} = \mathbf{b}$ has a solution if and only if the vector $\mathbf{b}$ is in the span of the columns of matrix $A$. That is, $\mathbf{b} \in \text{Col}(A)$.
+
+*   **Basis (Additional Properties)**
+    *   **Unique Representation Theorem:** A key property of a basis is that every vector $\mathbf{v}$ in the space can be expressed as a linear combination of the basis vectors in **exactly one way**. The coefficients of this unique combination are called the **coordinates** of $\mathbf{v}$ with respect to that basis.
+    *   **Example (The Standard Basis):** The most common basis for $\mathbb{R}^n$ is the **standard basis**, which consists of the columns of the $n \times n$ identity matrix $I_n$. For $\mathbb{R}^3$, the standard basis is $\{\mathbf{e}_1, \mathbf{e}_2, \mathbf{e}_3\} = \left\{ \begin{pmatrix} 1 \\ 0 \\ 0 \end{pmatrix}, \begin{pmatrix} 0 \\ 1 \\ 0 \end{pmatrix}, \begin{pmatrix} 0 \\ 0 \\ 1 \end{pmatrix} \right\}$.
+    
+*   **Characterizations of a Basis**
+    For a non-empty set of vectors $B$ in a vector space $V$, the following statements are equivalent (meaning if one is true, all are true):
+    1.  $B$ is a **basis** of $V$.
+    2.  $B$ is a **minimal generating set** (i.e., it spans $V$, but no proper subset of $B$ spans $V$).
+    3.  $B$ is a **maximal linearly independent set** (i.e., it's linearly independent, but adding any other vector from $V$ to it would make the set linearly dependent).
+
+*   **Further Properties of Dimension**
+
+    *   **Existence and Uniqueness of Size:** Every non-trivial vector space has a basis. While a space can have many different bases, all of them will have the same number of vectors. This makes the concept of dimension well-defined.
+    *   **Subspace Dimension:** If $U$ is a subspace of a vector space $V$, then $\text{dim}(U) \le \text{dim}(V)$. Equality holds if and only if $U = V$.
+    *   **Important Clarification:** The dimension of a space refers to the **number of vectors in its basis**, not the number of components in each vector. For example, the subspace spanned by the single vector $\begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix}$ is one-dimensional, even though the vector lives in $\mathbb{R}^3$.
+
+*   **How to Find a Basis for a Subspace (Basis Extraction Method)**
+
+    To find a basis for a subspace $U$ that is defined as the span of a set of vectors $\{\mathbf{v}_1, \ldots, \mathbf{v}_m\}$:
+    1.  Create a matrix $A$ where the columns are the vectors $\{\mathbf{v}_1, \ldots, \mathbf{v}_m\}$.
+    2.  Reduce the matrix $A$ to its **row echelon form**.
+    3.  Identify the columns that contain **pivots**.
+    4.  The basis for $U$ consists of the **original vectors** from the set $\{\mathbf{v}_1, \ldots, \mathbf{v}_m\}$ that correspond to these pivot columns.
+    
+*   **Rank of a Matrix**
+
+    *   **Definition:** The **rank** of a matrix $A$, denoted $\text{rk}(A)$, is the number of linearly independent columns in $A$. A fundamental theorem of linear algebra states that this number is always equal to the number of linearly independent rows.
+    *   **Key Property:** The rank of a matrix is equal to the rank of its transpose: $\text{rk}(A) = \text{rk}(A^T)$.
+
+*   **Rank and its Connection to Fundamental Subspaces**
+
+    *   **Column Space (Image/Range):** The rank of $A$ is the dimension of its column space.
+        $\text{rk}(A) = \text{dim}(\text{Col}(A))$
+    *   **Null Space (Kernel):** The rank determines the dimension of the null space through the Rank-Nullity Theorem. For an $m \times n$ matrix $A$:
+        $\text{dim}(\text{Nul}(A)) = n - \text{rk}(A)$
+
+*   **Properties and Applications of Rank**
+
+    *   **Invertibility of Square Matrices:** An $n \times n$ matrix $A$ is invertible if and only if its rank is equal to its dimension, i.e., $\text{rk}(A) = n$. This is because a full-rank square matrix can be row-reduced to the identity matrix.
+    *   **Solvability of Linear Systems:** The system $A\mathbf{x} = \mathbf{b}$ has at least one solution if and only if the rank of the coefficient matrix $A$ is equal to the rank of the augmented matrix $[A|\mathbf{b}]$.
+        **Reasoning:** If $\text{rk}(A) < \text{rk}([A|\mathbf{b}])$, it means that the vector $\mathbf{b}$ is linearly independent of the columns of $A$. Therefore, $\mathbf{b}$ cannot be written as a linear combination of the columns of $A$, and no solution exists.
+    *   **Full Rank and Rank Deficiency:**
+        *   A matrix has **full rank** if its rank is the maximum possible for its dimensions: $\text{rk}(A) = \min(m, n)$.
+        *   A matrix is **rank deficient** if $\text{rk}(A) < \min(m, n)$, indicating linear dependencies among its rows or columns.
+
+*   **Why Rank is Important**
+
+    The rank of a matrix is a core concept that reveals its fundamental structure. It tells us:
+    *   The maximum number of linearly independent rows/columns.
+    *   The dimension of the data (the dimension of the subspace spanned by the columns).
+    *   Whether a linear system is consistent (has solutions).
+    *   Whether a square matrix has an inverse.
+    *   It is crucial for identifying redundancy and simplifying problems in data analysis, optimization, and machine learning.
+
+*   **Summary: Tying Rank, Basis, and Pivots Together**
+    1.  You start with a set of vectors.
+    2.  You place them as columns in a matrix $A$.
+    3.  You perform Gaussian elimination to find the **pivots**.
+    4.  The **number of pivots** is the **rank** of the matrix $A$.
+    5.  This rank is also the **dimension** of the subspace spanned by the original vectors.
+    6.  The **original vectors** corresponding to the **pivot columns** form a **basis** for that subspace.
