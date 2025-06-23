@@ -85,7 +85,7 @@ ul.task-list {
   // Graph View 区域
   .sidebar-graph-section {
     flex: 0 0 auto;
-    margin-bottom: 15px; // 减少间距
+    margin-bottom: 15px;
 
     .graph {
       width: 320px;
@@ -111,7 +111,7 @@ ul.task-list {
       min-height: 350px;
       min-width: 350px;
       transform: translate(-50%, -50%);
-      z-index: 9999;
+      z-index: 10000; // 提高到最高层级
       display: block;
       background-color: var(--background-secondary);
       border: 1px solid var(--text-accent);
@@ -644,7 +644,7 @@ ul.task-list {
   min-height: 350px;
   min-width: 350px;
   transform: translate(-50%, -50%);
-  z-index: 9999;
+  z-index: 10000; // 提高到最高层级
   display: none;
   background-color: var(--background-secondary);
   border: 1px solid var(--text-accent);
