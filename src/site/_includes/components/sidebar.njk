@@ -7,7 +7,7 @@
                   
                   <!-- 上块：Graph View -->
                   {%if settings.dgShowLocalGraph === true%}
-                        <div class="sidebar-graph-section" style="height: 300px;">
+                        <div class="sidebar-graph-section" style="height: 280px; margin-bottom: 16px;">
                               {%include "components/graphScript.njk"%}
                         </div>
                   {%endif%}
@@ -17,8 +17,8 @@
                         {%if settings.dgShowToc === true%}
                               {%set tocHtml= (content and (content|toc)) %}
                               {%if tocHtml %}
-                                    <div class="toc">
-                                          <div class="toc-container" style="font-size: 1.1em;">
+                                    <div class="toc" style="margin-bottom: 16px;">
+                                          <div class="toc-container" style="font-size: 0.9em; line-height: 1.4;">
                                                 {{ tocHtml | safe }}
                                           </div>
                                     </div>
@@ -27,35 +27,35 @@
 
                         {%if settings.dgShowBacklinks === true %}
                               <div class="backlinks">
-                                          <div class="backlink-list">
-                                          {%- if page.url == "/" -%}
-                                                {%- if graph.nodes[graph.homeAlias].backLinks.length === 0 -%}
-                                                      <div class="backlink-card">
-                                                            <span class="no-backlinks-message">No other pages mentions this page</span>
-                                                      </div>
-                                                {%- endif -%}
-                                          {%- for backlink in graph.nodes[graph.homeAlias].backLinks -%}
-                                                {%- if graph.nodes[backlink].url != graph.homeAlias -%}
+                                    <div class="backlink-list">
+                                    {%- if page.url == "/" -%}
+                                          {%- if graph.nodes[graph.homeAlias].backLinks.length === 0 -%}
                                                 <div class="backlink-card">
-                                                      {%- if not meta.noteIconsSettings.backlinks -%}<i  icon-name="link"></i> {%- endif -%}<a href="{{graph.nodes[backlink].url}}" data-note-icon="{{graph.nodes[backlink].noteIcon}}" class="backlink">{{graph.nodes[backlink].title}}</a>
+                                                      <span class="no-backlinks-message">No other pages mentions this page</span>
                                                 </div>
-                                                {%- endif -%}
-                                          {%- endfor -%}
-                                          {%- else -%}
-                                                {%- if graph.nodes[page.url].backLinks.length === 0 -%}
-                                                      <div class="backlink-card">
-                                                            <span class="no-backlinks-message">No other pages mentions this page</span>
-                                                      </div>
-                                                {%- endif -%}
-                                          {%- for backlink in graph.nodes[page.url].backLinks -%}
-                                                {%- if graph.nodes[backlink].url != page.url -%}
+                                          {%- endif -%}
+                                    {%- for backlink in graph.nodes[graph.homeAlias].backLinks -%}
+                                          {%- if graph.nodes[backlink].url != graph.homeAlias -%}
+                                          <div class="backlink-card">
+                                                {%- if not meta.noteIconsSettings.backlinks -%}<i  icon-name="link"></i> {%- endif -%}<a href="{{graph.nodes[backlink].url}}" data-note-icon="{{graph.nodes[backlink].noteIcon}}" class="backlink">{{graph.nodes[backlink].title}}</a>
+                                          </div>
+                                          {%- endif -%}
+                                    {%- endfor -%}
+                                    {%- else -%}
+                                          {%- if graph.nodes[page.url].backLinks.length === 0 -%}
                                                 <div class="backlink-card">
-                                                      {%- if not meta.noteIconsSettings.backlinks -%}<i  icon-name="link"></i> {%- endif -%}<a href="{{graph.nodes[backlink].url}}" data-note-icon="{{graph.nodes[backlink].noteIcon}}" class="backlink">{{graph.nodes[backlink].title}}</a>
+                                                      <span class="no-backlinks-message">No other pages mentions this page</span>
                                                 </div>
-                                                {%- endif -%}
-                                          {%- endfor -%}
-                                    {%- endif -%}
-                                    </div>
+                                          {%- endif -%}
+                                    {%- for backlink in graph.nodes[page.url].backLinks -%}
+                                          {%- if graph.nodes[backlink].url != page.url -%}
+                                          <div class="backlink-card">
+                                                {%- if not meta.noteIconsSettings.backlinks -%}<i  icon-name="link"></i> {%- endif -%}<a href="{{graph.nodes[backlink].url}}" data-note-icon="{{graph.nodes[backlink].noteIcon}}" class="backlink">{{graph.nodes[backlink].title}}</a>
+                                          </div>
+                                          {%- endif -%}
+                                    {%- endfor -%}
+                            {%- endif -%}
+                            </div>
                               </div>
                         {%endif%}
                   </div>
