@@ -64,9 +64,9 @@ ul.task-list {
 
 .sidebar {
   position: fixed;
-  top: 75px;
+  top: 100px; // 增加顶部间距，避免与导航栏重合
   right: 17px;
-  height: calc(100vh - 75px);
+  height: calc(100vh - 100px); // 相应调整高度
   min-width: 25px;
   display: flex;
   z-index: 3;
@@ -85,7 +85,7 @@ ul.task-list {
   // Graph View 区域
   .sidebar-graph-section {
     flex: 0 0 auto;
-    margin-bottom: 20px;
+    margin-bottom: 15px; // 减少间距
 
     .graph {
       width: 320px;
@@ -143,21 +143,22 @@ ul.task-list {
   // 内容区域（TOC + 反向链接）
   .sidebar-content-section {
     flex: 1 1 auto;
-    overflow-y: auto;
+    overflow: hidden; // 改为 hidden，让子元素处理滚动
     display: flex;
     flex-direction: column;
     min-height: 0;
 
     .toc {
-      flex: 0 0 auto;
-      margin-bottom: 15px;
-      max-height: 300px;
-      overflow-y: auto;
+      flex: 1 1 auto; // 让 TOC 占据剩余空间
+      margin-bottom: 10px; // 减少间距
+      overflow-y: auto; // TOC 内部滚动
+      min-height: 150px; // 最小高度
     }
 
     .backlinks {
-      flex: 1 1 auto;
-      min-height: 200px;
+      flex: 0 0 auto; // 固定高度
+      min-height: 120px; // 减少最小高度
+      max-height: 200px; // 限制最大高度
     }
   }
 }
@@ -188,10 +189,10 @@ ul.task-list {
 
 .toc-container {
   font-size: 1rem;
-  max-height: 220px;
   overflow-y: auto;
-  margin-bottom: 10px;
+  margin-bottom: 0; // 移除底部间距
   border-left: 1px solid var(--text-accent);
+  height: 100%; // 充满父容器
   ul {
     list-style-type: none;
     padding-inline-start: 15px !important;
@@ -231,11 +232,11 @@ ul.task-list {
 }
 
 .backlinks {
-  flex: 1;
-  margin-top: 10px;
+  margin-top: 5px; // 减少顶部间距
   background-color: var(--background-primary);
   border-radius: 10px;
   padding: 10px;
+  overflow-y: auto; // 添加滚动
 
   .backlink-title {
     margin: 4px 0;
@@ -246,9 +247,9 @@ ul.task-list {
 
 .backlink-list {
   border-left: 1px solid var(--text-accent);
-  max-height: 200px;
   overflow-y: auto;
   overflow-x: hidden;
+  height: 100%; // 充满父容器
 }
 
 .backlink-card {
@@ -305,12 +306,13 @@ ul.task-list {
     position: relative;
     transform: none;
     border-radius: 4px;
-    margin-top: 50px;
+    margin-top: 30px; // 减少顶部间距
     max-width: 700px;
     margin: auto;
     border-radius: 0;
     border-top: 2px solid var(--background-secondary);
     justify-content: space-between;
+    height: auto; // 响应式时使用自动高度
   }
 
   .sidebar-container {
