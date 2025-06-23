@@ -554,3 +554,30 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
     *   **Endomorphism:** A linear mapping from a vector space **to itself** ($\Phi: V \to V$). It does not need to be invertible.
     *   **Automorphism:** An endomorphism that is also **bijective**. It is an isomorphism from a vector space to itself (e.g., a rotation or reflection).
     *   **Identity Mapping:** The map defined by $\text{id}(\mathbf{x}) = \mathbf{x}$. It leaves every vector unchanged and is the simplest example of an automorphism.
+    
+*   **Isomorphism**
+    *   **Isomorphism and Dimension:** A fundamental theorem states that two finite-dimensional vector spaces, $V$ and $W$, are **isomorphic** (structurally identical) if and only if they have the same dimension.
+         $\text{dim}(V) = \text{dim}(W) \iff V \cong W$
+    *   **Intuition:** This means any n-dimensional vector space is essentially a "re-labeling" of $\mathbb{R}^n$.
+    *   **Properties of Linear Mappings:**
+        *   The composition of two linear mappings is also a linear mapping.
+        *   The inverse of an isomorphism is also an isomorphism.
+        *   The sum and scalar multiple of linear mappings are also linear.
+
+*   **Matrix Representation via Ordered Bases**
+    The isomorphism between an abstract n-dimensional space $V$ and the concrete space $\mathbb{R}^n$ is made practical by choosing an **ordered basis**. The order of the basis vectors matters for defining coordinates.
+    *   **Notation:** We denote an ordered basis with parentheses, e.g., $B = (\mathbf{b}_1, \ldots, \mathbf{b}_n)$.
+
+*   **Coordinates and Coordinate Vectors**
+    *   **Definition:** Given an ordered basis $B = (\mathbf{b}_1, \ldots, \mathbf{b}_n)$ of $V$, every vector $\mathbf{x} \in V$ can be written uniquely as:
+        $$ \mathbf{x} = \alpha_1\mathbf{b}_1 + \cdots + \alpha_n\mathbf{b}_n $$
+        The scalars $\alpha_1, \ldots, \alpha_n$ are called the **coordinates** of $\mathbf{x}$ with respect to the basis $B$.
+    *   **Coordinate Vector:** We collect these coordinates into a single column vector, which represents $\mathbf{x}$ in the standard space $\mathbb{R}^n$:
+        $$ [\mathbf{x}]_B = \begin{pmatrix} \alpha_1 \\ \vdots \\ \alpha_n \end{pmatrix} \in \mathbb{R}^n $$
+
+*   **Coordinate Systems and Change of Basis**
+    *   **Concept:** A basis defines a coordinate system for the vector space. The familiar Cartesian coordinates in $\mathbb{R}^2$ are simply the coordinates with respect to the standard basis $(\mathbf{e}_1, \mathbf{e}_2)$. Any other basis defines a different, but equally valid, coordinate system.
+    *   **Example:** A single vector $\mathbf{x} \in \mathbb{R}^2$ has different coordinates in different bases. For instance, its coordinate vector might be $\begin{pmatrix} 2 \\ 2 \end{pmatrix}$ with respect to the standard basis, but $\begin{pmatrix} 1.09 \\ 0.72 \end{pmatrix}$ with respect to another basis $B = (\mathbf{b}_1, \mathbf{b}_2)$. This means $\mathbf{x} = 2\mathbf{e}_1 + 2\mathbf{e}_2$ and also $\mathbf{x} = 1.09\mathbf{b}_1 + 0.72\mathbf{b}_2$.
+
+*   **Importance for Linear Mappings**
+    Once we fix ordered bases for the input and output spaces, we can represent any linear mapping as a concrete **matrix**. This matrix representation is entirely dependent on the chosen bases.
