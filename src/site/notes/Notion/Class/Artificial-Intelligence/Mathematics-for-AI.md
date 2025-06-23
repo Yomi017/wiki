@@ -305,6 +305,7 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 	    *   **Scalability:** Gaussian elimination is generally **efficient for thousands of variables**. However, it is **not practical for very large systems** (e.g., millions of variables) because its computational cost scales cubically with the number of variables ($O(n^3)$), making it too slow and memory-intensive for extremely large problems.
 
 ## Part III: Vector Spaces and Groups
+
 *   **Group:**
 	A **group** is a set $G$ together with a binary operation $*$ (that combines any two elements of $G$ to form a third element also in $G$) that satisfies the following four axioms:
 	
@@ -341,3 +342,124 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 ![Image/Class/Mathematics-for-AI/2.png](/img/user/Image/Class/Mathematics-for-AI/2.png)
 ![Image/Class/Mathematics-for-AI/3.png](/img/user/Image/Class/Mathematics-for-AI/3.png)
 ![Image/Class/Mathematics-for-AI/4.png](/img/user/Image/Class/Mathematics-for-AI/4.png)
+
+### Continuation of Notes
+
+*   **Vector Space (向量空间):**
+    A **vector space** is a set of objects called **vectors** ($V$), along with a set of **scalars** (usually the real numbers $\mathbb{R}$), equipped with two operations: **vector addition** and **scalar multiplication**. These operations must satisfy ten axioms.
+
+    **Axioms of a Vector Space:**
+    Let $\mathbf{u}, \mathbf{v}, \mathbf{w}$ be vectors in $V$ and let $c, d$ be scalars in $\mathbb{R}$.
+
+    1.  **Closure under Addition:** $\mathbf{u} + \mathbf{v}$ is in $V$.
+    2.  **Commutativity of Addition:** $\mathbf{u} + \mathbf{v} = \mathbf{v} + \mathbf{u}$.
+    3.  **Associativity of Addition:** $(\mathbf{u} + \mathbf{v}) + \mathbf{w} = \mathbf{u} + (\mathbf{v} + \mathbf{w})$.
+    4.  **Zero Vector (Additive Identity):** There is a vector $\mathbf{0}$ in $V$ such that $\mathbf{u} + \mathbf{0} = \mathbf{u}$.
+    5.  **Additive Inverse:** For every vector $\mathbf{u}$, there is a vector $-\mathbf{u}$ in $V$ such that $\mathbf{u} + (-\mathbf{u}) = \mathbf{0}$.
+        *   **Connection to Groups:** The first five axioms mean that the set of vectors $V$ with the addition operation $(V, +)$ forms an **Abelian Group**.
+
+    6.  **Closure under Scalar Multiplication:** $c\mathbf{u}$ is in $V$.
+    7.  **Distributivity:** $c(\mathbf{u} + \mathbf{v}) = c\mathbf{u} + c\mathbf{v}$.
+    8.  **Distributivity:** $(c+d)\mathbf{u} = c\mathbf{u} + d\mathbf{u}$.
+    9.  **Associativity of Scalar Multiplication:** $c(d\mathbf{u}) = (cd)\mathbf{u}$.
+    10. **Scalar Identity:** $1\mathbf{u} = \mathbf{u}$.
+
+*   **Subspace (子空间):**
+    A **subspace** of a vector space $V$ is a subset $H$ of $V$ that is itself a vector space under the same operations of addition and scalar multiplication defined on $V$.
+    *   **Subspace Test (子空间判别法):** To verify if a subset $H$ is a subspace, we only need to check three conditions:
+        1.  **Contains the Zero Vector:** The zero vector of $V$ is in $H$ ($\mathbf{0} \in H$).
+        2.  **Closure under Addition:** For any two vectors $\mathbf{u}, \mathbf{v} \in H$, their sum $\mathbf{u} + \mathbf{v}$ is also in $H$.
+        3.  **Closure under Scalar Multiplication:** For any vector $\mathbf{u} \in H$ and any scalar $c$, the vector $c\mathbf{u}$ is also in $H$.
+    *   **Key Examples:**
+        *   Any line or plane in $\mathbb{R}^3$ that passes through the origin is a subspace of $\mathbb{R}^3$.
+        *   The **null space** of an $m \times n$ matrix $A$, denoted $N(A)$, is a subspace of $\mathbb{R}^n$.
+        *   The **column space** of an $m \times n$ matrix $A$, denoted $Col(A)$, is a subspace of $\mathbb{R}^m$.
+
+*   **Linear Combination (线性组合):**
+    Given vectors $\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_p$ in a vector space $V$ and scalars $c_1, c_2, \ldots, c_p$, the vector $\mathbf{y}$ defined by:
+    $$\mathbf{y} = c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + \cdots + c_p\mathbf{v}_p$$
+    is called a **linear combination** of $\mathbf{v}_1, \ldots, \mathbf{v}_p$ with weights $c_1, \ldots, c_p$.
+
+*   **Span (生成空间):**
+    *   **Definition:** The **span** of a set of vectors $\{\mathbf{v}_1, \ldots, \mathbf{v}_p\}$, denoted $\text{Span}\{\mathbf{v}_1, \ldots, \mathbf{v}_p\}$, is the set of **all possible linear combinations** of these vectors.
+    *   **Geometric Interpretation:**
+        *   $\text{Span}\{\mathbf{v}\}$ (where $\mathbf{v} \neq \mathbf{0}$) is the line passing through the origin and $\mathbf{v}$.
+        *   $\text{Span}\{\mathbf{u}, \mathbf{v}\}$ (where $\mathbf{u}, \mathbf{v}$ are not collinear) is the plane containing the origin, $\mathbf{u}$, and $\mathbf{v}$.
+    *   **Property:** The span of any set of vectors is always a **subspace**.
+
+*   **Linear Independence and Dependence (线性无关与线性相关):**
+    *   **Linear Independence:** A set of vectors $\{\mathbf{v}_1, \ldots, \mathbf{v}_p\}$ is **linearly independent** if the vector equation
+        $$c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + \cdots + c_p\mathbf{v}_p = \mathbf{0}$$
+        has **only the trivial solution** ($c_1 = c_2 = \cdots = c_p = 0$).
+    *   **Linear Dependence:** The set is **linearly dependent** if there exist weights $c_1, \ldots, c_p$, **not all zero**, such that the equation holds.
+    *   **Intuitive Meaning:** A set of vectors is linearly dependent if and only if at least one of the vectors can be written as a linear combination of the others. Linearly independent vectors are non-redundant.
+
+*   **Basis (基):**
+    A **basis** for a vector space $V$ is a set of vectors $B = \{\mathbf{b}_1, \ldots, \mathbf{b}_n\}$ that satisfies two conditions:
+    1.  The set $B$ is **linearly independent**.
+    2.  The set $B$ **spans** the vector space $V$ (i.e., $\text{Span}(B) = V$).
+    *   A basis is a "minimal" set of vectors needed to build the entire space.
+
+*   **Dimension (维度):**
+    *   **Definition:** The **dimension** of a non-zero vector space $V$, denoted $\text{dim}(V)$, is the **number of vectors in any basis** for $V$. The dimension of the zero vector space $\{\mathbf{0}\}$ is defined to be 0.
+    *   **Uniqueness:** Although a vector space can have many different bases, all bases for a given vector space have the same number of vectors.
+    *   **Connection to Rank-Nullity:**
+        *   The dimension of the column space of a matrix $A$ is its rank: $\text{dim}(\text{Col}(A)) = \text{rank}(A)$.
+        *   The dimension of the null space of a matrix $A$ is its nullity: $\text{dim}(N(A)) = \text{nullity}(A)$.
+*   **Testing for Linear Independence using Gaussian Elimination:**
+
+    To test if a set of vectors $\{\mathbf{v}_1, \ldots, \mathbf{v}_k\}$ is linearly independent:
+    1.  Form a matrix $A$ using these vectors as its columns.
+    2.  Perform Gaussian elimination on matrix $A$ to reduce it to **row echelon form**.
+
+    *   The original vectors that correspond to **pivot columns** are linearly independent.
+    *   The vectors that correspond to **non-pivot columns** can be written as a linear combination of the preceding pivot columns.
+
+    **Example:** In the following row echelon form matrix:
+    $$
+    \begin{pmatrix}
+      \mathbf{1} & 3 & 0 \\
+      0 & 0 & \mathbf{1}
+    \end{pmatrix}
+    $$
+    Column 1 and Column 3 are **pivot columns** (their corresponding original vectors are independent); Column 2 is a **non-pivot column** (its corresponding original vector is dependent).
+
+    Therefore, the original set of vectors (the columns of matrix $A$) is **not linearly independent** because there is at least one non-pivot column. In other words, the set is **linearly dependent**.
+*   **Linear Independence of Linear Combinations**
+
+    Let's consider a set of $k$ linearly independent vectors $\{\mathbf{b}_1, \ldots, \mathbf{b}_k\}$, which can be seen as a basis for a $k$-dimensional space. We can form a new set of $m$ vectors $\{\mathbf{x}_1, \ldots, \mathbf{x}_m\}$ where each $\mathbf{x}_j$ is a linear combination of the base vectors:
+    $$ \mathbf{x}_j = \sum_{i=1}^{k} \lambda_{ij} \mathbf{b}_i $$
+    Each set of weights can be represented by a **coefficient vector** $\boldsymbol{\lambda}_j \in \mathbb{R}^k$.
+
+    *   **Key Implication:** The set of new vectors $\{\mathbf{x}_1, \ldots, \mathbf{x}_m\}$ is linearly independent *if and only if* the set of their corresponding coefficient vectors $\{\boldsymbol{\lambda}_1, \ldots, \boldsymbol{\lambda}_m\}$ is linearly independent.
+    
+*   **The Dimension Theorem for Spanning Sets (A Fundamental Theorem)**
+     The dimension of a vector space cannot exceed the number of vectors in any of its spanning sets. A direct consequence is that in a vector space of dimension $k$, any set containing more than $k$ vectors must be linearly dependent.
+
+*   **Special Case: More New Vectors than Base Vectors ($m > k$)**
+
+    **Theorem:** If you use $k$ linearly independent vectors to generate $m$ new vectors, and $m > k$, the resulting set of new vectors $\{\mathbf{x}_1, \ldots, \mathbf{x}_m\}$ is **always linearly dependent**.
+
+    **Proof (using Matrix Rank):**
+
+    1.  **Focus on the Coefficient Vectors:** As established, the linear independence of $\{\mathbf{x}_j\}$ is equivalent to the linear independence of their coefficient vectors $\{\boldsymbol{\lambda}_j\}$. We will prove that the set $\{\boldsymbol{\lambda}_1, \ldots, \boldsymbol{\lambda}_m\}$ must be linearly dependent.
+
+    2.  **Construct the Coefficient Matrix:** Let's arrange these coefficient vectors as the columns of a matrix, $\Lambda$:
+        $$ \Lambda = [\boldsymbol{\lambda}_1, \boldsymbol{\lambda}_2, \ldots, \boldsymbol{\lambda}_m] $$
+        Since each coefficient vector $\boldsymbol{\lambda}_j$ is in $\mathbb{R}^k$, the matrix $\Lambda$ has $k$ rows and $m$ columns (it is a $k \times m$ matrix).
+
+    3.  **Analyze the Rank of the Matrix:** The **rank** of a matrix has a fundamental property: it cannot exceed its number of rows or its number of columns. Specifically, we are interested in the fact that $\text{rank}(\Lambda) \le k$ (the number of rows).
+        *   *(Justification via a more fundamental theorem: The rank is the dimension of the row space. The row space is spanned by $k$ row vectors. By [[Notion/Class/Proof/The-Dimension-Theorem-for-Spanning-Sets\|The-Dimension-Theorem-for-Spanning-Sets]], the dimension of this space cannot exceed $k$.)*
+
+    4.  **Apply the Condition $m > k$:** We have established two key facts about the matrix $\Lambda$:
+        *   The total number of columns is $m$.
+        *   The rank, which represents the maximum number of linearly independent columns, is at most $k$. That is, $\text{rank}(\Lambda) \le k$.
+
+    5.  **Connect Rank to Linear Dependence:** We are given that $m > k$. This leads to the crucial inequality:
+        $$ \text{Total number of columns } (m) > \text{Maximum number of linearly independent columns } (\text{rank}(\Lambda)) $$
+        This inequality means it is impossible for all $m$ columns of $\Lambda$ to be linearly independent. If you have more vectors ($m$) than the dimension of the space they can span (the rank, which is at most $k$), the set of vectors must be linearly dependent.
+
+    6.  **Draw the Conclusion:** Because the columns of $\Lambda$ (which are the coefficient vectors $\{\boldsymbol{\lambda}_j\}$) form a linearly dependent set, the set of new vectors $\{\mathbf{x}_j\}$ that they define must also be **linearly dependent**. Q.E.D.
+
+# Lecture 2: Linear Algebra: Basis and Rank, Linear Mappings, Affine Space
+
