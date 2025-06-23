@@ -4,29 +4,33 @@
                   {% for imp in dynamics.sidebar.top %}
                         {% include imp %}
                   {% endfor %}
+                  
+                  <!-- 上块：Graph View -->
                   {%if settings.dgShowLocalGraph === true%}
-                        {%include "components/graphScript.njk"%}
+                        <div class="sidebar-graph-section">
+                              {%include "components/graphScript.njk"%}
+                        </div>
                   {%endif%}
 
-                  {%if settings.dgShowToc === true%}
-                        {%set tocHtml= (content and (content|toc)) %}
-                        {%if tocHtml %}
-                              <div class="toc">
-                                    <div class="toc-title-container">
-                                          <div class="toc-title">
-                                                On this page
+                  <!-- 下块：大纲 (TOC) 和反向链接 -->
+                  <div class="sidebar-content-section">
+                        {%if settings.dgShowToc === true%}
+                              {%set tocHtml= (content and (content|toc)) %}
+                              {%if tocHtml %}
+                                    <div class="toc">
+                                          <div class="toc-title-container">
+                                                <div class="toc-title">
+                                                      On this page
+                                                </div>
+                                          </div>
+                                          <div class="toc-container">
+                                                {{ tocHtml | safe }}
                                           </div>
                                     </div>
-                                    <div class="toc-container">
-                                          {{ tocHtml | safe }}
-                                    </div>
-                              </div>
+                              {%endif%}
                         {%endif%}
 
-                  {%endif%}
-
                         {%if settings.dgShowBacklinks === true %}
-                              {%if settings.dgShowBacklinks === true %}
                               <div class="backlinks">
                                     <div class="backlink-title" style="margin: 4px 0 !important;">Pages mentioning this page</div>
                                           <div class="backlink-list">
@@ -60,7 +64,8 @@
                                     </div>
                               </div>
                         {%endif%}
-                  {%endif%}
+                  </div>
+                  
                   {% for imp in dynamics.sidebar.bottom %}
                         {% include imp %}
                   {% endfor %}
