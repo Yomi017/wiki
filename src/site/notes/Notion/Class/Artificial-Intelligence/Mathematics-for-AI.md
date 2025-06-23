@@ -581,3 +581,59 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 
 *   **Importance for Linear Mappings**
     Once we fix ordered bases for the input and output spaces, we can represent any linear mapping as a concrete **matrix**. This matrix representation is entirely dependent on the chosen bases.
+
+## Part III: Basis Change and Transformation Matrices
+
+This section explains how to represent abstract linear mappings and changes of coordinate systems using concrete matrices.
+
+### 1. The Transformation Matrix for a Linear Map
+
+This matrix allows us to compute the result of a linear mapping by performing a simple matrix multiplication on coordinate vectors.
+
+*   **Setup:**
+    *   A linear mapping $\Phi: V \to W$.
+    *   An ordered basis $B = (\mathbf{b}_1, \ldots, \mathbf{b}_n)$ for the input space $V$.
+    *   An ordered basis $C = (\mathbf{c}_1, \ldots, \mathbf{c}_m)$ for the output space $W$.
+
+*   **How to Construct the Transformation Matrix $A_\Phi$:**
+    The matrix $A_\Phi$ is built column by column. The $j$-th column of $A_\Phi$ is the coordinate vector of the image of the $j$-th input basis vector, expressed in the output basis.
+
+    1.  Take the $j$-th vector from the input basis, $\mathbf{b}_j$.
+    2.  Apply the linear map to it to get its image in $W$: $\Phi(\mathbf{b}_j)$.
+    3.  Express this image vector as a linear combination of the output basis vectors from $C$:
+        $\Phi(\mathbf{b}_j) = \alpha_{1j}\mathbf{c}_1 + \alpha_{2j}\mathbf{c}_2 + \cdots + \alpha_{mj}\mathbf{c}_m$.
+    4.  The coefficients form the $j$-th column of $A_\Phi$.
+        $$ \text{Column } j \text{ of } A_\Phi = [\Phi(\mathbf{b}_j)]_C = \begin{pmatrix} \alpha_{1j} \\ \alpha_{2j} \\ \vdots \\ \alpha_{mj} \end{pmatrix} $$
+
+*   **How to Use the Transformation Matrix:**
+    To find the coordinates of the image vector $\Phi(\mathbf{v})$ in basis $C$, you multiply the transformation matrix $A_\Phi$ by the coordinate vector of $\mathbf{v}$ in basis $B$.
+    $$ [\Phi(\mathbf{v})]_C = A_\Phi [\mathbf{v}]_B $$
+    This formula translates the abstract operation $\Phi(\mathbf{v})$ into a concrete matrix-vector multiplication.
+
+*   **Invertibility:** The mapping $\Phi$ can only be inverted if the transformation matrix $A_\Phi$ is **square and invertible**.
+
+### 2. The Change of Basis Matrix
+
+This is a special case of a transformation matrix where the linear mapping is the **identity map** ($\Phi(\mathbf{x}) = \mathbf{x}$), but we are changing the coordinate system from a "new" basis back to an "old" (often standard) basis.
+
+*   **Setup:**
+    *   An "old" basis $B$ for a vector space $V$.
+    *   A "new" basis $B' = (\mathbf{b}'_1, \ldots, \mathbf{b}'_n)$ for the same space $V$.
+
+*   **Change of Basis Matrix ($P_{B \leftarrow B'}$):**
+    This matrix transforms coordinates from the new basis $B'$ to the old basis $B$. Its columns are simply the vectors of the new basis $B'$ expressed in the coordinates of the old basis $B$.
+    $$ P_{B \leftarrow B'} = [[\mathbf{b}'_1]_B, [\mathbf{b}'_2]_B, \ldots, [\mathbf{b}'_n]_B] $$
+    *If the "old" basis $B$ is the standard basis in $\mathbb{R}^n$, this is very simple: the columns of $P$ are just the vectors of the new basis $B'$ themselves.*
+
+*   **How to Use the Change of Basis Matrix:**
+    *   **From New to Old Coordinates:**
+        $$ [\mathbf{x}]_B = P_{B \leftarrow B'} [\mathbf{x}]_{B'} $$
+    *   **From Old to New Coordinates (more common):**
+        $$ [\mathbf{x}]_{B'} = (P_{B \leftarrow B'})^{-1} [\mathbf{x}]_B $$
+
+*   **Example:**
+    Let the old basis be the standard basis $B$ in $\mathbb{R}^2$, and a new basis be $B' = \left( \begin{pmatrix} 1 \\ 1 \end{pmatrix}, \begin{pmatrix} -1 \\ 2 \end{pmatrix} \right)$.
+    The change of basis matrix from $B'$ to $B$ is:
+    $$ P = \begin{pmatrix} 1 & -1 \\ 1 & 2 \end{pmatrix} $$
+    To find the coordinates of the vector $\mathbf{x} = \begin{pmatrix} 3 \\ 4 \end{pmatrix}$ in the new basis $B'$:
+    $$ [\mathbf{x}]_{B'} = P^{-1} \mathbf{x} = \frac{1}{3}\begin{pmatrix} 2 & 1 \\ -1 & 1 \end{pmatrix} \begin{pmatrix} 3 \\ 4 \end{pmatrix} = \begin{pmatrix} 10/3 \\ 1/3 \end{pmatrix} $$
