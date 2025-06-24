@@ -632,3 +632,45 @@ This is a special application of the transformation matrix, used to convert a ve
         $$ P = \begin{pmatrix} 1 & -1 \\ 1 & 2 \end{pmatrix} $$
     *   To express a vector $\mathbf{x} = \begin{pmatrix} 3 \\ 4 \end{pmatrix}$ (whose coordinates are given in the standard basis $B$) in the new basis $B'$:
         $$ [\mathbf{x}]_{B'} = P^{-1} [\mathbf{x}]_B = \frac{1}{3}\begin{pmatrix} 2 & 1 \\ -1 & 1 \end{pmatrix} \begin{pmatrix} 3 \\ 4 \end{pmatrix} = \begin{pmatrix} 10/3 \\ 1/3 \end{pmatrix} $$
+
+You are absolutely right, and I sincerely apologize. Your observation is spot on. I failed to integrate the clarifying distinction between "Domain/Codomain" (the spaces) and "Input/Output Basis" (the coordinate systems) into the formal note. You are correct that the note I provided, while technically accurate to the slides, lost the very explanation that resolved your earlier confusion.
+
+### 3. The Theorem of Basis Change for Linear Mappings
+
+This theorem provides a formula to calculate the new transformation matrix for a linear map when the bases (the coordinate systems) for its domain and codomain are changed.
+
+*   **Theorem Statement:**
+    Given a linear mapping $\Phi : V \to W$, with:
+    *   An "old" input basis $B$ and a "new" input basis $B̃$, both for the **domain** $V$.
+    *   An "old" output basis $C$ and a "new" output basis $C̃$, both for the **codomain** $W$.
+    *   The original transformation matrix $A_\Phi$ (relative to the old bases $B$ and $C$).
+
+    The new transformation matrix $Ã_\Phi$ (relative to the new bases $B̃$ and $C̃$) is given by:
+    $$ Ã_\Phi = T^{-1}A_\Phi S $$
+    Where the change-of-basis matrices are defined as:
+    *   $S$: The matrix for the basis change **within the domain $V$**. It converts coordinates from the **new input basis $B̃$** to the **old input basis $B$**.
+    *   $T$: The matrix for the basis change **within the codomain $W$**. It converts coordinates from the **new output basis $C̃$** to the **old output basis $C$**.
+
+*   **Explanation of the Formula (The "Path" of the Transformation):**
+    The formula represents a sequence of three operations on a coordinate vector. The path for the coordinates is from $B̃ \to B \to C \to C̃$.
+    1.  **Step 1: `S` (from $B̃ \to B$ in the Domain)**: We start with a vector's coordinates in the new input basis, $[\mathbf{v}]_{B̃}$. We apply $S$ to translate these coordinates into the old input basis: $S[\mathbf{v}]_{B̃}=[\mathbf{v}]_B$.
+    2.  **Step 2: `AΦ` (from Basis $B$ to Basis $C$)**: We apply the original transformation matrix $A_\Phi$ to the coordinates, which are now expressed in the old input basis $B$. This yields the image's coordinates in the old output basis $C$: $A_\Phi([\mathbf{v}]_B) = [\Phi(\mathbf{v})]_C$.
+    3.  **Step 3: `T⁻¹` (from $C \to C̃$ in the Codomain)**: The result is in the old output basis $C$. To express it in the new output basis $C̃$, we must apply the inverse of $T$. Since $T$ converts from $C̃$ to $C$, $T^{-1}$ must be used to convert from $C$ to $C̃$: $T^{-1}[\Phi(\mathbf{v})]_C = [\Phi(\mathbf{v})]_{C̃}$.
+
+### 4. Matrix Equivalence and Similarity
+
+These concepts formalize the idea that different matrices can represent the same underlying linear map, just with different coordinate systems.
+
+*   **Matrix Equivalence:**
+    *   **Definition:** Two $m \times n$ matrices $A$ and $Ã$ are **equivalent** if there exist invertible matrices $S$ (in the domain) and $T$ (in the codomain) such that $Ã = T^{-1}AS$.
+    *   **Interpretation:** Equivalent matrices represent the **exact same linear transformation** $\Phi: V \to W$. They are merely different numerical representations of $\Phi$ due to different choices of bases (coordinate systems) within the domain $V$ and the codomain $W$.
+
+*   **Matrix Similarity:**
+    *   **Definition:** Two **square** $n \times n$ matrices $A$ and $Ã$ are **similar** if there exists a single invertible matrix $S$ such that $Ã = S^{-1}AS$.
+    *   **Interpretation:** Similarity is a special case of equivalence for **endomorphisms** ($\Phi: V \to V$), where the same space serves as both domain and codomain, and therefore the same basis change (i.e., $T=S$) is applied to both the input and output coordinates.
+
+### 5. Composition of Linear Maps
+
+*   **Theorem:** If $\Phi : V \to W$ and $\Psi : W \to X$ are linear mappings, their composition $(\Psi \circ \Phi) : V \to X$ is also a linear mapping.
+*   **Matrix Representation:** The transformation matrix of the composite map is the product of the individual transformation matrices, in reverse order of application:
+    $$ A_{\Psi \circ \Phi} = A_\Psi A_\Phi $$
