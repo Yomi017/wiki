@@ -111,12 +111,13 @@ ul.task-list {
       min-height: 350px;
       min-width: 350px;
       transform: translate(-50%, -50%);
-      z-index: 10000; // 提高到最高层级
+      z-index: 10002; // 同样提高全屏模式的层级
       display: block;
       background-color: var(--background-secondary);
       border: 1px solid var(--text-accent);
       border-radius: 5px;
       padding: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); // 添加阴影效果
 
       #link-graph {
         width: calc(100% - 20px);
@@ -644,12 +645,13 @@ ul.task-list {
   min-height: 350px;
   min-width: 350px;
   transform: translate(-50%, -50%);
-  z-index: 10000; // 提高到最高层级
+  z-index: 10002; // 提高到更高层级，确保在导航栏之上
   display: none;
   background-color: var(--background-secondary);
   border: 1px solid var(--text-accent);
   border-radius: 5px;
   padding: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); // 添加阴影效果
 
   #full-graph-container {
     width: calc(100% - 20px);
@@ -662,7 +664,7 @@ ul.task-list {
     top: 15px;
     right: 15px;
     cursor: pointer;
-    z-index: 10;
+    z-index: 10003; // 确保关闭按钮在最顶层
     background-color: var(--background-primary);
     border-radius: 50%;
     width: 30px;
