@@ -185,37 +185,17 @@
         return null;
     }
 </script>
-<div  x-init="{graphData, fullGraphData} = await fetchGraphData();" x-data="{ graphData: null, depth: 1, graph: null, fullGraph: null, showFullGraph: false, fullScreen: false, fullGraphData: null, isGlobalMode: true}" id="graph-component" x-bind:class="fullScreen ? 'graph graph-fs' : 'graph'" v-scope>
+<div  x-init="{graphData, fullGraphData} = await fetchGraphData();" x-data="{ graphData: null, depth: 1, graph: null, fullGraph: null, showFullGraph: false, fullScreen: false, fullGraphData: null}" id="graph-component" x-bind:class="fullScreen ? 'graph graph-fs' : 'graph'" v-scope>
     <div class="graph-title-container">
         <div id="graph-controls">
                 <div class="ctrl-right">
-                    <span id="graph-mode-btn" 
-                          x-on:click="isGlobalMode = !isGlobalMode; 
-                                     if (isGlobalMode) {
-                                         if (window.graph) window.graph._destructor();
-                                         window.graph = renderGraph(fullGraphData, 'link-graph', 200, fullScreen);
-                                     } else {
-                                         if (window.graph) window.graph._destructor();
-                                         window.graph = renderLocalGraph(graphData, depth, fullScreen);
-                                     }" 
-                          x-bind:title="isGlobalMode ? '切换到当前文章联系' : '切换到全局联系'">
-                        <i x-bind:icon-name="isGlobalMode ? 'target' : 'globe'" aria-hidden="true"></i>
-                    </span>
-                    <span id="graph-fs-btn" x-on:click="fullScreen = !fullScreen; $nextTick(() => {
-                                                        if (isGlobalMode) {
-                                                            if (window.graph) window.graph._destructor();
-                                                            window.graph = renderGraph(fullGraphData, 'link-graph', 200, fullScreen);
-                                                        } else {
-                                                            if (window.graph) window.graph._destructor();
-                                                            window.graph = renderLocalGraph(graphData, depth, fullScreen);
-                                                        }
-                                                    })" title="切换全屏">
-                        <i icon-name="expand" aria-hidden="true"></i>
-                    </span>
+                    <span id="local-graph-btn" x-on:click="window.graph = renderLocalGraph(graphData, 1, fullScreen)" title="当前文章联系"><i  icon-name="target" aria-hidden="true"></i></span>
+                    <span id="global-graph-btn" x-on:click="showFullGraph = true; setTimeout(() => {fullGraph = openFullGraph(fullGraphData)}, 100)" title="全局联系"><i  icon-name="globe" aria-hidden="true"></i></span>
+                    <span  id="graph-fs-btn"  x-on:click="fullScreen = !fullScreen; setTimeout(() => {window.graph = renderLocalGraph(graphData, depth, fullScreen)}, 100)" title="切换全屏"><i  icon-name="expand" aria-hidden="true"></i></span>
                 </div>
         </div>
     </div>
-    <div x-effect="if (isGlobalMode) { window.graph = renderGraph(fullGraphData, 'link-graph', 200, fullScreen); } else { window.graph = renderLocalGraph(graphData, depth, fullScreen); }" id="link-graph" ></div>
+    <div x-effect="window.graph = renderLocalGraph(graphData, depth, fullScreen)" id="link-graph" ></div>
     <div x-show="showFullGraph" id="full-graph" x-bind:class="showFullGraph ? 'show' : ''" style="display: none;">
         <span id="full-graph-close" x-on:click="fullGraph = closefullGraph(fullGraph); showFullGraph = false;"><i icon-name="x" aria-hidden="true"></i></span>
         <div id="full-graph-container"></div>
