@@ -637,6 +637,7 @@ You are absolutely right, and I sincerely apologize. Your observation is spot on
 
 ### 3. The Theorem of Basis Change for Linear Mappings
 
+[[Notion/Class/Proof/Change-of-Basis Theorem\|Change-of-Basis Theorem]]
 This theorem provides a formula to calculate the new transformation matrix for a linear map when the bases (the coordinate systems) for its domain and codomain are changed.
 
 *   **Theorem Statement:**
@@ -674,3 +675,142 @@ These concepts formalize the idea that different matrices can represent the same
 *   **Theorem:** If $\Phi : V \to W$ and $\Psi : W \to X$ are linear mappings, their composition $(\Psi \circ \Phi) : V \to X$ is also a linear mapping.
 *   **Matrix Representation:** The transformation matrix of the composite map is the product of the individual transformation matrices, in reverse order of application:
     $$ A_{\Psi \circ \Phi} = A_\Psi A_\Phi $$
+
+# Lecture 3: Analytic Geometry: Norms, Inner Products, and Lengths and Distances, Angles and Orthogonality
+
+### Part I: Geometric Structures on Vector Spaces
+
+In the previous parts, we established the algebraic framework of vector spaces and linear mappings. Now, we will enrich these spaces with **geometric structure**, allowing us to formalize intuitive concepts like the **length** of a vector, the **distance** between vectors, and the **angle** between them. These concepts are captured by norms and inner products.
+
+#### 1. Norms
+
+A norm is a formal generalization of the intuitive notion of a vector's "length" or "magnitude".
+
+*   **Geometric Intuition:** The norm of a vector is its length, i.e., the distance from the origin to the point the vector represents.
+
+*   **Formal Definition of a Norm:**
+    A **norm** on a vector space $V$ is a function $\|\cdot\| : V \to \mathbb{R}$ that assigns a non-negative real value $\|\mathbf{x}\|$ to every vector $\mathbf{x} \in V$. This function must satisfy the following three axioms for all vectors $\mathbf{x}, \mathbf{y} \in V$ and any scalar $\lambda \in \mathbb{R}$:
+
+    1.  **Positive Definiteness:** The length is positive, except for the zero vector.
+        *   $\|\mathbf{x}\| \ge 0$
+        *   $\|\mathbf{x}\| = 0 \iff \mathbf{x} = \mathbf{0}$
+
+    2.  **Absolute Homogeneity:** Scaling a vector scales its length by the same factor.
+        *   $\|\lambda\mathbf{x}\| = |\lambda|\|\mathbf{x}\|$
+
+    3.  **Triangle Inequality:** The length of one side of a triangle is no greater than the sum of the lengths of the other two sides.
+        *   $\|\mathbf{x} + \mathbf{y}\| \le \|\mathbf{x}\| + \|\mathbf{y}\|$
+
+    A vector space equipped with a norm is called a **normed vector space**.
+
+*   **Examples of Norms on $\mathbb{R}^n$:**
+    The idea of "length" can be defined in multiple ways. For a vector $\mathbf{x} = (x_1, \dots, x_n)^T$:
+
+    *   **The $L_1$-norm (Manhattan Norm):** Measures the "city block" distance.
+        $$ \|\mathbf{x}\|_1 := \sum_{i=1}^n |x_i| $$
+
+    *   **The $L_2$-norm (Euclidean Norm):** The standard "straight-line" distance, derived from the Pythagorean theorem.
+        $$ \|\mathbf{x}\|_2 := \sqrt{\sum_{i=1}^n x_i^2} = \sqrt{\mathbf{x}^T\mathbf{x}} $$
+        **This is the default norm.** When we write $\|\mathbf{x}\|$ without a subscript, we almost always mean the Euclidean norm.
+
+    *   **The $L_\infty$-norm (Maximum Norm):** The length is determined by the largest component of the vector.
+        $$ \|\mathbf{x}\|_\infty := \max_{i=1}^n |x_i| $$
+
+*   **Distance Derived from a Norm:**
+    Any norm naturally defines a **distance** $d(\mathbf{x}, \mathbf{y})$ between two vectors as the norm of their difference vector:
+    $$ d(\mathbf{x}, \mathbf{y}) := \|\mathbf{x} - \mathbf{y}\| $$
+
+#### 2. Inner Products
+
+An inner product is a more fundamental concept than a norm. It is a function that allows us to define not only the Euclidean norm but also the angle between vectors and the notion of orthogonality (perpendicularity).
+
+*   **Motivation:** The inner product is a generalization of the familiar **dot product** in $\mathbb{R}^n$, which is defined as:
+    $$ \langle \mathbf{x}, \mathbf{y} \rangle = \mathbf{x}^T\mathbf{y} = \sum_{i=1}^n x_i y_i $$
+
+*   **Formal Definition of an Inner Product:**
+    An **inner product** on a real vector space $V$ is a function $\langle \cdot, \cdot \rangle : V \times V \to \mathbb{R}$ that takes two vectors and returns a scalar. The function must be a **symmetric, positive-definite bilinear map**, satisfying the following axioms for all $\mathbf{x}, \mathbf{y}, \mathbf{z} \in V$ and any scalar $\lambda \in \mathbb{R}$:
+
+    1.  **Bilinearity:** The function is linear in each argument.
+        *   *Linearity in the first argument:* $\langle \lambda\mathbf{x} + \mathbf{y}, \mathbf{z} \rangle = \lambda\langle\mathbf{x}, \mathbf{z}\rangle + \langle\mathbf{y}, \mathbf{z}\rangle$
+        *   *Linearity in the second argument:* $\langle \mathbf{x}, \lambda\mathbf{y} + \mathbf{z} \rangle = \lambda\langle\mathbf{x}, \mathbf{y}\rangle + \langle\mathbf{x}, \mathbf{z}\rangle$
+
+    2.  **Symmetry:** The order of the arguments does not matter.
+        $$ \langle \mathbf{x}, \mathbf{y} \rangle = \langle \mathbf{y}, \mathbf{x} \rangle $$
+
+    3.  **Positive Definiteness:** The inner product of a vector with itself is non-negative, and is zero only for the zero vector.
+        *   $\langle \mathbf{x}, \mathbf{x} \rangle \ge 0$
+        *   $\langle \mathbf{x}, \mathbf{x} \rangle = 0 \iff \mathbf{x} = \mathbf{0}$
+
+    A vector space equipped with an inner product is called an **inner product space**.
+
+#### 3. The Bridge: From Inner Products to Geometry
+
+The inner product is the foundation of Euclidean geometry within a vector space. All key geometric concepts can be derived from it.
+
+*   **The Induced Norm:**
+    **Every inner product naturally defines (or induces) a norm** given by:
+    $$ \|\mathbf{x}\| := \sqrt{\langle \mathbf{x}, \mathbf{x} \rangle} $$
+    It can be proven that this definition satisfies all three norm axioms. The standard Euclidean norm $\|\mathbf{x}\|_2$ is precisely the norm induced by the standard dot product.
+
+*   **The Cauchy-Schwarz Inequality:**
+    This is one of the most important inequalities in mathematics. It relates the inner product of two vectors to their induced norms and provides the foundation for defining angles.
+    $$ |\langle \mathbf{x}, \mathbf{y} \rangle| \le \|\mathbf{x}\| \|\mathbf{y}\| $$
+
+*   **Geometric Concepts Defined by the Inner Product:**
+
+    *   **Length:** $\|\mathbf{x}\| = \sqrt{\langle \mathbf{x}, \mathbf{x} \rangle}$
+    *   **Distance:** $d(\mathbf{x}, \mathbf{y}) = \|\mathbf{x} - \mathbf{y}\| = \sqrt{\langle \mathbf{x}-\mathbf{y}, \mathbf{x}-\mathbf{y} \rangle}$
+    *   **Angle:** The angle $\theta$ between two non-zero vectors $\mathbf{x}$ and $\mathbf{y}$ is defined via:
+        $$ \cos\theta = \frac{\langle \mathbf{x}, \mathbf{y} \rangle}{\|\mathbf{x}\| \|\mathbf{y}\|} $$
+        (The Cauchy-Schwarz inequality guarantees that the right-hand side is between -1 and 1, so $\theta$ is well-defined).
+
+    *   **Orthogonality (Perpendicularity):**
+        *   **Definition:** Two vectors $\mathbf{x}$ and $\mathbf{y}$ are **orthogonal** if their inner product is zero. We denote this as $\mathbf{x} \perp \mathbf{y}$.
+            $$ \mathbf{x} \perp \mathbf{y} \iff \langle \mathbf{x}, \mathbf{y} \rangle = 0 $$
+        *   **Geometric Meaning:** If the inner product is the standard dot product, orthogonality means the vectors are perpendicular (the angle between them is 90° or $\pi/2$ radians).
+        *   **Pythagorean Theorem:** If $\mathbf{x} \perp \mathbf{y}$, then the familiar Pythagorean theorem holds:
+            $$ \|\mathbf{x} + \mathbf{y}\|^2 = \|\mathbf{x}\|^2 + \|\mathbf{y}\|^2 $$
+
+
+### Part II: Geometric Structures on Vector Spaces
+
+#### 4. Symmetric, Positive Definite (SPD) Matrices and Inner Products
+
+In finite-dimensional vector spaces like $\mathbb{R}^n$, the abstract concept of an inner product can be concretely represented and computed using a special class of matrices. These are **Symmetric, Positive Definite (SPD)** matrices. They are fundamental in machine learning, statistics, and optimization because they provide a way to define custom, yet valid, notions of distance, angle, and similarity, which are essential for algorithms like Support Vector Machines (with kernels), Gaussian models, and Newton's method in optimization.
+
+*   **Definition of a Symmetric, Positive Definite Matrix:**
+    A square matrix $A \in \mathbb{R}^{n \times n}$ is called **symmetric, positive definite** (SPD) if it satisfies two conditions:
+
+    1.  **Symmetry:** The matrix is equal to its transpose.
+        $$ A = A^T $$
+    2.  **Positive Definiteness:** The quadratic form $x^T A x$ is strictly positive for every non-zero vector $x \in \mathbb{R}^n$.[[Notion/Class/Proof/Quadratic Form\|Quadratic Form]]
+        $$ \mathbf{x}^T A \mathbf{x} > 0 \quad \text{for all } \mathbf{x} \in \mathbb{R}^n, \mathbf{x} \ne \mathbf{0} $$
+
+*   **The Central Theorem: The Matrix Representation of Inner Products**
+    The deep connection between algebra and geometry is captured by the following theorem, which states that inner products and SPD matrices are two sides of the same coin.
+
+    **Theorem:** Let $V$ be an $n$-dimensional real vector space with an ordered basis $B$. Let $\hat{\mathbf{x}}$ and $\hat{\mathbf{y}}$ be the coordinate vectors of $\mathbf{x}, \mathbf{y} \in V$ with respect to basis $B$. A function defined by
+    $$ \langle \mathbf{x}, \mathbf{y} \rangle := \hat{\mathbf{x}}^T A \hat{\mathbf{y}} $$
+    is a valid **inner product** on $V$ if and only if the matrix $A \in \mathbb{R}^{n \times n}$ is **symmetric and positive definite**.
+
+    **Explanation:**
+    *   This theorem provides a universal recipe for all possible inner products on a finite-dimensional space.
+    *   The standard **dot product** in $\mathbb{R}^n$ is the simplest case of this theorem, where the matrix $A$ is the identity matrix $I$:
+        $$ \langle \mathbf{x}, \mathbf{y} \rangle = \mathbf{x}^T I \mathbf{y} = \mathbf{x}^T \mathbf{y} $$
+    *   More importantly, *any* SPD matrix $A$ can be used to define a new, perfectly valid inner product $\langle \cdot, \cdot \rangle_A$ on $\mathbb{R}^n$. This new inner product defines a new geometry on the space, with its own corresponding notions of length $(\|\mathbf{x}\|_A = \sqrt{\mathbf{x}^T A \mathbf{x}})$ and orthogonality $(\mathbf{x}^T A \mathbf{y} = 0)$.
+
+*   **Properties of SPD Matrices**
+    If a matrix $A$ is symmetric and positive definite, it has several important properties that follow directly from its definition:
+
+    1.  **Invertibility (Trivial Null Space):** An SPD matrix is always invertible. Its null space (or kernel) contains only the zero vector.
+        *   **Proof:** Suppose there exists a non-zero vector $\mathbf{x}$ such that $A\mathbf{x} = \mathbf{0}$. Then multiplying by $\mathbf{x}^T$ gives $\mathbf{x}^T A \mathbf{x} = \mathbf{x}^T \mathbf{0} = 0$. This contradicts the positive definiteness condition, which states that $\mathbf{x}^T A \mathbf{x}$ must be strictly greater than 0 for any non-zero $\mathbf{x}$. Therefore, no such non-zero $\mathbf{x}$ can exist, and the only solution to $A\mathbf{x} = \mathbf{0}$ is $\mathbf{x} = \mathbf{0}$.
+
+    2.  **Positive Diagonal Elements:** All the diagonal elements of an SPD matrix are strictly positive.
+        *   **Proof:** To find the $i$-th diagonal element, $a_{ii}$, we can choose the standard basis vector $\mathbf{e}_i$ (which has a 1 in the $i$-th position and 0s elsewhere). Since $\mathbf{e}_i$ is a non-zero vector, we must have $\mathbf{e}_i^T A \mathbf{e}_i > 0$. But $\mathbf{e}_i^T A \mathbf{e}_i$ is precisely the element $a_{ii}$. Thus, $a_{ii} > 0$ for all $i$.
+
+*   **Recap: Inner Product vs. Dot Product**
+    It is crucial to distinguish between the general concept and its most common example:
+
+    *   **Inner Product $\langle \mathbf{x}, \mathbf{y} \rangle$:** This is the **general concept**. It is any function that is bilinear, symmetric, and positive definite.
+    *   **Dot Product $\mathbf{x}^T \mathbf{y}$:** This is a **specific example** of an inner product in $\mathbb{R}^n$. It is the inner product defined by the identity matrix, $A=I$.
+    *   **Euclidean Norm $\|\mathbf{x}\|_2$:** This is the norm that is **induced by the dot product**: $\|\mathbf{x}\|_2 = \sqrt{\mathbf{x}^T\mathbf{x}}$. Other inner products (defined by other SPD matrices $A$) induce different norms.
