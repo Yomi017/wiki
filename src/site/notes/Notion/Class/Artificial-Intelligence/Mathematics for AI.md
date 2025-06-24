@@ -774,7 +774,7 @@ The inner product is the foundation of Euclidean geometry within a vector space.
 
 ### Part II: Geometric Structures on Vector Spaces
 
-#### 4. Symmetric, Positive Definite (SPD) Matrices and Inner Products
+#### 1. Symmetric, Positive Definite (SPD) Matrices and Inner Products
 
 In finite-dimensional vector spaces like $\mathbb{R}^n$, the abstract concept of an inner product can be concretely represented and computed using a special class of matrices. These are **Symmetric, Positive Definite (SPD)** matrices. They are fundamental in machine learning, statistics, and optimization because they provide a way to define custom, yet valid, notions of distance, angle, and similarity, which are essential for algorithms like Support Vector Machines (with kernels), Gaussian models, and Newton's method in optimization.
 
@@ -814,3 +814,61 @@ In finite-dimensional vector spaces like $\mathbb{R}^n$, the abstract concept of
     *   **Inner Product $\langle \mathbf{x}, \mathbf{y} \rangle$:** This is the **general concept**. It is any function that is bilinear, symmetric, and positive definite.
     *   **Dot Product $\mathbf{x}^T \mathbf{y}$:** This is a **specific example** of an inner product in $\mathbb{R}^n$. It is the inner product defined by the identity matrix, $A=I$.
     *   **Euclidean Norm $\|\mathbf{x}\|_2$:** This is the norm that is **induced by the dot product**: $\|\mathbf{x}\|_2 = \sqrt{\mathbf{x}^T\mathbf{x}}$. Other inner products (defined by other SPD matrices $A$) induce different norms.
+You are absolutely right. My apologies for that oversight. I failed to maintain the English language consistency in the last response.
+
+### Part III: Angles, Orthogonality, and Orthogonal Matrices
+
+#### 1. Angles and Orthogonality
+
+Inner products not only define lengths and distances but also enable us to define the **angle** between vectors, thereby generalizing the concept of "perpendicularity".
+
+*   **Defining the Angle:**
+    *   The Cauchy-Schwarz inequality guarantees that for any non-zero vectors $\mathbf{x}$ and $\mathbf{y}$:
+        $$ -1 \le \frac{\langle \mathbf{x}, \mathbf{y} \rangle}{\|\mathbf{x}\| \|\mathbf{y}\|} \le 1 $$
+    *   This ensures that we can uniquely define an angle $\omega \in [0, \pi]$ (i.e., from 0° to 180°) such that:
+        $$ \cos\omega = \frac{\langle \mathbf{x}, \mathbf{y} \rangle}{\|\mathbf{x}\| \|\mathbf{y}\|} $$
+    *   This $\omega$ is defined as the **angle** between vectors $\mathbf{x}$ and $\mathbf{y}$. It measures the similarity of their orientation.
+
+*   **Orthogonality:**
+    *   **Definition:** Two vectors $\mathbf{x}$ and $\mathbf{y}$ are **orthogonal** if their inner product is zero. This is denoted as $\mathbf{x} \perp \mathbf{y}$.
+        $$ \mathbf{x} \perp \mathbf{y} \iff \langle \mathbf{x}, \mathbf{y} \rangle = 0 $$
+    *   **Geometric Meaning:** When $\langle \mathbf{x}, \mathbf{y} \rangle = 0$, it follows that $\cos\omega = 0$, which means the angle $\omega = \pi/2$ (90°). Therefore, orthogonality is a direct generalization of the geometric concept of "perpendicular".
+    *   **Important Corollary:** The zero vector $\mathbf{0}$ is orthogonal to every vector, since $\langle \mathbf{0}, \mathbf{x} \rangle = 0$.
+
+*   **Orthonormality:**
+    *   Two vectors $\mathbf{x}$ and $\mathbf{y}$ are **orthonormal** if they are both **orthogonal** ($\langle \mathbf{x}, \mathbf{y} \rangle = 0$) and are **unit vectors** ($\|\mathbf{x}\| = 1$, $\|\mathbf{y}\| = 1$).
+
+*   **Key Point: Orthogonality Depends on the Inner Product**
+    *   Just like length, whether two vectors are orthogonal depends entirely on the chosen inner product.
+    *   For example, the vectors $\mathbf{x}=[1, 1]^T$ and $\mathbf{y}=[-1, 1]^T$ are orthogonal under the standard dot product ($\mathbf{x}^T\mathbf{y} = 0$), but they may not be orthogonal under a different inner product defined by an SPD matrix $A$, such as $\langle \mathbf{x}, \mathbf{y} \rangle_A = \mathbf{x}^T A \mathbf{y}$.
+
+#### 2. Orthogonal Matrices
+
+An orthogonal matrix is a special type of square matrix whose corresponding linear transformation geometrically represents a shape-preserving transformation (like a rotation or reflection) and has excellent computational properties.
+
+*   **Definition:**
+    A square matrix $A \in \mathbb{R}^{n \times n}$ is called an **orthogonal matrix** if and only if its columns form an **orthonormal set**.
+
+*   **Equivalent Properties:**
+    The following statements are equivalent and are often used as practical tests for orthogonality:
+    1.  The columns of $A$ are orthonormal.
+    2.  $A^T A = I$
+    3.  $A^{-1} = A^T$
+    *   **Core Idea:** The inverse of an orthogonal matrix is simply its transpose. This makes the computationally expensive operation of inversion trivial.
+
+*   **Geometric Properties: Preserving Lengths and Angles**
+    A linear transformation $T(\mathbf{x}) = A\mathbf{x}$ defined by an orthogonal matrix $A$ is a **rigid transformation**, meaning it does not alter the geometry of the space.
+
+    1.  **Preserves Lengths:**
+        $$ \|A\mathbf{x}\|^2 = (A\mathbf{x})^T(A\mathbf{x}) = \mathbf{x}^T A^T A \mathbf{x} = \mathbf{x}^T I \mathbf{x} = \mathbf{x}^T\mathbf{x} = \|\mathbf{x}\|^2 $$
+        Therefore, $\|A\mathbf{x}\| = \|\mathbf{x}\|$.
+
+    2.  **Preserves Inner Products and Angles:**
+        $$ \langle A\mathbf{x}, A\mathbf{y} \rangle = (A\mathbf{x})^T(A\mathbf{y}) = \mathbf{x}^T A^T A \mathbf{y} = \mathbf{x}^T I \mathbf{y} = \langle \mathbf{x}, \mathbf{y} \rangle $$
+        Since the inner product is preserved, the angle defined by it is also preserved.
+
+*   **Practical Meaning and Applications:**
+    *   **Geometric Models:** Orthogonal matrices perfectly model **rotations** and **reflections** in space.
+    *   **Numerical Stability:** Algorithms involving orthogonal matrices (like QR decomposition) are typically very numerically stable.
+    *   **Change of Coordinate Systems:** The transformation from one orthonormal basis to another is described by an orthogonal matrix.
+    *   **Construction:** The **Gram-Schmidt process** can be used to construct an orthonormal basis from any set of linearly independent vectors, which can then be used as the columns of an orthogonal matrix.
