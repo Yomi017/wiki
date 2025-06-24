@@ -676,6 +676,225 @@ These concepts formalize the idea that different matrices can represent the same
 *   **Matrix Representation:** The transformation matrix of the composite map is the product of the individual transformation matrices, in reverse order of application:
     $$ A_{\Psi \circ \Phi} = A_\Psi A_\Phi $$
 
+## Part IV: Affine Spaces and Subspaces
+
+While vector spaces and subspaces are fundamental, they are constrained by one critical requirement: they must contain the origin. Affine spaces generalize this idea to describe geometric objects like lines and planes that do *not* necessarily pass through the origin.
+
+*   **Core Intuition: Vector Space vs. Affine Space**
+    *   A **vector subspace** is a line or plane (or higher-dimensional equivalent) that **must pass through the origin**.
+    *   An **affine subspace** is a line or plane (or higher-dimensional equivalent) that has been **shifted** or **translated** so it no longer needs to pass through the origin. It is a "flat" surface in the vector space.
+
+*   **Formal Definition of an Affine Subspace**
+
+    An **affine subspace** $L$ of a vector space $V$ is a subset that can be expressed as the sum of a specific vector (a point) and a vector subspace.
+
+    $$ L = \mathbf{p} + U = \{ \mathbf{p} + \mathbf{u} \mid \mathbf{u} \in U \} $$
+
+    Where:
+    *   $\mathbf{p} \in V$ is a specific vector, often called the **translation vector** or **support point**. It acts as the "anchor" that shifts the space.
+    *   $U$ is a **vector subspace** of $V$, often called the **direction space** or associated vector subspace. It defines the orientation and "shape" (line, plane, etc.) of the affine subspace.
+
+    The **dimension** of the affine subspace $L$ is defined as the dimension of its direction space $U$.
+
+*   **Geometric Examples:**
+    *   **A Line in $\mathbb{R}^3$:** A line passing through point $\mathbf{p}$ with direction vector $\mathbf{d}$ is an affine subspace.
+        $$ L = \mathbf{p} + t\mathbf{d} \quad (t \in \mathbb{R}) $$
+        Here, the support point is $\mathbf{p}$, and the direction space is the 1D vector subspace $U = \text{Span}\{\mathbf{d}\}$.
+    *   **A Plane in $\mathbb{R}^3$:** A plane containing point $\mathbf{p}$ and parallel to vectors $\mathbf{u}$ and $\mathbf{v}$ (which are linearly independent) is an affine subspace.
+        $$ L = \mathbf{p} + s\mathbf{u} + t\mathbf{v} \quad (s, t \in \mathbb{R}) $$
+        Here, the support point is $\mathbf{p}$, and the direction space is the 2D vector subspace $U = \text{Span}\{\mathbf{u}, \mathbf{v}\}$.
+
+*   **Connection to Solutions of Linear Systems (Crucial Application)**
+
+    Affine subspaces provide the perfect geometric description for the solution sets of linear systems.
+
+    *   **Homogeneous System `Ax = 0`:** The set of all solutions to a homogeneous system is the **Null Space** of $A$, denoted $N(A)$. The null space is always a **vector subspace**.
+
+    *   **Non-Homogeneous System `Ax = b`:** The set of all solutions to a non-homogeneous system (where $\mathbf{b} \ne \mathbf{0}$) is an **affine subspace**.
+        Recall the general solution formula:
+        $$ \mathbf{x} = \mathbf{x}_p + \mathbf{x}_h $$
+        Let's map this to the definition of an affine subspace $L = \mathbf{p} + U$:
+        *   The **particular solution** $\mathbf{x}_p$ serves as the **translation vector** $\mathbf{p}$.
+        *   The set of all **homogeneous solutions** $\mathbf{x}_h$ is the **direction space** $U$. This is precisely the null space, $N(A)$.
+
+        Therefore, the complete solution set for `Ax = b` is the affine subspace:
+        $$ L = \mathbf{x}_p + N(A) $$
+        This means the solution set is the null space $N(A)$ shifted by a particular solution vector $\mathbf{x}_p$.
+
+*   **Summary of Key Differences**
+
+| Feature | **Vector Subspace** (`U`) | **Affine Subspace** (`L = p + U`) |
+| :--- | :--- | :--- |
+| **Must Contain Origin?** | **Yes.** (`0 ∈ U`) | **No**, unless `p ∈ U`. |
+| **Closure under Addition?** | **Yes.** If `u₁, u₂ ∈ U`, then `u₁ + u₂ ∈ U`. | **No.** In general, `l₁ + l₂ ∉ L`. |
+| **Closure under Scaling?**| **Yes.** If `u ∈ U`, then `cu ∈ U`. | **No.** In general, `cl₁ ∉ L`. |
+| **Geometric Example** | A line/plane through the origin. | Any line/plane, shifted. |
+| **Linear System Example**| Solution set of `Ax = 0`. | Solution set of `Ax = b`. |
+
+*   **Affine Combination**
+    *   A related concept is an **affine combination**. It is a linear combination where the coefficients sum to 1.
+        $$ \mathbf{y} = \alpha_1\mathbf{x}_1 + \alpha_2\mathbf{x}_2 + \cdots + \alpha_k\mathbf{x}_k \quad \text{where} \quad \sum_{i=1}^k \alpha_i = 1 $$
+    *   An affine subspace is closed under affine combinations. The set of all affine combinations of a set of points forms the smallest affine subspace containing them (their "affine span").
+[[如何用仿射子空间 (Affine Subspace) 的结构来理解线性方程组 `Aλ = b` 的通解]]
+## Part V: Hyperplanes
+
+A hyperplane is a generalization of the concept of a line (in 2D) and a plane (in 3D) to vector spaces of any dimension. It is an extremely important and common special case of an affine subspace.
+
+### 1. Core Intuition
+
+-   In a **2D** space ($\mathbb{R}^2$), a hyperplane is a **line** (which is 1-dimensional).
+-   In a **3D** space ($\mathbb{R}^3$), a hyperplane is a **plane** (which is 2-dimensional).
+-   In an **n-dimensional** space ($\mathbb{R}^n$), a hyperplane is an **(n-1)-dimensional** "flat" subspace.
+
+Its key function is to "slice" the entire space into two half-spaces, making it an ideal **decision boundary** in classification problems.
+
+#### 2. Two Equivalent Definitions of a Hyperplane
+
+Hyperplanes can be defined in two equivalent ways: one algebraic and one geometric.
+
+##### **Definition 1: The Algebraic Definition (via a Single Linear Equation)**
+
+A **hyperplane** $H$ in $\mathbb{R}^n$ is the set of all points $\mathbf{x}$ that satisfy a single linear equation:
+$$ a_1x_1 + a_2x_2 + \cdots + a_nx_n = d $$
+where $a_1, \dots, a_n$ are coefficients that are not all zero, and `d` is a constant.
+
+Using vector notation, this equation becomes much more compact:
+$$ \mathbf{a}^T \mathbf{x} = d $$
+-   **Normal Vector $\mathbf{a}$**: The vector $\mathbf{a} = (a_1, \dots, a_n)^T$ is called the **normal vector** to the hyperplane. Geometrically, it is **perpendicular** to the hyperplane itself.
+-   **Offset `d`**: The constant `d` determines the hyperplane's offset from the origin.
+    -   If `d = 0`, the hyperplane `aᵀx = 0` passes through the origin and is itself an **(n-1)-dimensional vector subspace**.
+    -   If `d ≠ 0`, the hyperplane does not pass through the origin and is a true **affine subspace**.
+
+##### **Definition 2: The Geometric Definition (via Affine Subspaces)**
+
+A **hyperplane** $H$ in an n-dimensional vector space $V$ is an **affine subspace** of dimension **n-1**.
+$$ H = \mathbf{p} + U $$
+Where:
+-   $\mathbf{p}$ is any specific point on the hyperplane (the support point).
+-   $U$ is a vector subspace of dimension **n-1** (the direction space).
+
+### 3. The Connection Between the Definitions
+
+These two definitions are perfectly equivalent.
+
+-   **From Algebraic to Geometric (`aᵀx = d` → `p + U`)**:
+    1.  **Direction Space `U`**: The direction space `U` is the parallel hyperplane that passes through the origin. It is the set of all vectors `u` that satisfy `aᵀu = 0`. This set is the **orthogonal complement** of the normal vector `a` and has dimension n-1.
+    2.  **Support Point `p`**: We can find a support point `p` by finding any **particular solution** to the equation `aᵀx = d`.
+
+-   **Example**: Consider the plane $2x_1 + 3x_2 + 4x_3 = 12$ in $\mathbb{R}^3$.
+    -   **Algebraic Form**: Normal vector $\mathbf{a} = (2, 3, 4)^T$, offset $d = 12$.
+    -   **Geometric Form**:
+        -   **Find a support point `p`**: Let $x_2=0, x_3=0$. Then $2x_1=12 \implies x_1=6$. So, a point on the plane is $\mathbf{p} = (6, 0, 0)^T$.
+        -   **Find the direction space `U`**: `U` is the set of all vectors `u` such that $2u_1 + 3u_2 + 4u_3 = 0$. This is a 2-dimensional plane passing through the origin.
+        -   The hyperplane can thus be written as $H = \begin{pmatrix} 6 \\ 0 \\ 0 \end{pmatrix} + \text{Span}\left\{\begin{pmatrix} -3/2 \\ 1 \\ 0 \end{pmatrix}, \begin{pmatrix} -2 \\ 0 \\ 1 \end{pmatrix}\right\}$, where the two vectors in the span form a basis for `U`.
+
+### 4. Hyperplanes in Machine Learning
+
+Hyperplanes are at the core of many machine learning algorithms, most famously the **Support Vector Machine (SVM)**.
+
+-   **As a Decision Boundary**: In a binary classification problem, the goal is to find a hyperplane that best separates data points belonging to two different classes.
+-   **The SVM Hyperplane**: An SVM seeks to find an optimal hyperplane defined by the equation:
+    $$ \mathbf{w}^T\mathbf{x} - b = 0 $$
+    -   $\mathbf{w}$ is the weight vector, which is equivalent to the **normal vector** `a`.
+    -   `b` is the bias term, which is related to the **offset** `d`.
+-   **The Classification Rule**:
+    -   If a new data point $\mathbf{x}_{\text{new}}$ satisfies $\mathbf{w}^T\mathbf{x}_{\text{new}} - b > 0$, it is assigned to one class (e.g., the positive class).
+    -   If it satisfies $\mathbf{w}^T\mathbf{x}_{\text{new}} - b < 0$, it is assigned to the other class (e.g., the negative class).
+    -   This means the classification of a point is determined by which side of the hyperplane it lies on. The goal of an SVM is to find the `w` and `b` that make this separating "margin" as wide as possible.
+
+## Part VI: Affine Mappings
+
+We have established that linear mappings, of the form `φ(x) = Ax`, always preserve the origin (i.e., `φ(0) = 0`). However, many practical applications, especially in computer graphics, require transformations that include **translation**, which moves the origin. This more general class of transformation is called an affine mapping.
+
+### 1. Core Idea: A Linear Map Followed by a Translation
+
+An **affine mapping** is, in essence, a composition of a **linear mapping** and a **translation**.
+
+-   **Linear Part:** Handles rotation, scaling, shearing, and other transformations that keep the origin fixed.
+-   **Translation Part:** Shifts the entire result to a new location in the space.
+
+### 2. Formal Definition
+
+A mapping `f: V → W` from a vector space `V` to a vector space `W` is called an **affine mapping** if it can be written in the form:
+$$ f(\mathbf{x}) = A\mathbf{x} + \mathbf{b} $$
+Where:
+-   `A` is an $m \times n$ matrix representing the **linear part** of the transformation.
+-   `b` is an $m \times 1$ vector representing the **translation part**.
+
+**Distinction from Linear Mappings:**
+-   If the translation vector `b = 0`, the affine map degenerates into a purely linear map.
+-   If `b ≠ 0`, then `f(0) = A(0) + b = b`, which means the origin is no longer mapped to the origin but is moved to the position defined by `b`.
+
+### 3. Key Properties of Affine Mappings
+
+While affine maps are generally not linear (since `f(x+y) ≠ f(x) + f(y)`), they preserve several crucial geometric properties.
+
+1.  **Lines Map to Lines:** An affine map transforms a straight line into another straight line (or, in a degenerate case, a single point if the line's direction is in the null space of `A`).
+
+2.  **Parallelism is Preserved:** If two lines are parallel, their images under an affine map will also be parallel.
+
+3.  **Ratios of Lengths are Preserved:** If a point `P` is the midpoint of a line segment `QR`, then its image `f(P)` will be the midpoint of the image segment `f(Q)f(R)`. This property is vital for maintaining the relative structure of geometric shapes.
+
+4.  **Affine Combinations are Preserved:** This is the most fundamental algebraic property of an affine map. If a point `y` is an affine combination of a set of points `xᵢ` (meaning `y = Σαᵢxᵢ` where `Σαᵢ = 1`), then its image `f(y)` is the **same affine combination** of the images `f(xᵢ)`:
+    $$ f\left(\sum \alpha_i \mathbf{x}_i\right) = \sum \alpha_i f(\mathbf{x}_i), \quad \text{provided that} \quad \sum \alpha_i = 1 $$
+
+### 4. Homogeneous Coordinates: The Trick to Unify Transformations
+
+In fields like computer graphics, it is highly desirable to represent all transformations, including translations, with a **single matrix multiplication**. The standard form `Ax + b` requires both a multiplication and an addition, which is inconvenient for composing multiple transformations.
+
+**Homogeneous Coordinates** elegantly solve this problem by adding an extra dimension, effectively turning an affine map into a linear map in a higher-dimensional space.
+
+*   **How it Works:**
+    1.  An n-dimensional vector `x = (x₁, ..., xₙ)ᵀ` is represented as an (n+1)-dimensional homogeneous vector:
+        $$ \mathbf{x}_{\text{hom}} = \begin{bmatrix} x_1 \\ \vdots \\ x_n \\ 1 \end{bmatrix} $$
+    2.  An affine map `f(x) = Ax + b` is represented by an `(n+1) × (n+1)` **augmented transformation matrix**:
+        $$ T_f = \begin{bmatrix}
+           & A & & \mathbf{b} \\
+           \hline
+           0 & \cdots & 0 & 1
+           \end{bmatrix}
+        $$
+        Here, `A` is the $n \times n$ linear part, and `b` is the $n \times 1$ translation vector. The bottom row consists of zeros followed by a one.
+
+*   **The Unified Operation:**
+    The affine transformation can now be performed with a single matrix multiplication. The notation below shows the block matrix multiplication explicitly:
+
+    $$
+    T_f \mathbf{x}_{\text{hom}} =
+    \begin{bmatrix}
+    A & \mathbf{b} \\
+    \mathbf{0}^T & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+    \mathbf{x} \\
+    1
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+    A\mathbf{x} + \mathbf{b}(1) \\
+    \mathbf{0}^T\mathbf{x} + 1(1)
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+    A\mathbf{x} + \mathbf{b} \\
+    1
+    \end{bmatrix}
+    $$
+    The resulting vector's first `n` components are exactly the desired `Ax + b`, and the final component remains `1`.
+
+*   **The Advantage:**
+    This technique allows a sequence of transformations (e.g., a rotation, then a scaling, then a translation) to be composed by first multiplying their respective augmented matrices. The resulting single matrix can then be applied to all points, dramatically simplifying the computation and management of complex transformations.
+
+### 5. Summary
+
+| Concept                   | **Linear Mapping (`Ax`)**                                                    | **Affine Mapping (`Ax + b`)**                                                |
+| :------------------------ | :--------------------------------------------------------------------------- | :--------------------------------------------------------------------------- |
+| **Essence**               | Rotation / Scaling / Shearing                                                | Linear Transformation + Translation                                          |
+| **Preserves Origin?**     | **Yes**, `f(0) = 0`                                                          | **No**, `f(0) = b` in general                                                |
+| **Preserves Lin. Comb.?** | **Yes**                                                                      | **No**                                                                       |
+| **What is Preserved?**    | Lines, parallelism, **linear combinations**                                  | Lines, parallelism, **affine combinations**                                  |
+| **Representation**        | Matrix `A`                                                                   | Matrix `A` and vector `b`                                                    |
+| **Homogeneous Form**      | $\begin{bsmallmatrix} A & \mathbf{0} \\ \mathbf{0}^T & 1 \end{bsmallmatrix}$ | $\begin{bsmallmatrix} A & \mathbf{b} \\ \mathbf{0}^T & 1 \end{bsmallmatrix}$ |
 # Lecture 3: Analytic Geometry: Norms, Inner Products, and Lengths and Distances, Angles and Orthogonality
 
 ### Part I: Geometric Structures on Vector Spaces
@@ -872,3 +1091,4 @@ An orthogonal matrix is a special type of square matrix whose corresponding line
     *   **Numerical Stability:** Algorithms involving orthogonal matrices (like QR decomposition) are typically very numerically stable.
     *   **Change of Coordinate Systems:** The transformation from one orthonormal basis to another is described by an orthogonal matrix.
     *   **Construction:** The **Gram-Schmidt process** can be used to construct an orthonormal basis from any set of linearly independent vectors, which can then be used as the columns of an orthogonal matrix.
+
