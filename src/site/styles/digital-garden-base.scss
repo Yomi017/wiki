@@ -104,17 +104,17 @@ ul.task-list {
     }
 
     .graph-fs {
-      position: fixed !important;
-      top: 50% !important;
-      left: 50% !important;
-      height: calc(100vmin - 100px) !important;
-      width: calc(100vmin - 100px) !important;
-      min-height: 350px !important;
-      min-width: 350px !important;
-      transform: translate(-50%, -50%) !important;
-      z-index: 999999 !important; // 使用更高的层级并强制应用
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      height: calc(100vmin - 100px);
+      width: calc(100vmin - 100px);
+      min-height: 350px;
+      min-width: 350px;
+      transform: translate(-50%, -50%);
+      z-index: 9999; // 简化层级设置
       display: block;
-      background-color: var(--background-secondary) !important;
+      background-color: var(--background-secondary);
       border: 1px solid var(--text-accent);
       border-radius: 5px;
       padding: 10px;
@@ -390,13 +390,14 @@ ul.task-list {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 3;
+  z-index: 1; // 降低顶部导航栏的层级
   padding-left: var(--file-margins);
   display: flex;
   justify-content: space-between;
   align-items: center;
   @media (max-width: 1400px) {
     position: fixed;
+    z-index: 1; // 确保响应式时也是低层级
   }
 
   @media (max-width: 800px) {
@@ -639,17 +640,17 @@ ul.task-list {
 }
 
 #full-graph {
-  position: fixed !important;
-  top: 50% !important;
-  left: 50% !important;
-  height: calc(100vmin - 100px) !important;
-  width: calc(100vmin - 100px) !important;
-  min-height: 350px !important;
-  min-width: 350px !important;
-  transform: translate(-50%, -50%) !important;
-  z-index: 999999 !important; // 使用更高的层级并强制应用
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  height: calc(100vmin - 100px);
+  width: calc(100vmin - 100px);
+  min-height: 350px;
+  min-width: 350px;
+  transform: translate(-50%, -50%);
+  z-index: 9999; // 简化层级设置
   display: none;
-  background-color: var(--background-secondary) !important;
+  background-color: var(--background-secondary);
   border: 1px solid var(--text-accent);
   border-radius: 5px;
   padding: 10px;
@@ -666,7 +667,7 @@ ul.task-list {
     top: 15px;
     right: 15px;
     cursor: pointer;
-    z-index: 1000000 !important; // 确保关闭按钮在最顶层
+    z-index: 10000; // 关闭按钮稍高一点
     background-color: var(--background-primary);
     border-radius: 50%;
     width: 30px;
