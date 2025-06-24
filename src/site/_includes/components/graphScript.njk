@@ -86,12 +86,6 @@
             .linkDirectionalArrowRelPos(0) // 移除箭头
             .autoPauseRedraw(false)
             .linkColor((link) => {
-                // 如果连接涉及文件夹，使用虚线样式
-                if (link.isFolder || (graphData.nodes.find(n => n.id === link.source)?.isFolder) || 
-                    (graphData.nodes.find(n => n.id === link.target)?.isFolder)) {
-                    return mutedColor;
-                }
-                
                 if (hoverNode == null) {
                     return color;
                 }
@@ -100,28 +94,6 @@
                 } else {
                     return mutedColor;
                 }
-            })
-            .linkCanvasObject((link, ctx) => {
-                const start = link.source;
-                const end = link.target;
-                
-                // 检查是否是文件夹连接
-                const isFolderLink = start.isFolder || end.isFolder;
-                
-                if (isFolderLink) {
-                    // 绘制虚线
-                    ctx.save();
-                    ctx.strokeStyle = mutedColor;
-                    ctx.lineWidth = 1;
-                    ctx.setLineDash([3, 3]); // 虚线样式
-                    ctx.beginPath();
-                    ctx.moveTo(start.x, start.y);
-                    ctx.lineTo(end.x, end.y);
-                    ctx.stroke();
-                    ctx.restore();
-                    return true; // 返回true表示自定义绘制完成
-                }
-                return false; // 使用默认绘制
             })
             .nodeCanvasObject((node, ctx) => {
                 const numberOfNeighbours = (node.neighbors && node.neighbors.length) || 2;
@@ -187,11 +159,12 @@
                 }
                 hoverNode = node || null;
             });
-            if (fullScreen || (delay != null && graphData.nodes.length > 4)) {
-                setTimeout(() => {
-                    Graph.zoomToFit(5, 75);
-                }, delay || 200);
-            }
+            
+        if (fullScreen || (delay != null && graphData.nodes.length > 4)) {
+            setTimeout(() => {
+                Graph.zoomToFit(5, 75);
+            }, delay || 200);
+        }
         return Graph;
     }
 
@@ -210,7 +183,7 @@
         graphData = JSON.parse(JSON.stringify(graphData));
         const hiddens = Object.values(graphData.nodes).filter((n) => n.hide).map((n) => n.id);
         
-        // 创建文件夹节点映射
+        // 对于全局图，添加文件夹结构
         const folderNodes = new Map();
         const enhancedNodes = [];
         const enhancedLinks = [];
