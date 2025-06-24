@@ -1092,3 +1092,168 @@ An orthogonal matrix is a special type of square matrix whose corresponding line
     *   **Change of Coordinate Systems:** The transformation from one orthonormal basis to another is described by an orthogonal matrix.
     *   **Construction:** The **Gram-Schmidt process** can be used to construct an orthonormal basis from any set of linearly independent vectors, which can then be used as the columns of an orthogonal matrix.
 
+## Part IV: Metric Spaces and the Formal Definition of Distance
+
+Previously, we defined distance in an inner product space as `d(x, y) = ||x - y||`. This is a specific instance of a much more general concept called a **metric**. A metric formalizes the intuitive notion of "distance" between elements of any set, not just vectors.
+
+### 1. The Metric Function (度量函数)
+
+A **metric** (or **distance function**) on a set `V` is a function that quantifies the distance between any two elements of that set.
+
+*   **Formal Definition:**
+    A **metric** on a set `V` is a function `d : V × V → ℝ` that maps a pair of elements `(x, y)` to a real number `d(x, y)`, satisfying the following three axioms for all `x, y, z ∈ V`:
+
+    1.  **Positive Definiteness (正定性):**
+        *   `d(x, y) ≥ 0` (Distance is always non-negative).
+        *   `d(x, y) = 0` if and only if `x = y` (The distance from an element to itself is zero, and it's the only case where the distance is zero).
+
+    2.  **Symmetry (对称性):**
+        *   `d(x, y) = d(y, x)` (The distance from x to y is the same as the distance from y to x).
+
+    3.  **Triangle Inequality (三角不等式):**
+        *   `d(x, z) ≤ d(x, y) + d(y, z)` (The direct path is always the shortest; going from x to z via y is at least as long).
+
+*   **Metric Space (度量空间):**
+    A set `V` equipped with a metric `d` is called a **metric space**, denoted as `(V, d)`.
+
+### 2. The Connection: From Inner Products to Metrics
+
+The distance we derived from the inner product is a valid metric. We can prove this by showing it satisfies all three metric axioms.
+
+*   **Theorem:** The distance function `d(x, y) = ||x - y|| = √⟨x-y, x-y⟩` induced by an inner product is a metric.
+
+*   **Proof:**
+    1.  **Positive Definiteness:**
+        *   `d(x, y) = ||x - y||`. By the positive definiteness of norms, `||x - y|| ≥ 0`.
+        *   Equality `||x - y|| = 0` holds if and only if `x - y = 0`, which means `x = y`. The axiom holds.
+
+    2.  **Symmetry:**
+        *   `d(x, y) = ||x - y||`. Using the properties of norms, `||x - y|| = ||(-1)(y - x)|| = |-1| ||y - x|| = ||y - x|| = d(y, x)`. The axiom holds.
+
+    3.  **Triangle Inequality:**
+        *   `d(x, z) = ||x - z||`. We can rewrite the argument as `x - z = (x - y) + (y - z)`.
+        *   By the triangle inequality for norms, `||(x - y) + (y - z)|| ≤ ||x - y|| + ||y - z||`.
+        *   Substituting back the distance definition, we get `d(x, z) ≤ d(x, y) + d(y, z)`. The axiom holds.
+
+### 3. Why is the Concept of a Metric Useful?
+
+The power of defining a metric abstractly is that it allows us to measure "distance" in contexts far beyond standard Euclidean geometry.
+
+*   **Generalization:** It applies to any set, including:
+    *   **Strings:** The **edit distance** (or Levenshtein distance) between two strings (e.g., "apple" and "apply") is a metric. It counts the minimum number of edits (insertions, deletions, substitutions) needed to change one string into the other.
+    *   **Graphs:** The shortest path distance between two nodes in a graph is a metric.
+    *   **Functions:** We can define metrics to measure how "far apart" two functions are.
+
+*   **Foundation for Other Fields:** The concept of a metric space is foundational for topology, analysis, and many areas of machine learning. For example, the **k-Nearest Neighbors (k-NN)** algorithm can work with any valid metric to find the "closest" data points, not just Euclidean distance.
+
+### 4. Summary: Hierarchy of Spaces
+
+This shows how these geometric concepts build upon each other:
+
+`Inner Product Space` → `Normed Space` → `Metric Space` → `Topological Space`
+
+*   Every **inner product** induces a **norm**.
+*   Every **norm** induces a **metric**.
+*   Every **metric** induces a **topology** (a notion of "open sets" and "closeness").
+
+However, the reverse is not always true. There are metrics (like edit distance) that do not come from a norm, and norms (like the L1-norm) that do not come from an inner product.
+
+## Part V: Orthogonal Projections
+
+Orthogonal projection is a fundamental operation that finds the "closest" vector in a subspace to a given vector in the larger space. It is the geometric foundation for concepts like least-squares approximation.
+
+### 1. The Concept of Orthogonal Projection
+
+Let $U$ be a subspace of an inner product space $V$ (e.g., $\mathbb{R}^n$ with the dot product), and let $\mathbf{x} \in V$ be a vector. The **orthogonal projection** of $\mathbf{x}$ onto the subspace $U$, denoted $\pi_U(\mathbf{x})$, is the unique vector in $U$ that is "closest" to $\mathbf{x}$.
+
+This projection, which we will call $\mathbf{p} = \pi_U(\mathbf{x})$, is defined by two fundamental properties:
+
+1.  **Membership Property:** The projection $\mathbf{p}$ must lie within the subspace $U$.
+    -   ($\mathbf{p} \in U$)
+
+2.  **Orthogonality Property:** The vector connecting the original vector $\mathbf{x}$ to its projection $\mathbf{p}$ (the "error" vector $\mathbf{x} - \mathbf{p}$) must be orthogonal to the entire subspace $U$.
+    -   ($(\mathbf{x} - \mathbf{p}) \perp U$)
+
+This second property implies that $(\mathbf{x} - \mathbf{p})$ must be orthogonal to every vector in $U$. A key theorem states that this is equivalent to being orthogonal to all vectors in a **basis** for $U$.
+
+### 2. Deriving the Projection Formula (The Normal Equation)
+
+Our goal is to find an algebraic method to compute the projection vector $\mathbf{p}$. The strategy is to translate the two geometric properties above into a system of linear equations.
+
+**Step 1: Express the Membership Property using a Basis**
+
+First, we need a basis for the subspace $U$. Let's say we find a basis $\{\mathbf{b}_1, \mathbf{b}_2, \dots, \mathbf{b}_k\}$. We can arrange these basis vectors as the columns of a matrix $B$:
+$$ B = \begin{bmatrix} | & | & & | \\ \mathbf{b}_1 & \mathbf{b}_2 & \cdots & \mathbf{b}_k \\ | & | & & | \end{bmatrix} $$
+Since the projection $\mathbf{p}$ must be in the subspace $U$ (which is the column space of $B$), $\mathbf{p}$ must be a linear combination of the columns of $B$. This means there must exist a unique vector of coefficients $\boldsymbol{\lambda} = (\lambda_1, \dots, \lambda_k)^T$ such that:
+$$ \mathbf{p} = \lambda_1\mathbf{b}_1 + \lambda_2\mathbf{b}_2 + \cdots + \lambda_k\mathbf{b}_k $$
+In matrix form, this is written as:
+$$ \mathbf{p} = B\boldsymbol{\lambda} $$
+Our problem is now reduced from finding the vector $\mathbf{p}$ to finding the unknown coefficient vector $\boldsymbol{\lambda}$.
+
+**Step 2: Express the Orthogonality Property as an Equation**
+
+The orthogonality property states that $(\mathbf{x} - \mathbf{p}) \perp U$. This means the dot product of $(\mathbf{x} - \mathbf{p})$ with every basis vector of $U$ must be zero:
+$$
+\begin{cases}
+    \mathbf{b}_1 \cdot (\mathbf{x} - \mathbf{p}) = 0 \\
+    \mathbf{b}_2 \cdot (\mathbf{x} - \mathbf{p}) = 0 \\
+    \quad \vdots \\
+    \mathbf{b}_k \cdot (\mathbf{x} - \mathbf{p}) = 0
+\end{cases}
+\quad \iff \quad
+\begin{cases}
+    \mathbf{b}_1^T (\mathbf{x} - \mathbf{p}) = 0 \\
+    \mathbf{b}_2^T (\mathbf{x} - \mathbf{p}) = 0 \\
+    \quad \vdots \\
+    \mathbf{b}_k^T (\mathbf{x} - \mathbf{p}) = 0
+\end{cases}
+$$
+This system of equations can be written compactly in matrix form. Notice that the rows of the matrix are the transposes of our basis vectors, which is exactly the matrix $B^T$:
+$$
+\begin{bmatrix}
+\text{--- } \mathbf{b}_1^T \text{ ---} \\
+\text{--- } \mathbf{b}_2^T \text{ ---} \\
+\vdots \\
+\text{--- } \mathbf{b}_k^T \text{ ---}
+\end{bmatrix}
+(\mathbf{x} - \mathbf{p}) = \mathbf{0}
+\quad \implies \quad
+B^T(\mathbf{x} - \mathbf{p}) = \mathbf{0}
+$$
+
+**Step 3: Combine and Solve for λ**
+
+We now have a system of two equations:
+1.  $\mathbf{p} = B\boldsymbol{\lambda}$
+2.  $B^T(\mathbf{x} - \mathbf{p}) = \mathbf{0}$
+
+Substitute the first equation into the second:
+$$ B^T(\mathbf{x} - B\boldsymbol{\lambda}) = \mathbf{0} $$
+Distribute $B^T$:
+$$ B^T\mathbf{x} - B^T(B\boldsymbol{\lambda}) = \mathbf{0} $$
+Rearrange the terms to isolate the unknown $\boldsymbol{\lambda}$:
+$$ (B^T B)\boldsymbol{\lambda} = B^T\mathbf{x} $$
+
+This final result is known as the **Normal Equation**. It is a system of linear equations for the unknown coefficients $\boldsymbol{\lambda}$.
+
+### 3. The Algorithm for Orthogonal Projection
+
+Given a vector $\mathbf{x}$ and a subspace $U$:
+
+1.  **Find a Basis:** Find a basis $\{\mathbf{b}_1, \dots, \mathbf{b}_k\}$ for the subspace $U$.
+2.  **Form the Basis Matrix `B`:** Create a matrix $B$ whose columns are the basis vectors.
+3.  **Set up the Normal Equation:** Compute the matrix `BᵀB` and the vector `Bᵀx`.
+4.  **Solve for `λ`:** Solve the linear system `(BᵀB)λ = Bᵀx` to find the coefficient vector `λ`.
+5.  **Compute the Projection `p`:** Calculate the final projection vector using the formula `p = Bλ`.
+
+**Important Note:** The matrix `BᵀB` is square and is invertible if and only if the columns of `B` are linearly independent (which they are, because they form a basis).
+
+### 4. Special Case: Orthonormal Basis
+
+If the basis for $U$ is **orthonormal**, the columns of $B$ are orthonormal. In this case, the calculation simplifies dramatically:
+
+*   $B^T B = I$ (the identity matrix).
+*   The Normal Equation becomes: $I \boldsymbol{\lambda} = B^T\mathbf{x} \implies \boldsymbol{\lambda} = B^T\mathbf{x}$.
+*   The projection formula becomes: $\mathbf{p} = B\boldsymbol{\lambda} = B(B^T\mathbf{x}) = (BB^T)\mathbf{x}$.
+
+The matrix $P = BB^T$ is called the **projection matrix**. This simplified formula only works when the basis is orthonormal. For a general, non-orthogonal basis, one must solve the full Normal Equation.
