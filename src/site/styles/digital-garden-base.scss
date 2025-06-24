@@ -112,7 +112,7 @@ ul.task-list {
       min-height: 350px;
       min-width: 350px;
       transform: translate(-50%, -50%);
-      z-index: 10002; // 同样提高全屏模式的层级
+      z-index: 99999; // 设置为最高层级
       display: block;
       background-color: var(--background-secondary);
       border: 1px solid var(--text-accent);
@@ -194,7 +194,8 @@ ul.task-list {
   overflow-y: auto;
   margin-bottom: 0; // 移除底部间距
   border-left: 1px solid var(--text-accent);
-  height: 100%; // 充满父容器
+  height: 100%;
+
   ul {
     list-style-type: none;
     padding-inline-start: 15px !important;
@@ -646,13 +647,13 @@ ul.task-list {
   min-height: 350px;
   min-width: 350px;
   transform: translate(-50%, -50%);
-  z-index: 10002; // 提高到更高层级，确保在导航栏之上
+  z-index: 99999; // 设置为最高层级
   display: none;
   background-color: var(--background-secondary);
   border: 1px solid var(--text-accent);
   border-radius: 5px;
   padding: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); // 添加阴影效果
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 
   #full-graph-container {
     width: calc(100% - 20px);
@@ -665,7 +666,7 @@ ul.task-list {
     top: 15px;
     right: 15px;
     cursor: pointer;
-    z-index: 10003; // 确保关闭按钮在最顶层
+    z-index: 100000; // 确保关闭按钮在最顶层
     background-color: var(--background-primary);
     border-radius: 50%;
     width: 30px;
@@ -940,4 +941,53 @@ div.dataview-error-box {
 
 .dataview.small-text::after {
   content: ")";
+}
+
+/* 修复大纲锚点偏移问题 */
+.toc-container {
+  font-size: 1rem;
+  overflow-y: auto;
+  margin-bottom: 0;
+  border-left: 1px solid var(--text-accent);
+  height: 100%;
+
+  ul {
+    list-style-type: none;
+    padding-inline-start: 15px !important;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  ul:not(:first-child) {
+    margin-bottom: 3px;
+  }
+
+  li {
+    padding-top: 4px;
+    &::before {
+      content: "# " !important;
+      color: var(--text-accent);
+      font-size: 0.8rem;
+    }
+    a {
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+/* 添加锚点偏移以避免被顶部导航栏遮挡 */
+h1[id],
+h2[id],
+h3[id],
+h4[id],
+h5[id],
+h6[id] {
+  scroll-margin-top: 100px; // 为固定导航栏留出空间
+}
+
+/* 通用锚点偏移 */
+[id] {
+  scroll-margin-top: 100px;
 }

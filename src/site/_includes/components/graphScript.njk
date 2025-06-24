@@ -70,7 +70,7 @@
         let hoverNode = null;
         const color = getCssVar("--graph-main");
         const mutedColor = getCssVar("--graph-muted");
-        const folderColor = getCssVar("--text-muted"); // 文件夹颜色
+        const folderColor = getCssVar("--text-muted");
         
         let Graph = ForceGraph()
         (el)
@@ -82,8 +82,8 @@
             .d3AlphaDecay(0.10)
             .width(width)
             .height(height)
-            .linkDirectionalArrowLength(2)
-            .linkDirectionalArrowRelPos(0.5)
+            .linkDirectionalArrowLength(0) // 移除箭头
+            .linkDirectionalArrowRelPos(0) // 移除箭头
             .autoPauseRedraw(false)
             .linkColor((link) => {
                 // 如果连接涉及文件夹，使用虚线样式
