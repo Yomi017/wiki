@@ -70,6 +70,8 @@
         let hoverNode = null;
         const color = getCssVar("--graph-main");
         const mutedColor = getCssVar("--graph-muted");
+        const folderColor = getCssVar("--text-muted"); // 文件夹颜色
+        
         let Graph = ForceGraph()
         (el)
             .graphData(graphData)
@@ -84,6 +86,12 @@
             .linkDirectionalArrowRelPos(0.5)
             .autoPauseRedraw(false)
             .linkColor((link) => {
+                // 如果连接涉及文件夹，使用虚线样式
+                if (link.isFolder || (graphData.nodes.find(n => n.id === link.source)?.isFolder) || 
+                    (graphData.nodes.find(n => n.id === link.target)?.isFolder)) {
+                    return mutedColor;
+                }
+                
                 if (hoverNode == null) {
                     return color;
                 }
@@ -92,7 +100,28 @@
                 } else {
                     return mutedColor;
                 }
+            })
+            .linkCanvasObject((link, ctx) => {
+                const start = link.source;
+                const end = link.target;
                 
+                // 检查是否是文件夹连接
+                const isFolderLink = start.isFolder || end.isFolder;
+                
+                if (isFolderLink) {
+                    // 绘制虚线
+                    ctx.save();
+                    ctx.strokeStyle = mutedColor;
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([3, 3]); // 虚线样式
+                    ctx.beginPath();
+                    ctx.moveTo(start.x, start.y);
+                    ctx.lineTo(end.x, end.y);
+                    ctx.stroke();
+                    ctx.restore();
+                    return true; // 返回true表示自定义绘制完成
+                }
+                return false; // 使用默认绘制
             })
             .nodeCanvasObject((node, ctx) => {
                 const numberOfNeighbours = (node.neighbors && node.neighbors.length) || 2;
@@ -100,19 +129,32 @@
                 
                 ctx.beginPath();
                 ctx.arc(node.x, node.y, nodeR, 0, 2 * Math.PI, false);
-                if (hoverNode == null) {
-                    ctx.fillStyle = color;
+                
+                // 根据节点类型选择颜色
+                let fillColor;
+                if (node.isFolder) {
+                    fillColor = folderColor;
+                } else if (hoverNode == null) {
+                    fillColor = color;
                 } else {
                     if (node == hoverNode || highlightNodes.has(node.url)) {
-                        ctx.fillStyle = color;
+                        fillColor = color;
                     } else {
-                        ctx.fillStyle = mutedColor;
+                        fillColor = mutedColor;
                     }
                 }
-                 
+                ctx.fillStyle = fillColor;
                 ctx.fill();
                 
-                if (node.current) {
+                // 文件夹节点使用方形边框
+                if (node.isFolder) {
+                    ctx.beginPath();
+                    const size = nodeR * 1.2;
+                    ctx.rect(node.x - size/2, node.y - size/2, size, size);
+                    ctx.strokeStyle = folderColor;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                } else if (node.current) {
                     ctx.beginPath();
                     ctx.arc(node.x, node.y, nodeR + 1, 0, 2 * Math.PI, false);
                     ctx.lineWidth = 0.5;
@@ -121,24 +163,29 @@
                 }
 
                 const label = htmlDecode(node.title)
-                const fontSize = 3.5;
+                const fontSize = node.isFolder ? 3.0 : 3.5; // 文件夹字体稍小
                 ctx.font = `${fontSize}px Sans-Serif`;
+                ctx.fillStyle = node.isFolder ? folderColor : fillColor;
 
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'top';
                 ctx.fillText(label, node.x, node.y + nodeR + 2);
             })
             .onNodeClick(node => {
-                window.location = node.url;
+                // 只有非文件夹节点才能点击跳转
+                if (!node.isFolder && node.url) {
+                    window.location = node.url;
+                }
             })
             .onNodeHover(node => {
                 highlightNodes.clear();
                 if (node) {
-                highlightNodes.add(node);
-                node.neighbors.forEach(neighbor => highlightNodes.add(neighbor));
+                    highlightNodes.add(node);
+                    if (node.neighbors) {
+                        node.neighbors.forEach(neighbor => highlightNodes.add(neighbor));
+                    }
                 }
                 hoverNode = node || null;
-                
             });
             if (fullScreen || (delay != null && graphData.nodes.length > 4)) {
                 setTimeout(() => {
@@ -162,11 +209,70 @@
         }
         graphData = JSON.parse(JSON.stringify(graphData));
         const hiddens = Object.values(graphData.nodes).filter((n) => n.hide).map((n) => n.id);
-        const data = {
-            links: JSON.parse(JSON.stringify(graphData.links)).filter((l) => hiddens.indexOf(l.source) == -1 && hiddens.indexOf(l.target) == -1),
-            nodes: [...Object.values(graphData.nodes).filter((n) => !n.hide)]
-        }
-        return data
+        
+        // 创建文件夹节点映射
+        const folderNodes = new Map();
+        const enhancedNodes = [];
+        const enhancedLinks = [];
+        
+        // 处理现有节点并创建文件夹结构
+        Object.values(graphData.nodes).forEach(node => {
+            if (!node.hide) {
+                enhancedNodes.push(node);
+                
+                // 从节点路径提取文件夹层级
+                if (node.url && node.url !== '/') {
+                    const pathParts = node.url.split('/').filter(part => part);
+                    let currentPath = '';
+                    
+                    for (let i = 0; i < pathParts.length - 1; i++) {
+                        const folderName = pathParts[i];
+                        const parentPath = currentPath;
+                        currentPath += '/' + folderName;
+                        
+                        if (!folderNodes.has(currentPath)) {
+                            const folderId = `folder-${currentPath.replace(/\//g, '-')}`;
+                            folderNodes.set(currentPath, {
+                                id: folderId,
+                                title: folderName,
+                                isFolder: true,
+                                path: currentPath,
+                                neighbors: []
+                            });
+                            enhancedNodes.push(folderNodes.get(currentPath));
+                        }
+                        
+                        // 连接父文件夹和子文件夹
+                        if (parentPath && folderNodes.has(parentPath)) {
+                            enhancedLinks.push({
+                                source: folderNodes.get(parentPath).id,
+                                target: folderNodes.get(currentPath).id,
+                                isFolder: true
+                            });
+                        }
+                    }
+                    
+                    // 连接最后一级文件夹和文件
+                    if (currentPath && folderNodes.has(currentPath)) {
+                        enhancedLinks.push({
+                            source: folderNodes.get(currentPath).id,
+                            target: node.id,
+                            isFolder: true
+                        });
+                    }
+                }
+            }
+        });
+        
+        // 添加原有的文章间连接
+        const originalLinks = graphData.links.filter((l) => 
+            hiddens.indexOf(l.source) == -1 && hiddens.indexOf(l.target) == -1
+        );
+        
+        return {
+            nodes: enhancedNodes,
+            links: [...originalLinks, ...enhancedLinks]
+        };
     }
 
     function openFullGraph(fullGraphData) {
