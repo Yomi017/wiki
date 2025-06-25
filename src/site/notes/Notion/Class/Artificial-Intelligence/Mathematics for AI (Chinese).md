@@ -24,7 +24,7 @@
 	*   **无解 (inconsistent)**
 	*   **唯一解 (unique)**
 	*   **无穷多解 (underdetermined)**
-*   **矩阵表示法 (Matrix Notation):** [图片/课堂/人工智能数学/1.png]
+*   **矩阵表示法 (Matrix Notation):** ![Image/Class/Mathematics-for-AI/1.png](/img/user/Image/Class/Mathematics-for-AI/1.png)
     一个线性方程组可以用矩阵乘法紧凑地表示。对于一个包含 $m$ 个方程和 $n$ 个未知数的系统：
     $$\begin{aligned}
     a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n &= b_1 \\
@@ -1112,7 +1112,7 @@ $$ (B^T B)\boldsymbol{\lambda} = B^T\mathbf{x} $$
     1.  **构成基矩阵 $B$**。
     2.  **求解法方程** $(B^T B)\boldsymbol{\lambda} = B^T\mathbf{x}$ 得到 $\boldsymbol{\lambda}$。
     3.  **计算投影** $\mathbf{p} = B\boldsymbol{\lambda}$。
-*   **[[投影矩阵\|投影矩阵]]:** $P = B(B^T B)^{-1}B^T$。
+*   **[[Notion/Class/Proof/Projection Matrix\|Projection Matrix]]:** $P = B(B^T B)^{-1}B^T$。
 
 ### 3. 旋转
 
