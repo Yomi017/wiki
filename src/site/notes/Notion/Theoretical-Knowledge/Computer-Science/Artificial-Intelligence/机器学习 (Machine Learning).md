@@ -467,3 +467,32 @@ $$ \theta^* = \arg\min_{\theta} L(\theta) $$
 [[Notion/Theoretical-Knowledge/Computer-Science/Artificial-Intelligence/Question/Deep 而非 Fat 的 Neural Network\|Deep 而非 Fat 的 Neural Network]]
 **2. 为什么我们不 "Deeper" ?**
 [[Notion/Theoretical-Knowledge/Computer-Science/Artificial-Intelligence/Question/不一直 Deeper 的神经网络\|不一直 Deeper 的神经网络]]
+
+### 2.3.2 优化进阶：泰勒展开与损失曲面近似 (Advanced Optimization: Taylor Expansion & Loss Surface Approximation)
+
+在梯度下降中，我们利用损失函数的一阶导数（梯度）来确定下降方向。为了更深入地理解优化过程，特别是更高级的优化算法（如牛顿法），我们可以使用**泰勒级数 (Taylor Series)** 来近似损失函数。
+
+泰勒展开的核心思想是，在任意一个参数点 $\theta'$ 附近，我们可以用一个更简单的多项式函数来近似复杂的损失函数 $L(\theta)$。对于优化而言，通常使用到二阶的泰勒展开就足够了。
+
+![Image/Computer-Science/Machine Learning/11.png](/img/user/Image/Computer-Science/Machine%20Learning/11.png)
+
+如上图所示，在点 $\theta'$ 附近的二阶泰勒展开为：
+$$ L(\theta) \approx L(\theta') + (\theta - \theta')^T g + \frac{1}{2} (\theta - \theta')^T H (\theta - \theta') $$
+
+*   **$L(\theta')$**: 当前点 $\theta'$ 的损失值，这是一个常数。
+*   **$(\theta - \theta')^T g$**: **一阶项 (First-order term)**。
+    *   $\mathbf{g} = \nabla L(\theta')$ 是损失函数在点 $\theta'$ 的**梯度 (Gradient)**。
+    *   这一项用一个线性函数来近似损失函数的变化。**梯度下降法只依赖于这一项**，它告诉我们在 $\theta'$ 附近，沿着负梯度 $-\mathbf{g}$ 的方向移动，损失值 $L(\theta)$ 会下降得最快。图中的绿色框和绿色直角三角形的高度就直观地表示了这一线性近似。
+*   **$\frac{1}{2} (\theta - \theta')^T H (\theta - \theta')$**: **二阶项 (Second-order term)**。
+    *   $H$ 是损失函数在点 $\theta'$ 的**海森矩阵 (Hessian Matrix)**，即损失函数的二阶偏导数矩阵 ($H_{ij} = \frac{\partial^2 L}{\partial \theta_i \partial \theta_j}$)。
+    *   这一项引入了关于损失曲面**曲率 (curvature)** 的信息。它用一个二次函数来更精确地描述损失曲面的形状（是“平坦”的碗还是“陡峭”的碗）。
+
+**与优化的关系:**
+
+1.  **梯度下降 (Gradient Descent)**: 只考虑一阶信息（梯度 `g`），可以看作是在一个线性的近似下寻找下降方向。它简单高效，但不知道“走多远”最合适（需要手动设置学习率 $\eta$），也无法很好地处理不同方向上曲率差异很大的情况（例如狭长的山谷）。
+
+2.  **牛顿法 (Newton's Method)**: 同时考虑一阶（梯度 `g`）和二阶信息（海森矩阵 `H`）。它通过找到上述二次近似函数的最小值点来确定下一步的更新方向和步长。更新规则为 $\theta^{t+1} = \theta^t - H^{-1}g$。
+    *   **优点**: 收敛速度通常比梯度下降快得多，因为它利用了曲率信息，能够更直接地跳向最小值点。
+    *   **缺点**: 计算和存储海森矩阵 $H$ 以及其逆矩阵 $H^{-1}$ 的开销巨大。对于有数百万参数的深度神经网络来说，这是不现实的。
+
+因此，在深度学习中，虽然我们不直接使用标准的牛顿法，但许多先进的优化器（如 Adam、RMSProp 等）都受到了“利用曲率信息来调整步长”这一思想的启发，它们通过各种方式来近似海森矩阵的信息，以实现比朴素梯度下降更快的收敛。泰勒展开为理解这些高级优化算法提供了坚实的理论基础。

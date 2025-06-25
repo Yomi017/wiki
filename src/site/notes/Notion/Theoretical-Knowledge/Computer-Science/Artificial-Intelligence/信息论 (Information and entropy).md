@@ -695,7 +695,7 @@ There is a special case illustrated by the transmission of code 271 in this exam
 在这个例子中，解码器有一个地方需要进行不寻常的操作。通常，在收到传输的码字后，解码器可以在字典中查找其字符串，然后输出它，并使用其第一个字符来完成部分形成的最后一个字典条目，然后开始下一个字典条目。这样只需要一次字典查找。然而，上面介绍的算法使用了两次查找，一次用于第一个字符，另一次用于整个字符串。为什么不只使用一次查找以提高效率呢？
 此示例中代码271的传输就说明了一个特殊情况，即接收到的代码对应的字符串不完整。可以找到第一个字符，但在检索整个字符串之前，必须先完成该条目。当一个字符或字符串第一次连续出现三次时，就会发生这种情况，因此这种情况很少见。上述算法可以正确工作，但代价是额外的一次查找，这很少需要，并可能减慢算法的速度。一个使用单次字典查找的更快算法只有在检测到这种情况并将其作为特殊情况处理时才能可靠工作。
 
-![11.png](/img/user/Image/Computer-Science/Information%20and%20entropy/11.png)
+![Image/Computer-Science/Information and entropy/11.png](/img/user/Image/Computer-Science/Information%20and%20entropy/11.png)
 
 *   **Core:** Demonstrates LZW's effectiveness for longer, repetitive strings, showing rapid dictionary growth and significant bit savings (e.g., 25% for the given example).
 *   **Distinction:** Highlights a rare "special case" in decoding (e.g., code 271) where the received string is incomplete, requiring a second dictionary lookup for correctness, which can impact efficiency if not optimized.
