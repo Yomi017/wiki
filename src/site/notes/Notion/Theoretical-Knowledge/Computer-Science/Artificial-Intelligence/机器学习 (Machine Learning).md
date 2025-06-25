@@ -468,6 +468,14 @@ $$ \theta^* = \arg\min_{\theta} L(\theta) $$
 **2. 为什么我们不 "Deeper" ?**
 [[Notion/Theoretical-Knowledge/Computer-Science/Artificial-Intelligence/Question/不一直 Deeper 的神经网络\|不一直 Deeper 的神经网络]]
 
+好的，这张图非常精彩，它解释了为什么在高维优化中，**鞍点 (Saddle Point)** 虽然常见，但并不可怕，以及如何利用二阶信息（海森矩阵）来逃离鞍点。
+
+我已经将这张图上的笔记内容完整地、有条理地整合到了你之前的文本中。
+
+---
+
+... (您之前的笔记内容) ...
+
 ### 2.3.2 优化进阶：泰勒展开与损失曲面近似 (Advanced Optimization: Taylor Expansion & Loss Surface Approximation)
 
 在梯度下降中，我们利用损失函数的一阶导数（梯度）来确定下降方向。为了更深入地理解优化过程，特别是更高级的优化算法（如牛顿法），我们可以使用**泰勒级数 (Taylor Series)** 来近似损失函数。
@@ -486,6 +494,46 @@ $$ L(\theta) \approx L(\theta') + (\theta - \theta')^T g + \frac{1}{2} (\theta -
 *   **$\frac{1}{2} (\theta - \theta')^T H (\theta - \theta')$**: **二阶项 (Second-order term)**。
     *   $H$ 是损失函数在点 $\theta'$ 的**海森矩阵 (Hessian Matrix)**，即损失函数的二阶偏导数矩阵 ($H_{ij} = \frac{\partial^2 L}{\partial \theta_i \partial \theta_j}$)。
     *   这一项引入了关于损失曲面**曲率 (curvature)** 的信息。它用一个二次函数来更精确地描述损失曲面的形状（是“平坦”的碗还是“陡峭”的碗）。
+
+#### 临界点分析 (Analysis at Critical Points)
+
+当梯度下降进行到某一步时，如果梯度 $\mathbf{g} = \nabla L(\theta') = 0$，我们称 $\theta'$ 为一个**临界点 (Critical Point)**。在临界点，梯度下降会停止更新，因为它找不到下降的方向。此时，泰勒展开的一阶项为零，损失函数的行为完全由二阶项决定：
+$$ L(\theta) \approx L(\theta') + \frac{1}{2} (\theta - \theta')^T H (\theta - \theta') $$
+
+令 $\mathbf{v} = (\theta - \theta')$，我们可以通过海森矩阵 $H$ 的性质来判断这个临界点的类型：
+
+*   如果对于所有非零向量 $\mathbf{v}$，都有 $\mathbf{v}^T H \mathbf{v} > 0$（即 $H$ 是正定矩阵），那么 $L(\theta) > L(\theta')$。这意味着 $\theta'$ 是一个**局部最小值点 (Local Minima)**。
+*   如果对于所有非零向量 $\mathbf{v}$，都有 $\mathbf{v}^T H \mathbf{v} < 0$（即 $H$ 是负定矩阵），那么 $L(\theta) < L(\theta')$。这意味着 $\theta'$ 是一个**局部最大值点 (Local Maxima)**。
+*   如果对于某些向量 $\mathbf{v}$，$\mathbf{v}^T H \mathbf{v} > 0$，而对于另一些向量 $\mathbf{v}$，$\mathbf{v}^T H \mathbf{v} < 0$（即 $H$ 是不定矩阵），那么 $\theta'$ 是一个**鞍点 (Saddle Point)**。
+
+#### 如何逃离鞍点 (Don't be afraid of Saddle Point!)
+
+![Image/Computer-Science/Machine Learning/12.png](/img/user/Image/Computer-Science/Machine%20Learning/12.png)
+
+在高维空间中（例如深度神经网络的参数空间），鞍点远比局部最小值点更常见。那么，当梯度下降卡在鞍点时（因为梯度为零），我们该怎么办呢？**海森矩阵 $H$ 告诉了我们逃离的方向！**
+
+*   **核心思想**: 在鞍点处，海森矩阵 $H$ 必然存在至少一个**负特征值 (negative eigenvalue)**。
+*   **逃离步骤**:
+    1.  假设我们当前在鞍点 $\theta'$，梯度为零。
+    2.  我们计算海森矩阵 $H$ 的特征值和特征向量。
+    3.  找到一个负特征值 $\lambda < 0$ 以及其对应的特征向量 $\mathbf{u}$。
+    4.  根据特征向量的定义，我们有 $H\mathbf{u} = \lambda\mathbf{u}$。
+    5.  现在，我们考虑沿着特征向量 $\mathbf{u}$ 的方向更新参数，即令更新步长 $\theta - \theta' = \mathbf{u}$。
+    6.  代入泰勒展开式，计算新的损失值与当前损失值的差异：
+        $$ L(\theta) - L(\theta') \approx \frac{1}{2} (\theta - \theta')^T H (\theta - \theta') = \frac{1}{2} \mathbf{u}^T H \mathbf{u} $$
+        利用 $H\mathbf{u} = \lambda\mathbf{u}$，我们得到：
+        $$ \frac{1}{2} \mathbf{u}^T (H \mathbf{u}) = \frac{1}{2} \mathbf{u}^T (\lambda \mathbf{u}) = \frac{1}{2} \lambda (\mathbf{u}^T \mathbf{u}) = \frac{1}{2} \lambda ||\mathbf{u}||^2 $$
+    7.  因为 $\lambda < 0$ 且 $||\mathbf{u}||^2 > 0$，所以 $\frac{1}{2} \lambda ||\mathbf{u}||^2 < 0$。
+    8.  这意味着 $L(\theta) - L(\theta') < 0$，即 $L(\theta) < L(\theta')$。
+
+*   **结论**: 只要我们沿着海森矩阵**负特征值对应的特征向量方向**更新参数（例如，$\theta = \theta' + \alpha \mathbf{u}$，其中 $\alpha$ 是一个小的步长），我们就能有效地降低损失值，从而成功**逃离鞍点**。
+
+**实际应用中的意义:**
+
+虽然在大型神经网络中显式地计算整个海森矩阵及其特征向量的成本极高，但这个理论非常重要：
+1.  它解释了为什么鞍点在理论上不是一个根本性的障碍。总有“下山”的路可走。
+2.  许多先进的优化算法，如带动量的SGD、Adam等，虽然没有直接计算海森矩阵，但它们引入的机制（如动量）在实践中能帮助模型“冲过”平坦区域和鞍点。
+3.  一些二阶优化算法的变体（如Hessian-Free优化）会尝试用更高效的方法来近似海森矩阵与某个向量的乘积（即 $H\mathbf{v}$），从而利用曲率信息来逃离鞍点和加速收敛。
 
 **与优化的关系:**
 

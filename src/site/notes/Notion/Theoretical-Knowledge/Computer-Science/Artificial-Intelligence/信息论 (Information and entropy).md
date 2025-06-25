@@ -815,7 +815,7 @@ With this equation, we can compute the set of base matrices of the DCT, that is:
 `X = CYCT`。(3.15)
 利用这个方程，我们可以计算DCT的基矩阵集，即：Y的每个元素通过DCT对应的矩阵集。让我们构建一组所有可能的图像，每个图像只有一个非零像素。这些图像将代表矩阵Y的各个系数。
 
-![12.png](/img/user/Image/Computer-Science/Information%20and%20entropy/12.png)
+![Image/Computer-Science/Information and entropy/12.png](/img/user/Image/Computer-Science/Information%20and%20entropy/12.png)
 
 Figure 3.7(a) shows the set for 4×4 pixel images. Figure 3.7(b) shows the result of applying the IDCT to the images in Figure 3.7(a). The set of images in Figure 3.7(b) are called basis because the DCT of any of them will yield a matrix Y that has a single non-zero coefficient, and thus they represent the base images in which the DCT “decomposes” any input image.
 Recalling our overview of Discrete Linear Transformations above, should we want to recover an image X from its DCT Y we would just take each element of Y and multiply it by the corresponding matrix from 3.7(b). Indeed, Figure 3.7(b) introduces a very remarkable property of the DCT basis: it encodes spatial frequency. Compression can be achieved by ignoring those spatial frequencies that have smaller DCT coefficients. Think about the image of a chessboard—it has a high spatial frequency component, and almost all of the low frequency components can be removed. Conversely, blurred images tend to have fewer higher spatial frequency components, and then high frequency components, lower right in the Figure 3.7(b), can be set to zero as an “acceptable approximation”. This is the principle for irreversible compression behind JPEG.
