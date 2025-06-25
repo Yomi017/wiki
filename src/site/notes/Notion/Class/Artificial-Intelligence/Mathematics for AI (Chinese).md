@@ -1080,7 +1080,7 @@ $$ (B^T B)\boldsymbol{\lambda} = B^T\mathbf{x} $$
 
 
 
-#### 3. 正的概念从单个向量推广到整个子空间。
+### 3. 正的概念从单个向量推广到整个子空间。
 
 *   **定义 (正交补):** 令 $U$ 是向量空间 $V$ 的一个子空间。$U$ 的**正交补**，记为 $U^\perp$，是 $V$ 中所有与 $U$ 中*每个*向量都正交的向量的集合。
     $$ U^\perp = \{ \mathbf{v} \in V \mid \langle \mathbf{v}, \mathbf{u} \rangle = 0 \text{ 对于所有 } \mathbf{u} \in U \} $$
@@ -1105,7 +1105,7 @@ $$ (B^T B)\boldsymbol{\lambda} = B^T\mathbf{x} $$
 *   **诱导的几何性质：**
     *   **长度 (范数):** $\|f\| = \sqrt{\int_{a}^{b} f(x)^2 \,dx}$
     *   **正交性：** 如果 $\langle f, g \rangle = 0$，则两个函数正交。
-*   **意义：** 这种推广是**傅里叶级数**的数学基础。
+*   **意义：** 这种推广是**傅里叶级数**的数学基础。[[Notion/Class/Concept/Fourier Series Explained\|Fourier Series Explained]]
 
 ### 2. 正交投影
 
@@ -1127,3 +1127,76 @@ $$ (B^T B)\boldsymbol{\lambda} = B^T\mathbf{x} $$
 *   **2D 旋转：** 在2D平面中逆时针旋转角度 $\theta$ 的矩阵是：
     $$ R_\theta = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix} $$
 *   **群结构：** 所有 $n \times n$ 旋转矩阵的集合构成一个数学群，称为**特殊正交群**，记为 $SO(n)$。
+
+## 第三部分：正交投影详解
+
+投影是一类至关重要的线性变换，广泛应用于图形学、编码理论、统计学和机器学习中。
+
+### 1. 正交投影的重要性与概念
+
+*   **在机器学习中的动机：** 在机器学习中，我们经常处理难以分析或可视化的多维数据。一个关键的洞见是，大部分相关信息通常包含在一个维度低得多的子空间内。
+*   **目标（维度约减）：** 通过将多维数据投影到一个精心选择的低维“特征空间”，我们可以简化问题、降低计算成本并提取有意义的模式。其目标是在执行此投影的同时，**最小化信息损失**。
+*   **什么是正交投影？**
+    *   它是一种线性变换，将一个向量从高维空间“投射”到低维子空间上。
+    *   它之所以是“正交”的，是因为它通过**最小化**原始数据与其投影图像之间的**误差**（距离）来**最大可能地保留信息**。
+    *   这一特性使其成为线性回归、分类和数据压缩的核心。
+
+### 2. 投影的正式定义与性质
+
+*   **代数定义（幂等性）：** 一个线性映射 $\pi: V \to U$ 如果应用两次与应用一次的效果相同，则被称为**投影**。这被称为**幂等性**。
+    $$ \pi^2 = \pi \quad (\text{或 } \pi(\pi(\mathbf{x})) = \pi(\mathbf{x})) $$
+    *   **矩阵形式：** 如果一个方阵 $P$ 满足 $P^2 = P$，那么它就是一个**投影矩阵**。
+*   **几何定义（最近点）：** 向量 $\mathbf{x}$ 在子空间 $U$ 上的**正交投影** $\pi_U(\mathbf{x})$ 是 $U$ 中离 $\mathbf{x}$ **最近**的那个唯一的点。
+    *   这个“最近点”条件等价于**正交性条件**：差向量 $(\mathbf{x} - \pi_U(\mathbf{x}))$ 必须与子空间 $U$ 中的每一个向量都正交。
+
+### 3. 投影到一维子空间（直线）
+![Image/Class/Mathematics-for-AI/5.png](/img/user/Image/Class/Mathematics-for-AI/5.png)
+![Image/Class/Mathematics-for-AI/6.png](/img/user/Image/Class/Mathematics-for-AI/6.png)
+我们从最简单的情况开始推导投影公式：将一个向量投影到一条直线上。除非另有说明，我们都假设使用标准的点积作为内积。
+
+*   **设定：**
+    *   令 $U$ 为一个一维子空间（一条过原点的直线）。
+    *   令 $\mathbf{b}$ 为一个非零的基向量，它张成了这条直线，因此 $U = \text{span}\{\mathbf{b}\}$。
+*   **推导过程：**
+    1.  **隶属属性：** 投影 $\pi_U(\mathbf{x})$ 必须位于直线上，所以它一定是基向量 $\mathbf{b}$ 的一个标量倍。
+        $$ \pi_U(\mathbf{x}) = \lambda\mathbf{b} $$
+        我们的目标是求出这个标量坐标 $\lambda$。
+    2.  **正交属性：** 误差向量 $(\mathbf{x} - \pi_U(\mathbf{x}))$ 必须与基向量 $\mathbf{b}$ 正交。
+        $$ \langle \mathbf{x} - \lambda\mathbf{b}, \mathbf{b} \rangle = 0 $$
+    3.  **求解 $\lambda$：** 利用内积的双线性性质，我们得到 $\langle \mathbf{x}, \mathbf{b} \rangle - \lambda\langle \mathbf{b}, \mathbf{b} \rangle = 0$，解出 $\lambda$：
+        $$ \lambda = \frac{\langle \mathbf{x}, \mathbf{b} \rangle}{\langle \mathbf{b}, \mathbf{b} \rangle} = \frac{\mathbf{b}^T\mathbf{x}}{\|\mathbf{b}\|^2} $$
+        *（如果 $\|\mathbf{b}\|=1$，那么 $\lambda = \mathbf{b}^T\mathbf{x}$）*。
+*   **一维投影的最终公式：**
+    *   **投影向量：**
+        $$ \pi_U(\mathbf{x}) = \left( \frac{\mathbf{b}^T\mathbf{x}}{\|\mathbf{b}\|^2} \right) \mathbf{b} $$
+    *   **投影的长度：** 投影的长度为 $\|\pi_U(\mathbf{x})\| = |\lambda|\|\mathbf{b}\|$。如果 $\mathbf{b}$ 是一个单位向量，这个公式简化为 $\|\pi_U(\mathbf{x})\| = |\mathbf{b}^T\mathbf{x}| = |\cos\omega|\|\mathbf{x}\|$，其中 $\omega$ 是 $\mathbf{x}$ 和 $\mathbf{b}$ 之间的夹角。
+    *   **投影矩阵：** 通过重新排列公式，$\pi_U(\mathbf{x}) = \left( \frac{\mathbf{b}\mathbf{b}^T}{\|\mathbf{b}\|^2} \right) \mathbf{x}$，我们可以确定投影矩阵：
+        $$ P_\pi = \frac{\mathbf{b}\mathbf{b}^T}{\|\mathbf{b}\|^2} $$
+        这个矩阵是对称的，并且秩为1。
+
+### 4. 投影到一般子空间
+![Image/Class/Mathematics-for-AI/7.png](/img/user/Image/Class/Mathematics-for-AI/7.png)
+用于一维投影的三步法可以推广到任何 m 维子空间 $U \subseteq \mathbb{R}^n$。
+
+*   **设定：** 假设我们有 $U$ 的一个有序基 $\{\mathbf{b}_1, \dots, \mathbf{b}_m\}$。我们构建基矩阵 $B = [\mathbf{b}_1, \dots, \mathbf{b}_m] \in \mathbb{R}^{n \times m}$。
+*   **推导过程：**
+    1.  **隶属属性：** 投影 $\pi_U(\mathbf{x})$ 是基向量的线性组合：
+        $$ \pi_U(\mathbf{x}) = \sum_{i=1}^{m} \lambda_i \mathbf{b}_i = B\boldsymbol{\lambda} $$
+    2.  **正交属性：** 误差向量 $(\mathbf{x} - \pi_U(\mathbf{x}))$ 必须与 $U$ 的*所有*基向量正交。这给出了 m 个联立方程：
+        $$ \mathbf{b}_i^T (\mathbf{x} - B\boldsymbol{\lambda}) = 0 \quad \text{对于 } i=1, \dots, m $$
+    3.  **求解正规方程：** 这个方程组可以紧凑地写为 $B^T(\mathbf{x} - B\boldsymbol{\lambda}) = \mathbf{0}$，重新整理后得到**正规方程 (Normal Equation)**：
+        $$ B^T B \boldsymbol{\lambda} = B^T \mathbf{x} $$
+*   **求解投影：**
+    *   由于 $B$ 的列向量构成一个基，它们是线性无关的，这保证了 $m \times m$ 矩阵 $B^T B$ 是**可逆的**。
+    *   **坐标 $\boldsymbol{\lambda}$：** 我们可以解出坐标向量：
+        $$ \boldsymbol{\lambda} = (B^T B)^{-1} B^T \mathbf{x} $$
+        矩阵 $(B^T B)^{-1} B^T$ 被称为 $B$ 的**伪逆 (pseudoinverse)**。
+    *   **投影向量 $\pi_U(\mathbf{x})$：**
+        $$ \pi_U(\mathbf{x}) = B\boldsymbol{\lambda} = B(B^T B)^{-1} B^T \mathbf{x} $$
+    *   **投影矩阵 $P_\pi$：**
+        $$ P_\pi = B(B^T B)^{-1} B^T $$
+
+### 5. 关于维度和坐标的说明
+
+*   **投影向量：** 一个投影后的向量 $\pi_U(\mathbf{x})$ 仍然是一个n维向量（它有n个分量），但它被限制在m维子空间 $U$ 内。
+*   **坐标的力量：** 至关重要的是，这个投影向量完全由它相对于 $U$ 的基的**m个坐标**（$\lambda_1, \dots, \lambda_m$）所确定。这就是维度约减的数学基础：我们只需要存储或使用这m个坐标和m个基向量，就可以完美地表示投影后的数据，这比存储原始的n维向量要高效得多。

@@ -1330,7 +1330,7 @@ The concept of an inner product can be extended from the familiar space $\mathbb
     *   **Length (Norm):** $\|f\| = \sqrt{\int_{a}^{b} f(x)^2 \,dx}$
     *   **Distance:** $d(f, g) = \|f - g\|$
     *   **Orthogonality:** Two functions are orthogonal if $\langle f, g \rangle = 0$.
-*   **Significance:** This generalization is crucial for fields like signal processing and quantum mechanics, and it forms the mathematical basis for **Fourier series**, which decompose functions into a sum of orthogonal sine and cosine functions.
+*   **Significance:** This generalization is crucial for fields like signal processing and quantum mechanics, and it forms the mathematical basis for **Fourier series**, which decompose functions into a sum of orthogonal sine and cosine functions.[[Notion/Class/Concept/Fourier Series Explained\|Fourier Series Explained]]
 
 ### 2. Orthogonal Projections
 
@@ -1360,11 +1360,11 @@ Rotations are a fundamental class of geometric transformations that preserve the
     $$ R_\theta = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix} $$
 *   **Group Structure:** The set of all $n \times n$ rotation matrices forms a mathematical group known as the **Special Orthogonal Group**, denoted $SO(n)$.
 
-### Part III: Orthogonal Projections
+## Part III: Detail of Orthogonal Projections
 
 Projections are a critical class of linear transformations, widely used in graphics, coding theory, statistics, and machine learning.
 
-#### 1. The Importance and Concept of Orthogonal Projections
+### 1. The Importance and Concept of Orthogonal Projections
 
 *   **Motivation in Machine Learning:** In machine learning, we often deal with high-dimensional data that is difficult to analyze or visualize. The key insight is that most of the relevant information is often contained within a much lower-dimensional subspace.
 *   **The Goal (Dimensionality Reduction):** By projecting high-dimensional data onto a carefully chosen lower-dimensional "feature space", we can simplify the problem, reduce computational cost, and extract meaningful patterns. The objective is to perform this projection while **minimizing information loss**.
@@ -1373,7 +1373,7 @@ Projections are a critical class of linear transformations, widely used in graph
     *   It is "orthogonal" because it does so in a way that **retains as much information as possible** by **minimizing the error** (the distance) between the original data and its projected image.
     *   This property makes it central to linear regression, classification, and data compression.
 
-#### 2. The Formal Definition and Properties of Projection
+### 2. The Formal Definition and Properties of Projection
 
 *   **Algebraic Definition (Idempotence):** A linear mapping $\pi: V \to U$ is called a **projection** if applying it twice is the same as applying it once. This is known as the **idempotent property**.
     $$ \pi^2 = \pi \quad (\text{or } \pi(\pi(\mathbf{x})) = \pi(\mathbf{x})) $$
@@ -1381,8 +1381,9 @@ Projections are a critical class of linear transformations, widely used in graph
 *   **Geometric Definition (Closest Point):** The **orthogonal projection** $\pi_U(\mathbf{x})$ of a vector $\mathbf{x}$ onto a subspace $U$ is the unique point in $U$ that is **closest** to $\mathbf{x}$.
     *   This "closest point" condition is equivalent to the **orthogonality condition**: the difference vector $(\mathbf{x} - \pi_U(\mathbf{x}))$ must be orthogonal to every vector in the subspace $U$.
 
-#### 3. Projection onto One-Dimensional Subspaces (Lines)
+### 3. Projection onto One-Dimensional Subspaces (Lines)
 ![Image/Class/Mathematics-for-AI/5.png](/img/user/Image/Class/Mathematics-for-AI/5.png)
+![Image/Class/Mathematics-for-AI/6.png](/img/user/Image/Class/Mathematics-for-AI/6.png)
 We begin by deriving the projection formula for the simplest case: projecting a vector onto a line, assuming the standard dot product as the inner product unless stated otherwise.
 
 *   **Setup:**
@@ -1405,8 +1406,8 @@ We begin by deriving the projection formula for the simplest case: projecting a 
         $$ P_\pi = \frac{\mathbf{b}\mathbf{b}^T}{\|\mathbf{b}\|^2} $$
         This matrix is symmetric and has a rank of 1.
 
-#### 4. Projection onto General Subspaces
-
+### 4. Projection onto General Subspaces
+![Image/Class/Mathematics-for-AI/7.png](/img/user/Image/Class/Mathematics-for-AI/7.png)
 The three-step procedure for 1D projection generalizes to any m-dimensional subspace $U \subseteq \mathbb{R}^n$.
 
 *   **Setup:** Assume we have an ordered basis $\{\mathbf{b}_1, \dots, \mathbf{b}_m\}$ for $U$. We form the basis matrix $B = [\mathbf{b}_1, \dots, \mathbf{b}_m] \in \mathbb{R}^{n \times m}$.
@@ -1427,7 +1428,7 @@ The three-step procedure for 1D projection generalizes to any m-dimensional subs
     *   **Projection Matrix $P_\pi$:**
         $$ P_\pi = B(B^T B)^{-1} B^T $$
 
-#### 5. Remarks on Dimensions and Coordinates
+### 5. Remarks on Dimensions and Coordinates
 
 *   **The Projection Vector:** A projected vector $\pi_U(\mathbf{x})$ is still an n-dimensional vector (it has $n$ components), but it is constrained to lie within the m-dimensional subspace $U$.
 *   **The Power of Coordinates:** Crucially, this projected vector is fully determined by its **m coordinates** ($\lambda_1, \dots, \lambda_m$) with respect to the basis of $U$. This is the mathematical foundation of dimensionality reduction: we only need to store or use the $m$ coordinates and the $m$ basis vectors to perfectly represent the projected data, which is far more efficient than storing the original n-dimensional vectors.
