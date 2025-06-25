@@ -1176,7 +1176,9 @@ $$ (B^T B)\boldsymbol{\lambda} = B^T\mathbf{x} $$
 ### 5. 核心应用 I：Gram-Schmidt正交化
 
 Gram-Schmidt过程是构造一组标准正交基的经典算法，其核心思想就是**反复利用正交投影**。
-
+![Image/Class/Mathematics-for-AI/8.png](/img/user/Image/Class/Mathematics-for-AI/8.png)
+![Image/Class/Mathematics-for-AI/9.png](/img/user/Image/Class/Mathematics-for-AI/9.png)
+![Image/Class/Mathematics-for-AI/10.png](/img/user/Image/Class/Mathematics-for-AI/10.png)
 *   **目标：** 将一组线性无关的向量 $\{\mathbf{b}_1, \dots, \mathbf{b}_n\}$ 转换为一组正交向量 $\{\mathbf{u}_1, \dots, \mathbf{u}_n\}$，并且两组向量张成相同的子空间。
 *   **迭代构造法：**
     1.  **第一步：** 选择第一个向量作为新基的起点。
@@ -1212,7 +1214,7 @@ Gram-Schmidt过程是构造一组标准正交基的经典算法，其核心思�
     *   最小化 $\|\mathbf{x} - (\mathbf{x}_0 + \mathbf{u})\|^2$ 就等价于最小化 $\|(\mathbf{x} - \mathbf{x}_0) - \mathbf{u}\|^2$。
     *   根据定义，使这个距离最小的 $\mathbf{u}^*$ 正是向量 $(\mathbf{x} - \mathbf{x}_0)$ 在子空间 $U$ 上的投影，即 $\mathbf{u}^* = \pi_U(\mathbf{x} - \mathbf{x}_0)$。
     *   因此，最近点 $\mathbf{y}^* = \mathbf{x}_0 + \mathbf{u}^* = \mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0)$。
-
+     ![Image/Class/Mathematics-for-AI/11.png](/img/user/Image/Class/Mathematics-for-AI/11.png)![Image/Class/Mathematics-for-AI/12.png](/img/user/Image/Class/Mathematics-for-AI/12.png)![Image/Class/Mathematics-for-AI/13.png](/img/user/Image/Class/Mathematics-for-AI/13.png)
 *   **点到仿射子空间的距离：**
     $$ d(\mathbf{x}, L) = \|\mathbf{x} - \pi_L(\mathbf{x})\| = \|\mathbf{x} - (\mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0))\| = \|(\mathbf{x} - \mathbf{x}_0) - \pi_U(\mathbf{x} - \mathbf{x}_0)\| = d(\mathbf{x}-\mathbf{x}_0, U) $$
     这表明，点到仿射空间的距离，等于平移后的点到其方向子空间的距离。

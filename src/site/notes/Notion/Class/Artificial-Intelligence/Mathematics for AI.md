@@ -1411,6 +1411,9 @@ The three-step method for 1D projection can be generalized to any m-dimensional 
 
 ### 5. Core Application I: Gram-Schmidt Orthogonalization
 
+![Image/Class/Mathematics-for-AI/8.png](/img/user/Image/Class/Mathematics-for-AI/8.png)
+![Image/Class/Mathematics-for-AI/9.png](/img/user/Image/Class/Mathematics-for-AI/9.png)
+![Image/Class/Mathematics-for-AI/10.png](/img/user/Image/Class/Mathematics-for-AI/10.png)
 The Gram-Schmidt process is a classic algorithm for constructing an orthonormal basis, and its core idea is the **repeated application of orthogonal projection**.
 
 *   **Goal:** To transform a set of linearly independent vectors $\{\mathbf{b}_1, \dots, \mathbf{b}_n\}$ into a set of orthogonal vectors $\{\mathbf{u}_1, \dots, \mathbf{u}_n\}$ that span the same subspace.
@@ -1448,7 +1451,7 @@ So far, we have discussed projections onto subspaces that pass through the origi
     *   Minimizing $\|\mathbf{x} - (\mathbf{x}_0 + \mathbf{u})\|^2$ is equivalent to minimizing $\|(\mathbf{x} - \mathbf{x}_0) - \mathbf{u}\|^2$.
     *   By definition, the $\mathbf{u}^*$ that minimizes this distance is the projection of $(\mathbf{x} - \mathbf{x}_0)$ onto $U$, so $\mathbf{u}^* = \pi_U(\mathbf{x} - \mathbf{x}_0)$.
     *   Therefore, the closest point is $\mathbf{y}^* = \mathbf{x}_0 + \mathbf{u}^* = \mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0)$.
-
+![Image/Class/Mathematics-for-AI/11.png](/img/user/Image/Class/Mathematics-for-AI/11.png)![Image/Class/Mathematics-for-AI/12.png](/img/user/Image/Class/Mathematics-for-AI/12.png)![Image/Class/Mathematics-for-AI/13.png](/img/user/Image/Class/Mathematics-for-AI/13.png)
 *   **Distance from a Point to an Affine Subspace:**
     $$ d(\mathbf{x}, L) = \|\mathbf{x} - \pi_L(\mathbf{x})\| = \|\mathbf{x} - (\mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0))\| = \|(\mathbf{x} - \mathbf{x}_0) - \pi_U(\mathbf{x} - \mathbf{x}_0)\| = d(\mathbf{x}-\mathbf{x}_0, U) $$
     This shows that the distance from a point to an affine space is equal to the distance from the translated point to its corresponding direction subspace.
