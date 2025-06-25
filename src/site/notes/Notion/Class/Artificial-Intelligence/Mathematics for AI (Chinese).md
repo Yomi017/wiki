@@ -248,7 +248,7 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
             $$ [A | I_n] \xrightarrow{\text{高斯消元}} [I_n | A^{-1}] $$
         3.  **读取逆矩阵：** 如果左侧成功变为 $I_n$，那么右侧的矩阵就是 $A^{-1}$。
         4.  **不可逆的情况：** 如果在行化简过程中，左侧无法变为 $I_n$（例如，出现一个全零行），则矩阵 $A$ 是奇异的（不可逆），$A^{-1}$ 不存在。
-        5.  **证明：** [[分块矩阵乘法的相容性\|分块矩阵乘法的相容性]]
+        5.  **证明：** [[Notion/Class/Proof/Compatibility of Matrix Multiplication with Partitioned Matrices\|Compatibility of Matrix Multiplication with Partitioned Matrices]]
 	        $$C[A|I_n]=[CA|CI_n]=[I_n|C]\Rightarrow C=A^{-1}$$
     *   **限制：** 对于非方阵，此方法不适用。
 
@@ -257,7 +257,7 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 	    *   **适用性：** 当系数矩阵 $A$ 是**方阵且可逆**时。
 	    *   **公式：** $x = A^{-1}b$
 	
-	*   **2. 伪逆法 ([[摩尔-彭若斯伪逆\|摩尔-彭若斯伪逆]]):**
+	*   **2. 伪逆法 ([[Notion/Class/Proof/Moore Penrose Pseudo inverse\|Moore Penrose Pseudo inverse]]):**
 	    *   **适用性：** 当 $A$ **不是方阵但列线性无关**（即满列秩）时。这在超定系统（方程多于未知数, $m > n$）中很常见。
 	    *   **公式：** $x = (A^T A)^{-1} A^T b$
 	    *   **结果：** 这个公式给出了**最小范数最小二乘解**。它找到使残差的欧几里得范数 $\|Ax - b\|_2^2$ 最小化的向量 $x$。
@@ -285,9 +285,9 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 	**附加术语：**
 	*   **阿贝尔群 (Abelian Group)（交换群）：** 如果运算 $*$ 还满足**交换律**（即对所有 $a, b \in G$，$a * b = b * a$），则该群称为阿贝尔群。
 	
-	[图片/课堂/人工智能数学/2.png]
-    [图片/课堂/人工智能数学/3.png]
-    [图片/课堂/人工智能数学/4.png]
+	![Image/Class/Mathematics-for-AI/2.png](/img/user/Image/Class/Mathematics-for-AI/2.png)
+    ![Image/Class/Mathematics-for-AI/3.png](/img/user/Image/Class/Mathematics-for-AI/3.png)
+  ![Image/Class/Mathematics-for-AI/4.png](/img/user/Image/Class/Mathematics-for-AI/4.png)
 
 ### 笔记续
 
@@ -391,7 +391,7 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
         由于每个系数向量 $\boldsymbol{\lambda}_j$ 都在 $\mathbb{R}^k$ 中，矩阵 $\Lambda$ 有 $k$ 行和 $m$ 列（它是一个 $k \times m$ 矩阵）。
 
     3.  **分析矩阵的秩：** 矩阵的**秩**有一个基本性质：它不能超过其行数或列数。具体来说，我们关心的是 $\text{rank}(\Lambda) \le k$（行数）。
-        *   *（通过一个更基本的定理证明：秩是行空间的维度。行空间由 $k$ 个行向量生成。根据[[生成集的维度定理\|生成集的维度定理]]，这个空间的维度不能超过 $k$）。*
+        *   *（通过一个更基本的定理证明：秩是行空间的维度。行空间由 $k$ 个行向量生成。根据[[Notion/Class/Proof/The Dimension Theorem for Spanning Sets\|The Dimension Theorem for Spanning Sets]]，这个空间的维度不能超过 $k$）。*
 
     4.  **应用条件 $m > k$：** 我们已经确定了关于矩阵 $\Lambda$ 的两个关键事实：
         *   总列数为 $m$。
@@ -546,7 +546,7 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
     这个公式将抽象的函数应用转化为具体的矩阵-向量乘法。矩阵 $A_\Phi$ 是映射 $\Phi$ *相对于所选基*的表示；改变任何一个基都会导致同一个线性映射有不同的变换矩阵。
 
 *   **可逆性：**
-    线性映射 $\Phi$ 是一个可逆的同构，当且仅当其变换矩阵 $A_\Phi$ 是方阵 ($m=n$) 且可逆。[[不可逆变换与信息丢失\|不可逆变换与信息丢失]]
+    线性映射 $\Phi$ 是一个可逆的同构，当且仅当其变换矩阵 $A_\Phi$ 是方阵 ($m=n$) 且可逆。[[Notion/Class/Proof/Non-Invertible Transformations and Information Loss\|Non-Invertible Transformations and Information Loss]]
 
 ### 2. 基变换矩阵
 
@@ -565,7 +565,7 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
 
 ### 3. 线性映射的基变换定理
 
-[[基变换定理\|基变换定理]]
+[[Notion/Class/Proof/Change-of-Basis Theorem\|Change-of-Basis Theorem]]
 该定理提供了一个公式，用于在改变线性映射的定义域和陪域的基（坐标系）时，计算新的变换矩阵。
 
 *   **定理陈述：**
@@ -663,7 +663,7 @@ $$(\lambda A)_{ij}=\lambda(A_{ij})$$
     *   一个相关的概念是**仿射组合**。它是一种系数之和为1的线性组合。
         $$ \mathbf{y} = \alpha_1\mathbf{x}_1 + \alpha_2\mathbf{x}_2 + \cdots + \alpha_k\mathbf{x}_k \quad \text{其中} \quad \sum_{i=1}^k \alpha_i = 1 $$
     *   仿射子空间在仿射组合下是封闭的。一组点的所有仿射组合的集合构成了包含它们的最小仿射子空间（它们的“仿射包”）。
-[[如何用仿射子空间 (Affine Subspace) 的结构来理解线性方程组 Aλ = b 的通解\|如何用仿射子空间 (Affine Subspace) 的结构来理解线性方程组 Aλ = b 的通解]]
+[[如何用仿射子空间 (Affine Subspace) 的结构来理解线性方程组 `Aλ = b` 的通解]]
 
 ## 第五部分：超平面 (Hyperplanes)
 
@@ -911,7 +911,7 @@ $$ f(\mathbf{x}) = A\mathbf{x} + \mathbf{b} $$
     一个方阵 $A \in \mathbb{R}^{n \times n}$ 被称为**对称正定** (SPD)，如果它满足两个条件：
 
     1.  **对称性：** $A = A^T$
-    2.  **正定性：** 对于每个非零向量 $x \in \mathbb{R}^n$，二次型 $x^T A x$ 严格为正。[[二次型\|二次型]]
+    2.  **正定性：** 对于每个非零向量 $x \in \mathbb{R}^n$，二次型 $x^T A x$ 严格为正。[[Notion/Class/Proof/Quadratic Form\|Quadratic Form]]
         $$ \mathbf{x}^T A \mathbf{x} > 0 \quad \text{对于所有 } \mathbf{x} \in \mathbb{R}^n, \mathbf{x} \ne \mathbf{0} $$
 
 *   **中心定理：内积的矩阵表示**
