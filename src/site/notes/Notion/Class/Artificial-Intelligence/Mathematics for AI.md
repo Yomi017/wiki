@@ -1562,13 +1562,23 @@ Any complex 3D rotation can be decomposed into a sequence of fundamental rotatio
 *   **Core Idea:** Any rotation in n-dimensional space can be described as a rotation within a **two-dimensional plane**, while leaving the other $n-2$ dimensions unchanged.
 *   **Definition: Givens Rotation**
     *   An n-dimensional rotation matrix that performs a rotation in the $(i, j)-\text{plane}$ is denoted as $R_{ij}(\theta)$.
+    * Its structure is a modified identity matrix. Specifically, $R_ij(θ)$is an 'n x n' matrix, and its form is as follows: 
+        $$ R_{ij}(\theta) :=
+        \begin{bmatrix}
+        I_{i-1} & 0 & 0 & 0 & 0 \\
+        0 & \cos\theta & 0 & -\sin\theta & 0 \\
+        0 & 0 & I_{j-i-1} & 0 & 0 \\
+        0 & \sin\theta & 0 & \cos\theta & 0 \\
+        0 & 0 & 0 & 0 & I_{n-j}
+        \end{bmatrix}
+        $$
     *   This matrix is an identity matrix everywhere except for four entries, where a standard 2D rotation matrix is embedded:
         *   $r_{ii} = \cos\theta$
         *   $r_{ij} = -\sin\theta$
         *   $r_{ji} = \sin\theta$
         *   $r_{jj} = \cos\theta$
 *   **Application in Practice:**
-    *   In algorithms (like QR decomposition), we typically do not pre-set `$\theta$`. Instead, we **back-calculate** the values of `$\cos\theta$` and `$\sin\theta$` to achieve a specific goal, such as **zeroing out** an entry in a vector.
+    *   In algorithms (like QR decomposition), we typically do not pre-set $\theta$. Instead, we **back-calculate** the values of $\cos\theta$ and $\sin\theta$ to achieve a specific goal, such as **zeroing out** an entry in a vector.
 
 ### 5. General Properties of Rotations
 
