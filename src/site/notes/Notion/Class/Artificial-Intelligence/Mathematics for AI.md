@@ -1359,3 +1359,75 @@ Rotations are a fundamental class of geometric transformations that preserve the
 *   **2D Rotation:** The matrix for a counter-clockwise rotation by an angle $\theta$ in the 2D plane is:
     $$ R_\theta = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix} $$
 *   **Group Structure:** The set of all $n \times n$ rotation matrices forms a mathematical group known as the **Special Orthogonal Group**, denoted $SO(n)$.
+
+### Part III: Orthogonal Projections
+
+Projections are a critical class of linear transformations, widely used in graphics, coding theory, statistics, and machine learning.
+
+#### 1. The Importance and Concept of Orthogonal Projections
+
+*   **Motivation in Machine Learning:** In machine learning, we often deal with high-dimensional data that is difficult to analyze or visualize. The key insight is that most of the relevant information is often contained within a much lower-dimensional subspace.
+*   **The Goal (Dimensionality Reduction):** By projecting high-dimensional data onto a carefully chosen lower-dimensional "feature space", we can simplify the problem, reduce computational cost, and extract meaningful patterns. The objective is to perform this projection while **minimizing information loss**.
+*   **What is an Orthogonal Projection?**
+    *   It is a linear transformation that "drops" a vector from a higher-dimensional space onto a lower-dimensional subspace.
+    *   It is "orthogonal" because it does so in a way that **retains as much information as possible** by **minimizing the error** (the distance) between the original data and its projected image.
+    *   This property makes it central to linear regression, classification, and data compression.
+
+#### 2. The Formal Definition and Properties of Projection
+
+*   **Algebraic Definition (Idempotence):** A linear mapping $\pi: V \to U$ is called a **projection** if applying it twice is the same as applying it once. This is known as the **idempotent property**.
+    $$ \pi^2 = \pi \quad (\text{or } \pi(\pi(\mathbf{x})) = \pi(\mathbf{x})) $$
+    *   **Matrix Form:** A square matrix $P$ is a **projection matrix** if it satisfies $P^2 = P$.
+*   **Geometric Definition (Closest Point):** The **orthogonal projection** $\pi_U(\mathbf{x})$ of a vector $\mathbf{x}$ onto a subspace $U$ is the unique point in $U$ that is **closest** to $\mathbf{x}$.
+    *   This "closest point" condition is equivalent to the **orthogonality condition**: the difference vector $(\mathbf{x} - \pi_U(\mathbf{x}))$ must be orthogonal to every vector in the subspace $U$.
+
+#### 3. Projection onto One-Dimensional Subspaces (Lines)
+![Image/Class/Mathematics-for-AI/5.png](/img/user/Image/Class/Mathematics-for-AI/5.png)
+We begin by deriving the projection formula for the simplest case: projecting a vector onto a line, assuming the standard dot product as the inner product unless stated otherwise.
+
+*   **Setup:**
+    *   Let $U$ be a one-dimensional subspace (a line through the origin).
+    *   Let $\mathbf{b}$ be a non-zero basis vector that spans this line, so $U = \text{span}\{\mathbf{b}\}$.
+*   **Derivation:**
+    1.  **Membership Property:** The projection $\pi_U(\mathbf{x})$ must lie on the line, so it must be a scalar multiple of the basis vector $\mathbf{b}$.
+        $$ \pi_U(\mathbf{x}) = \lambda\mathbf{b} $$
+        The goal is to find the scalar coordinate $\lambda$.
+    2.  **Orthogonality Property:** The error vector $(\mathbf{x} - \pi_U(\mathbf{x}))$ must be orthogonal to the basis vector $\mathbf{b}$.
+        $$ \langle \mathbf{x} - \lambda\mathbf{b}, \mathbf{b} \rangle = 0 $$
+    3.  **Solve for $\lambda$:** Using bilinearity, we get $\langle \mathbf{x}, \mathbf{b} \rangle - \lambda\langle \mathbf{b}, \mathbf{b} \rangle = 0$, which gives:
+        $$ \lambda = \frac{\langle \mathbf{x}, \mathbf{b} \rangle}{\langle \mathbf{b}, \mathbf{b} \rangle} = \frac{\mathbf{b}^T\mathbf{x}}{\|\mathbf{b}\|^2} $$
+        *(If $\|\mathbf{b}\|=1$, then $\lambda = \mathbf{b}^T\mathbf{x}$)*.
+*   **Final Formulas for 1D Projection:**
+    *   **Projection Vector:**
+        $$ \pi_U(\mathbf{x}) = \left( \frac{\mathbf{b}^T\mathbf{x}}{\|\mathbf{b}\|^2} \right) \mathbf{b} $$
+    *   **Length of Projection:** The length of the projection is $\|\pi_U(\mathbf{x})\| = |\lambda|\|\mathbf{b}\|$. If $\mathbf{b}$ is a unit vector, this simplifies to $\|\pi_U(\mathbf{x})\| = |\mathbf{b}^T\mathbf{x}| = |\cos\omega|\|\mathbf{x}\|$, where $\omega$ is the angle between $\mathbf{x}$ and $\mathbf{b}$.
+    *   **Projection Matrix:** By rearranging the formula, $\pi_U(\mathbf{x}) = \left( \frac{\mathbf{b}\mathbf{b}^T}{\|\mathbf{b}\|^2} \right) \mathbf{x}$, we identify the projection matrix:
+        $$ P_\pi = \frac{\mathbf{b}\mathbf{b}^T}{\|\mathbf{b}\|^2} $$
+        This matrix is symmetric and has a rank of 1.
+
+#### 4. Projection onto General Subspaces
+
+The three-step procedure for 1D projection generalizes to any m-dimensional subspace $U \subseteq \mathbb{R}^n$.
+
+*   **Setup:** Assume we have an ordered basis $\{\mathbf{b}_1, \dots, \mathbf{b}_m\}$ for $U$. We form the basis matrix $B = [\mathbf{b}_1, \dots, \mathbf{b}_m] \in \mathbb{R}^{n \times m}$.
+*   **Derivation:**
+    1.  **Membership Property:** The projection $\pi_U(\mathbf{x})$ is a linear combination of the basis vectors:
+        $$ \pi_U(\mathbf{x}) = \sum_{i=1}^{m} \lambda_i \mathbf{b}_i = B\boldsymbol{\lambda} $$
+    2.  **Orthogonality Property:** The error vector $(\mathbf{x} - \pi_U(\mathbf{x}))$ must be orthogonal to *all* basis vectors of $U$. This gives $m$ simultaneous equations:
+        $$ \mathbf{b}_i^T (\mathbf{x} - B\boldsymbol{\lambda}) = 0 \quad \text{for } i=1, \dots, m $$
+    3.  **Solve the Normal Equation:** The system of equations can be written compactly as $B^T(\mathbf{x} - B\boldsymbol{\lambda}) = \mathbf{0}$, which rearranges to the **Normal Equation**:
+        $$ B^T B \boldsymbol{\lambda} = B^T \mathbf{x} $$
+*   **Solving for the Projection:**
+    *   Since the columns of $B$ form a basis, they are linearly independent, which guarantees that the $m \times m$ matrix $B^T B$ is **invertible**.
+    *   **Coordinates $\boldsymbol{\lambda}$:** We can solve for the coordinate vector:
+        $$ \boldsymbol{\lambda} = (B^T B)^{-1} B^T \mathbf{x} $$
+        The matrix $(B^T B)^{-1} B^T$ is the **pseudoinverse** of $B$.
+    *   **Projection Vector $\pi_U(\mathbf{x})$:**
+        $$ \pi_U(\mathbf{x}) = B\boldsymbol{\lambda} = B(B^T B)^{-1} B^T \mathbf{x} $$
+    *   **Projection Matrix $P_\pi$:**
+        $$ P_\pi = B(B^T B)^{-1} B^T $$
+
+#### 5. Remarks on Dimensions and Coordinates
+
+*   **The Projection Vector:** A projected vector $\pi_U(\mathbf{x})$ is still an n-dimensional vector (it has $n$ components), but it is constrained to lie within the m-dimensional subspace $U$.
+*   **The Power of Coordinates:** Crucially, this projected vector is fully determined by its **m coordinates** ($\lambda_1, \dots, \lambda_m$) with respect to the basis of $U$. This is the mathematical foundation of dimensionality reduction: we only need to store or use the $m$ coordinates and the $m$ basis vectors to perfectly represent the projected data, which is far more efficient than storing the original n-dimensional vectors.
