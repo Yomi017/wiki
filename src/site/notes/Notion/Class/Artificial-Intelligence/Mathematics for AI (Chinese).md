@@ -1078,19 +1078,23 @@ $$ (B^T B)\boldsymbol{\lambda} = B^T\mathbf{x} $$
         b.  **归一化：** 归一化 $\mathbf{v}_k$ 得到 $\mathbf{q}_k$。
             $$ \mathbf{q}_k = \frac{\mathbf{v}_k}{\|\mathbf{v}_k\|} $$
 
-### 3. 正交补
 
-正交补将垂直性的概念从单个向量推广到整个子空间。
 
-*   **定义：** 令 $U$ 是向量空间 $V$ 的一个子空间。$U$ 的**正交补**，记为 $U^\perp$，是 $V$ 中所有与 $U$ 中*每个*向量都正交的向量的集合。
+#### 3. 正的概念从单个向量推广到整个子空间。
+
+*   **定义 (正交补):** 令 $U$ 是向量空间 $V$ 的一个子空间。$U$ 的**正交补**，记为 $U^\perp$，是 $V$ 中所有与 $U$ 中*每个*向量都正交的向量的集合。
     $$ U^\perp = \{ \mathbf{v} \in V \mid \langle \mathbf{v}, \mathbf{u} \rangle = 0 \text{ 对于所有 } \mathbf{u} \in U \} $$
-*   **关键性质：**
-    1.  **交集：** $U \cap U^\perp = \{\mathbf{0}\}$。
-    2.  **维度：** $\dim(U) + \dim(U^\perp) = \dim(V)$。
-    3.  **正交分解：** $V$ 中的任何向量 $\mathbf{x}$ 都可以唯一地分解为 $U$ 中的一个分量和 $U^\perp$ 中的一个分量之和。这写成**直和**：
-        $$ V = U \oplus U^\perp $$
 
-*   **示例：** 在 $\mathbb{R}^3$ 中，xy-平面（2D子空间）的正交补是 z-轴（1D子空间）。
+*   **空间分解 (直和):** 整个空间 $V$ 可以被唯一地分解为子空间 $U$ 与其正交补 $U^\perp$ 的**直和**。这意味着 $U$ 和 $U^\perp$ 的交集只有零向量，并且它们的维度之和等于 $V$ 的维度。
+    $$ V = U \oplus U^\perp \quad \text{且} \quad \dim(U) + \dim(U^\perp) = \dim(V) $$
+
+*   **向量分解 (正交分解):** 基于空间的直和分解，$V$ 中的**任何一个向量 $\mathbf{x}$** 都可以被**唯一地**分解为一个在 $U$ 中的分量和一个在 $U^\perp$ 中的分量之和。
+    *   **概念层面:**
+        $$ \mathbf{x} = \mathbf{x}_U + \mathbf{x}_{U^\perp} \quad (\text{其中 } \mathbf{x}_U \in U, \mathbf{x}_{U^\perp} \in U^\perp) $$
+    *   **基层面表示:** 在计算上，这个分解通过找到 $\mathbf{x}$ 关于 $U$ 的基和 $U^\perp$ 的基的唯一坐标来实现。
+        $$ \mathbf{x} = \sum_{m=1}^{M} \lambda_m \mathbf{b}_m + \sum_{j=1}^{D-M} \psi_j \mathbf{b}_j^\perp $$
+        其中，$\{\mathbf{b}_1, \ldots, \mathbf{b}_M\}$ 是 $U$ 的一组基，$\{\mathbf{b}_1^\perp, \ldots, \mathbf{b}_{D-M}^\perp\}$ 是 $U^\perp$ 的一组基，而 $\lambda_m, \psi_j$ 是唯一的标量坐标。
+    *   分量 $\mathbf{x}_U = \sum \lambda_m \mathbf{b}_m$ 正是 $\mathbf{x}$ 在子空间 $U$ 上的**正交投影**。
 
 ## 第二部分：函数内积、正交投影与旋转
 

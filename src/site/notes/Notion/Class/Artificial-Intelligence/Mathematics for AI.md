@@ -1288,18 +1288,23 @@ The Gram-Schmidt process is a fundamental algorithm that transforms any set of l
             $$ \mathbf{q}_k = \frac{\mathbf{v}_k}{\|\mathbf{v}_k\|} $$
 *   **Result:** The set $\{\mathbf{q}_1, \dots, \mathbf{q}_n\}$ is an orthonormal basis for the same space spanned by the original vectors $\{\mathbf{a}_1, \dots, \mathbf{a}_n\}$.
 
-### 3. Orthogonal Complement
+#### 3. Orthogonal Complement and Decomposition
 
-The orthogonal complement generalizes the idea of perpendicularity from single vectors to entire subspaces.
+The orthogonal complement generalizes the concept of perpendicularity from single vectors to entire subspaces.
 
-*   **Definition:** Let $U$ be an $M$-dimensional subspace of a $D$-dimensional vector space $V$. The **orthogonal complement** of $U$, denoted $U^\perp$, is the set of all vectors in $V$ that are orthogonal to *every* vector in $U$.
+*   **Definition (Orthogonal Complement):** Let $U$ be a subspace of a vector space $V$. The **orthogonal complement** of $U$, denoted $U^\perp$, is the set of all vectors in $V$ that are orthogonal to *every* vector in $U$.
     $$ U^\perp = \{ \mathbf{v} \in V \mid \langle \mathbf{v}, \mathbf{u} \rangle = 0 \text{ for all } \mathbf{u} \in U \} $$
-*   **Key Properties:**
-    1.  **Intersection:** The only vector that lies in both a subspace and its orthogonal complement is the zero vector: $U \cap U^\perp = \{\mathbf{0}\}$.
-    2.  **Dimension:** The dimensions of a subspace and its orthogonal complement sum to the dimension of the total space:
-        $$ \dim(U) + \dim(U^\perp) = \dim(V) $$
-    3.  **Orthogonal Decomposition:** Any vector $\mathbf{x} \in V$ can be uniquely decomposed into a sum of a component in $U$ and a component in $U^\perp$. This is written as a **direct sum**:
-        $$ V = U \oplus U^\perp $$
+
+*   **Space Decomposition (Direct Sum):** The entire space $V$ can be uniquely decomposed into the **direct sum** of the subspace $U$ and its orthogonal complement $U^\perp$. This implies that the intersection of $U$ and $U^\perp$ contains only the zero vector, and the sum of their dimensions equals the dimension of $V$.
+    $$ V = U \oplus U^\perp \quad \text{and} \quad \dim(U) + \dim(U^\perp) = \dim(V) $$
+
+*   **Vector Decomposition (Orthogonal Decomposition):** Based on the direct sum decomposition of the space, **any vector $\mathbf{x}$** in $V$ can be **uniquely** decomposed into the sum of a component in $U$ and a component in $U^\perp$.
+    *   **Conceptually:**
+        $$ \mathbf{x} = \mathbf{x}_U + \mathbf{x}_{U^\perp} \quad (\text{where } \mathbf{x}_U \in U, \mathbf{x}_{U^\perp} \in U^\perp) $$
+    *   **Basis-Level Representation:** Computationally, this decomposition is expressed by finding the unique coordinates of $\mathbf{x}$ with respect to a basis for $U$ and a basis for $U^\perp$.
+        $$ \mathbf{x} = \sum_{m=1}^{M} \lambda_m \mathbf{b}_m + \sum_{j=1}^{D-M} \psi_j \mathbf{b}_j^\perp $$
+        where $\{\mathbf{b}_1, \ldots, \mathbf{b}_M\}$ is a basis for $U$, $\{\mathbf{b}_1^\perp, \ldots, \mathbf{b}_{D-M}^\perp\}$ is a basis for $U^\perp$, and $\lambda_m, \psi_j$ are the unique scalar coordinates.
+    *   The component $\mathbf{x}_U = \sum \lambda_m \mathbf{b}_m$ is precisely the **orthogonal projection** of $\mathbf{x}$ onto the subspace $U$.
 
 ### 4. Applications and Examples of Orthogonal Complements
 
