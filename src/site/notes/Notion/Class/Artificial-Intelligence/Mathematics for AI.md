@@ -1409,6 +1409,7 @@ The three-step method for 1D projection can be generalized to any m-dimensional 
     *   **Projection Vector:** $\pi_U(\mathbf{x}) = B(B^T B)^{-1} B^T \mathbf{x}$
     *   **Projection Matrix:** $P_\pi = B(B^T B)^{-1} B^T$
 
+**Extension: [[Notion/Class/Concept/Projections between Subspaces\|Projections between Subspaces]]**
 ### 5. Core Application I: Gram-Schmidt Orthogonalization
 
 ![Image/Class/Mathematics-for-AI/8.png](/img/user/Image/Class/Mathematics-for-AI/8.png)
@@ -1455,3 +1456,125 @@ So far, we have discussed projections onto subspaces that pass through the origi
 *   **Distance from a Point to an Affine Subspace:**
     $$ d(\mathbf{x}, L) = \|\mathbf{x} - \pi_L(\mathbf{x})\| = \|\mathbf{x} - (\mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0))\| = \|(\mathbf{x} - \mathbf{x}_0) - \pi_U(\mathbf{x} - \mathbf{x}_0)\| = d(\mathbf{x}-\mathbf{x}_0, U) $$
     This shows that the distance from a point to an affine space is equal to the distance from the translated point to its corresponding direction subspace.
+
+## Part IV: A Detailed Explanation of Rotations
+
+Rotations are another important class of linear transformations, following projections, that play a central role in geometry, computer graphics, and robotics.
+
+### 1. Fundamental Concepts of Rotation
+
+*   **Relationship with Orthogonal Transformations:** A rotation is a special case of an **orthogonal transformation**. The core characteristic of orthogonal transformations is that they **preserve the length of vectors and the angles between them**. Rotations perfectly fit this description.
+*   **Definition:** A rotation is a linear function that rotates a plane (or space) by a specific angle $\theta$ around a fixed origin.
+*   **Directional Convention:** By convention, a **positive angle $\theta > 0$** corresponds to a **counter-clockwise** rotation.
+*   **Core Property:** A rotation only changes the direction of a vector, not its distance from the origin.
+
+### 2. Rotations in $\mathbb{R}^2$
+
+#### 2.1 Derivation of the $\mathbb{R}^2$ Rotation Matrix: Two Perspectives
+
+##### Perspective 1: Basis Change (The "Columns are Transformed Basis Vectors" View)
+
+This is the standard derivation based on the nature of linear transformations.
+
+*   **Goal:** To find a matrix $R(\theta)$ that, when multiplied by a vector $\mathbf{x}$, rotates that vector counter-clockwise by an angle $\theta$ around the origin.
+*   **Key Idea:** The **columns of a linear transformation matrix** are the new coordinates of the **standard basis vectors** after the transformation.
+*   **Derivation Steps:**
+    1.  **Identify Standard Basis Vectors:** In $\mathbb{R}^2$, the standard basis is $\mathbf{e}_1 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$ and $\mathbf{e}_2 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$.
+    2.  **Rotate the Basis Vectors:**
+        *   Rotating $\mathbf{e}_1$ by $\theta$ yields the new coordinates $\Phi(\mathbf{e}_1) = \begin{bmatrix} \cos\theta \\ \sin\theta \end{bmatrix}$.
+        *   Rotating $\mathbf{e}_2$ by $\theta$ yields the new coordinates $\Phi(\mathbf{e}_2) = \begin{bmatrix} -\sin\theta \\ \cos\theta \end{bmatrix}$.
+    3.  **Construct the Rotation Matrix:** Use the transformed basis vectors as the columns of the rotation matrix.
+        $$ R(\theta) = [\Phi(\mathbf{e}_1) \quad \Phi(\mathbf{e}_2)] = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix} $$
+
+##### Perspective 2: Polar Coordinates and Trigonometric Identities (The "Direct Geometric" View)
+
+This is a more direct geometric proof that does not rely on the idea of basis change.
+
+1.  **Represent the Vector:** Express an arbitrary vector in polar coordinates: $x = r\cos\phi, y = r\sin\phi$.
+2.  **Represent the Rotation:** Rotating this vector by an angle $\theta$ changes its angle to $\phi+\theta$. The new coordinates $(x', y')$ are:
+    $$ x' = r\cos(\phi+\theta), \quad y' = r\sin(\phi+\theta) $$
+3.  **Apply Angle-Sum Formulas:**
+    *   $x' = r(\cos\phi\cos\theta - \sin\phi\sin\theta) = x\cos\theta - y\sin\theta$
+    *   $y' = r(\sin\phi\cos\theta + \cos\phi\sin\theta) = x\sin\theta + y\cos\theta$
+4.  **Write in Matrix Form:**
+    $$ \begin{bmatrix} x' \\ y' \end{bmatrix} = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix} \begin{bmatrix} x \\ y \end{bmatrix} $$
+
+#### 2.2 Applications and Notes for $\mathbb{R}^2$ Rotations
+
+*   **Coordinate System Dependency:** The derived matrix $R(\theta)$ **only applies directly to vectors expressed in the standard Cartesian coordinate system**.
+*   **Rotating a Vector in a Non-Standard Basis:** If your vector's coordinates $\mathbf{x}_F$ are given in a non-standard basis $F = [\mathbf{f}_1, \mathbf{f}_2]$, the correct procedure is:
+    1.  **Change Basis to Cartesian:** $\mathbf{x}_{\text{cartesian}} = F\mathbf{x}_F$
+    2.  **Rotate with Standard Matrix:** $\mathbf{x}'_{\text{rotated}} = R(\theta) \mathbf{x}_{\text{cartesian}}$
+    3.  **(Optional) Change Basis Back:** $\mathbf{y}_F = F^{-1}\mathbf{x}'_{\text{rotated}}$
+*   **Rotating a Vector Space:** To rotate an entire vector space, you simply rotate all of its basis vectors. If the basis of a space is given by the columns of a matrix $B=[\mathbf{b}_1, \dots, \mathbf{b}_k]$, the new rotated basis matrix is $B' = [R(\theta)\mathbf{b}_1, \dots, R(\theta)\mathbf{b}_k] = R(\theta)B$.
+
+### 3. Rotations in $\mathbb{R}^3$
+
+Rotations in 3D are more complex than in 2D because they must occur around an **axis of rotation**.
+
+*   **Definition:** In $\mathbb{R}^3$, a rotation is performed around a line (the axis) that passes through the origin. All points on the axis remain fixed during the rotation.
+*   **Constructing an Arbitrary 3D Rotation Matrix:** A general 3D rotation matrix $R$ can be constructed by determining the new positions $R\mathbf{e}_1, R\mathbf{e}_2, R\mathbf{e}_3$ of the standard basis vectors after rotation. These new vectors must remain orthonormal.
+    $$ R = [R\mathbf{e}_1 \quad R\mathbf{e}_2 \quad R\mathbf{e}_3] $$
+
+#### 3.1 Directional Convention for 3D Rotations: The Right-Hand Rule
+
+To define "counter-clockwise," we use the **Right-Hand Rule**:
+*   **Rule:** Point the thumb of your right hand in the **positive direction** of the axis of rotation. The direction in which your other four fingers curl is the direction of a **positive angle (counter-clockwise)** rotation.
+
+#### 3.2 Fundamental Rotations about the Coordinate Axes
+
+Any complex 3D rotation can be decomposed into a sequence of fundamental rotations about the three primary axes (x, y, z).
+
+1.  **Rotation about the x-axis ($e_1$) by $R_x(\theta)$**
+    *   **Description:** The x-coordinate remains unchanged; the rotation occurs in the yz-plane.
+    *   **Matrix:**
+        $$ R_x(\theta) = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos\theta & -\sin\theta \\ 0 & \sin\theta & \cos\theta \end{bmatrix} $$
+
+2.  **Rotation about the y-axis ($e_2$) by $R_y(\theta)$**
+    *   **Description:** The y-coordinate remains unchanged; the rotation occurs in the zx-plane.
+    *   **Matrix:**
+        $$ R_y(\theta) = \begin{bmatrix} \cos\theta & 0 & \sin\theta \\ 0 & 1 & 0 \\ -\sin\theta & 0 & \cos\theta \end{bmatrix} $$
+
+3.  **Rotation about the z-axis ($e_3$) by $R_z(\theta)$**
+    *   **Description:** The z-coordinate remains unchanged; the rotation occurs in the xy-plane.
+    *   **Matrix:**
+        $$ R_z(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{bmatrix} $$
+
+#### 3.3 Trigonometric Proof of the 3D Fundamental Rotation Matrices
+
+*   **About x-axis:** In the yz-plane, let $y = r\cos\phi, z = r\sin\phi$. After rotating by $\theta$, the new coordinates are $y' = r\cos(\phi+\theta)$ and $z' = r\sin(\phi+\theta)$. Expanding with angle-sum formulas while keeping $x'=x$ derives the $R_x(\theta)$ matrix.
+*   **About z-axis:** In the xy-plane, let $x = r\cos\phi, y = r\sin\phi$. After rotating by $\theta$, the new coordinates are $x' = r\cos(\phi+\theta)$ and $y' = r\sin(\phi+\theta)$. Expanding derives the $R_z(\theta)$ matrix.
+*   **About y-axis (Special Case):**
+    *   According to the right-hand rule, with the thumb pointing along +y, the fingers curl from the **z-axis towards the x-axis**.
+    *   Therefore, a rotation from `x` to `z` is considered a **negative angle**. Alternatively, to achieve a positive rotation, the new angle should be $\phi-\theta$, not $\phi+\theta$.
+    *   $x' = r\cos(\phi-\theta) = x\cos\theta + z\sin\theta$
+    *   $z' = r\sin(\phi-\theta) = z\cos\theta - x\sin\theta$
+    *   This explains why the signs of $\sin\theta$ in the $R_y(\theta)$ matrix are different from the other two.
+
+#### 3.4 Sequential Rotations in 3D
+
+*   **Order Matters:** In 3D and higher dimensions, rotation is **not commutative**. That is, $R_xR_y \neq R_yR_x$. The order of application is critical.
+*   **Matrix Multiplication Order:** Rotations are applied sequentially **from right to left**. If you want to rotate a vector $\mathbf{x}$ first about the x-axis, then the y-axis, and finally the z-axis, the combined rotation is calculated as:
+    $$ \mathbf{x}_{\text{rotated}} = (R_z R_y R_x) \mathbf{x} $$
+
+### 4. Rotations in Higher Dimensions ($\mathbb{R}^n$): Givens Rotations
+
+*   **Core Idea:** Any rotation in n-dimensional space can be described as a rotation within a **two-dimensional plane**, while leaving the other $n-2$ dimensions unchanged.
+*   **Definition: Givens Rotation**
+    *   An n-dimensional rotation matrix that performs a rotation in the $(i, j)-\text{plane}$ is denoted as $R_{ij}(\theta)$.
+    *   This matrix is an identity matrix everywhere except for four entries, where a standard 2D rotation matrix is embedded:
+        *   $r_{ii} = \cos\theta$
+        *   $r_{ij} = -\sin\theta$
+        *   $r_{ji} = \sin\theta$
+        *   $r_{jj} = \cos\theta$
+*   **Application in Practice:**
+    *   In algorithms (like QR decomposition), we typically do not pre-set `$\theta$`. Instead, we **back-calculate** the values of `$\cos\theta$` and `$\sin\theta$` to achieve a specific goal, such as **zeroing out** an entry in a vector.
+
+### 5. General Properties of Rotations
+
+*   **Orthogonality:** Rotation matrices $R$ are always orthogonal matrices, satisfying $R^T R = I$, which means $R^T = R^{-1}$.
+*   **Isometry (Distance Preservation):** $\|Rx - Ry\| = \|x - y\|$. Rotations do not change the distance between points.
+*   **Angle Preservation:** The angle between vectors is unchanged after rotation.
+*   **Commutativity:**
+    *   In **$\mathbb{R}^2$**, rotations **are commutative**: $R(\phi)R(\theta) = R(\theta)R(\phi)$.
+    *   In **$\mathbb{R}^3$ and higher dimensions**, rotations are **not commutative**.

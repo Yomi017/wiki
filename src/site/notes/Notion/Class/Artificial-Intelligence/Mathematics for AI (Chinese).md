@@ -1173,6 +1173,7 @@ $$ (B^T B)\boldsymbol{\lambda} = B^T\mathbf{x} $$
     *   **投影向量：** $\pi_U(\mathbf{x}) = B(B^T B)^{-1} B^T \mathbf{x}$
     *   **投影矩阵：** $P_\pi = B(B^T B)^{-1} B^T$
 
+**拓展：子空间之间的投影[[Notion/Class/Concept/Projections between Subspaces\|Projections between Subspaces]]**
 ### 5. 核心应用 I：Gram-Schmidt正交化
 
 Gram-Schmidt过程是构造一组标准正交基的经典算法，其核心思想就是**反复利用正交投影**。
@@ -1218,3 +1219,125 @@ Gram-Schmidt过程是构造一组标准正交基的经典算法，其核心思�
 *   **点到仿射子空间的距离：**
     $$ d(\mathbf{x}, L) = \|\mathbf{x} - \pi_L(\mathbf{x})\| = \|\mathbf{x} - (\mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0))\| = \|(\mathbf{x} - \mathbf{x}_0) - \pi_U(\mathbf{x} - \mathbf{x}_0)\| = d(\mathbf{x}-\mathbf{x}_0, U) $$
     这表明，点到仿射空间的距离，等于平移后的点到其方向子空间的距离。
+
+## 第四部分：旋转详解 (Rotations)
+
+旋转是继投影之后的另一类重要的线性变换，它在几何学、计算机图形学和机器人学中扮演着核心角色。
+
+### 1. 旋转的基本概念
+
+*   **与正交变换的关系：** 旋转是**正交变换**的一个特例。正交变换的核心特性是它们在变换过程中**保持向量的长度和向量间的夹角**不变。旋转完美地符合这一特性。
+*   **定义：** 一个旋转是一个线性函数，它将一个平面（或空间）围绕一个固定的原点旋转一个特定的角度 $\theta$。
+*   **方向约定：** 按照惯例，一个**正角度 $\theta > 0$** 对应于**逆时针 (counter-clockwise)** 旋转。
+*   **核心性质：** 旋转只改变向量的方向，不改变其到原点的距离。
+
+### 2. R² 中的旋转
+
+#### 2.1 R² 旋转矩阵的推导：两种视角
+
+##### 视角一：基变换 (The "Columns are Transformed Basis Vectors" View)
+
+这是从线性变换本质出发的标准推导方法。
+
+*   **目标：** 找到一个矩阵 $R(\theta)$，当它乘以一个向量 $\mathbf{x}$ 时，能够将该向量围绕原点逆时针旋转 $\theta$ 角。
+*   **关键思想：** 一个线性变换矩阵的**列向量**，正是**标准基向量**经过该变换后的新坐标。
+*   **推导步骤：**
+    1.  **确定标准基向量：** 在 $\mathbb{R}^2$ 中，标准基是 $\mathbf{e}_1 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$ 和 $\mathbf{e}_2 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$。
+    2.  **旋转基向量：**
+        *   将 $\mathbf{e}_1$ 旋转 $\theta$ 角，新坐标是 $\Phi(\mathbf{e}_1) = \begin{bmatrix} \cos\theta \\ \sin\theta \end{bmatrix}$。
+        *   将 $\mathbf{e}_2$ 旋转 $\theta$ 角，新坐标是 $\Phi(\mathbf{e}_2) = \begin{bmatrix} -\sin\theta \\ \cos\theta \end{bmatrix}$。
+    3.  **构建旋转矩阵：** 将变换后的基向量作为列，构成旋转矩阵。
+        $$ R(\theta) = [\Phi(\mathbf{e}_1) \quad \Phi(\mathbf{e}_2)] = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix} $$
+
+##### 视角二：极坐标与三角恒等式 (The "Direct Geometric" View)
+
+这是一个更直接的几何证明，不依赖于基变换的思想。
+
+1.  **表示向量：** 将任意向量用极坐标表示：$x = r\cos\phi, y = r\sin\phi$。
+2.  **表示旋转：** 将该向量旋转角度 $\theta$，其角度变为 $\phi+\theta$。新坐标 $(x', y')$ 为：
+    $$ x' = r\cos(\phi+\theta), \quad y' = r\sin(\phi+\theta) $$
+3.  **应用和角公式：**
+    *   $x' = r(\cos\phi\cos\theta - \sin\phi\sin\theta) = x\cos\theta - y\sin\theta$
+    *   $y' = r(\sin\phi\cos\theta + \cos\phi\sin\theta) = x\sin\theta + y\cos\theta$
+4.  **写成矩阵形式：**
+    $$ \begin{bmatrix} x' \\ y' \end{bmatrix} = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix} \begin{bmatrix} x \\ y \end{bmatrix} $$
+
+#### 2.2 R² 旋转的应用与注意事项
+
+*   **坐标系依赖性：** 上述推导的 $R(\theta)$ **只直接适用于在标准笛卡尔坐标系下表示的向量**。
+*   **在非标准坐标系中旋转向量：** 如果你的向量坐标 $\mathbf{x}_F$ 是在某个非标准基 $F = [\mathbf{f}_1, \mathbf{f}_2]$ 下给出的，正确的做法是：
+    1.  **基变换到笛卡尔坐标：** $\mathbf{x}_{\text{cartesian}} = F\mathbf{x}_F$
+    2.  **用标准矩阵旋转：** $\mathbf{x}'_{\text{rotated}} = R(\theta) \mathbf{x}_{\text{cartesian}}$
+    3.  **（可选）变换回原基：** $\mathbf{y}_F = F^{-1}\mathbf{x}'_{\text{rotated}}$
+*   **旋转一个向量空间：** 要旋转整个向量空间，只需旋转其所有基向量即可。如果一个空间的基由矩阵 $B=[\mathbf{b}_1, \dots, \mathbf{b}_k]$ 的列给出，那么旋转后的新基矩阵为 $B' = [R(\theta)\mathbf{b}_1, \dots, R(\theta)\mathbf{b}_k] = R(\theta)B$。
+
+### 3. R³ 中的旋转
+
+三维空间中的旋转比二维更复杂，因为它必须围绕一个**旋转轴 (axis of rotation)** 进行。
+
+*   **定义：** 在 $\mathbb{R}^3$ 中，旋转是围绕一条穿过原点的直线（轴）进行的。该轴上的所有点在旋转过程中保持不变。
+*   **构建任意3D旋转矩阵：** 一个通用的3D旋转矩阵 $R$ 可以通过确定标准基 $\mathbf{e}_1, \mathbf{e}_2, \mathbf{e}_3$ 旋转后的新位置 $R\mathbf{e}_1, R\mathbf{e}_2, R\mathbf{e}_3$ 来构建，这些新向量必须保持标准正交性。
+    $$ R = [R\mathbf{e}_1 \quad R\mathbf{e}_2 \quad R\mathbf{e}_3] $$
+
+#### 3.1 3D旋转的方向约定：右手定则
+
+为了定义“逆时针”旋转，我们使用**右手定则 (Right-Hand Rule)**：
+*   **规则：** 将你的右手大拇指指向旋转轴的**正方向**。你其余四指弯曲的方向，就是**正角度（逆时针）** 的旋转方向。
+
+#### 3.2 沿坐标轴的基本旋转
+
+任何复杂的3D旋转都可以分解为沿三个主坐标轴（x, y, z）的一系列基本旋转。
+
+1.  **绕 x 轴 ($e_1$) 旋转 $R_x(\theta)$**
+    *   **描述：** x 坐标保持不变，旋转发生在 yz 平面。
+    *   **矩阵：**
+        $$ R_x(\theta) = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos\theta & -\sin\theta \\ 0 & \sin\theta & \cos\theta \end{bmatrix} $$
+
+2.  **绕 y 轴 ($e_2$) 旋转 $R_y(\theta)$**
+    *   **描述：** y 坐标保持不变，旋转发生在 zx 平面。
+    *   **矩阵：**
+        $$ R_y(\theta) = \begin{bmatrix} \cos\theta & 0 & \sin\theta \\ 0 & 1 & 0 \\ -\sin\theta & 0 & \cos\theta \end{bmatrix} $$
+
+3.  **绕 z 轴 ($e_3$) 旋转 $R_z(\theta)$**
+    *   **描述：** z 坐标保持不变，旋转发生在 xy 平面。
+    *   **矩阵：**
+        $$ R_z(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{bmatrix} $$
+
+#### 3.3 3D基本旋转矩阵的三角证明
+
+*   **绕 x 轴:** 在 yz 平面中，令 $y = r\cos\phi, z = r\sin\phi$。旋转 $\theta$ 角后，新坐标为 $y' = r\cos(\phi+\theta)$ 和 $z' = r\sin(\phi+\theta)$。通过和角公式展开，并保持 $x'=x$，即可推导出 $R_x(\theta)$ 矩阵。
+*   **绕 z 轴:** 在 xy 平面中，令 $x = r\cos\phi, y = r\sin\phi$。旋转 $\theta$ 角后，新坐标为 $x' = r\cos(\phi+\theta)$ 和 $y' = r\sin(\phi+\theta)$。展开后即可推导出 $R_z(\theta)$ 矩阵。
+*   **绕 y 轴 (特殊情况):**
+    *   根据右手定则，大拇指指向+y，四指弯曲方向是从 **z 轴到 x 轴**。
+    *   因此，从 `x` 到 `z` 的旋转被视为**负角度**。或者说，要实现一个正角度的旋转，新角度应该是 `ϕ-θ` 而不是 `ϕ+θ`。
+    *   $x' = r\cos(\phi-\theta) = x\cos\theta + z\sin\theta$
+    *   $z' = r\sin(\phi-\theta) = z\cos\theta - x\sin\theta$
+    *   这解释了为什么 $R_y(\theta)$ 矩阵中 `sinθ` 的符号与其他两个矩阵不同。
+
+#### 3.4 3D序贯旋转 (Sequential Rotations)
+
+*   **顺序的重要性：** 在三维及更高维度中，旋转操作**不满足交换律 (not commutative)**。即 `RxRy ≠ RyRx`。因此，旋转的顺序至关重要。
+*   **矩阵乘法顺序：** 旋转操作是**从右向左**依次施加的。如果要先绕x轴，再绕y轴，最后绕z轴旋转向量 `x`，组合旋转矩阵的计算方式是：
+    $$ \mathbf{x}_{\text{rotated}} = (R_z R_y R_x) \mathbf{x} $$
+
+### 4. 高维空间 (Rⁿ) 中的旋转：吉文斯旋转 (Givens Rotation)
+
+*   **核心思想：** 在 n 维空间中的任何旋转，都可以被看作是在一个**二维平面**内的旋转，同时保持其余 `n-2` 个维度不变。
+*   **定义：吉文斯旋转**
+    *   一个在 `(i, j)` 平面中进行旋转的 n 维旋转矩阵，记为 `R_ij(θ)`。
+    *   这个矩阵在绝大多数位置上是单位矩阵，只在第 `i` 行 `i` 列、`i` 行 `j` 列、`j` 行 `i` 列、`j` 行 `j` 列这四个位置上，嵌入了一个标准的二维旋转矩阵：
+        *   `r_ii = cosθ`
+        *   `r_ij = -sinθ`
+        *   `r_ji = sinθ`
+        *   `r_jj = cosθ`
+*   **实践中的应用：**
+    *   在实际算法中（如QR分解），我们通常不是预先设定 `θ`，而是根据需求**反向计算**出 `cosθ` 和 `sinθ` 的值，以达到特定目的，例如将一个向量在特定维度上的分量**清零**。
+
+### 5. 旋转的通用性质
+
+*   **正交性：** 旋转矩阵 `R` 都是正交矩阵，满足 `RᵀR = I`，即 `Rᵀ = R⁻¹`。
+*   **保距性：** `||Rx - Ry|| = ||x - y||`，旋转不改变点与点之间的距离。
+*   **保角性：** 旋转不改变向量之间的夹角。
+*   **交换律：**
+    *   在 **R²** 中，旋转**满足**交换律：`R(φ)R(θ) = R(θ)R(φ)`。
+    *   在 **R³ 及更高维度**中，旋转**不满足**交换律。
