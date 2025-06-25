@@ -1219,6 +1219,18 @@ Gram-Schmidt过程是构造一组标准正交基的经典算法，其核心思�
 *   **点到仿射子空间的距离：**
     $$ d(\mathbf{x}, L) = \|\mathbf{x} - \pi_L(\mathbf{x})\| = \|\mathbf{x} - (\mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0))\| = \|(\mathbf{x} - \mathbf{x}_0) - \pi_U(\mathbf{x} - \mathbf{x}_0)\| = d(\mathbf{x}-\mathbf{x}_0, U) $$
     这表明，点到仿射空间的距离，等于平移后的点到其方向子空间的距离。
+### 7. 核心应用 III：投影与最小二乘解
+
+[[Notion/Class/Proof/Moore Penrose Pseudo inverse\|Moore Penrose Pseudo inverse]]
+正交投影为求解无解的线性方程组 `Ax=b` 提供了一个强大的几何框架，这构成了**最小二乘法 (Least Squares Method)** 的基础。
+
+*   **问题的根源：** 当方程 `Ax=b` 无解时，从几何上看，这意味着向量 `b` 不在矩阵 `A` 的列空间 `Col(A)` 内。
+*   **解决思路：** 既然无法在 `Col(A)` 中找到一个点**等于** `b`，我们就退而求其次，寻找一个 `Col(A)` 中离 `b` **最近**的点。
+*   **投影是答案：** 根据定义，这个“最近点”正是 `b` 在 `Col(A)` 上的**正交投影**，我们记为 $\hat{\mathbf{b}} = \pi_{Col(A)}(\mathbf{b})$。
+*   **求解新方程：** 我们现在求解一个新的、**必有解**的方程：
+    $$ A\hat{\mathbf{x}} = \hat{\mathbf{b}} $$
+    这个方程的解 $\hat{\mathbf{x}}$ 就是原始问题的**最小二乘解**。
+*   **为什么叫“最小二乘”？** 因为这个解 $\hat{\mathbf{x}}$ 能够使**误差向量**的长度平方 $\|\mathbf{b} - A\mathbf{x}\|^2$ 达到**最小**。这个长度的平方就是各项误差的**平方和 (sum of squares)**，因此得名。
 
 ## 第四部分：旋转详解 (Rotations)
 
@@ -1351,3 +1363,5 @@ Gram-Schmidt过程是构造一组标准正交基的经典算法，其核心思�
 *   **交换律：**
     *   在 **R²** 中，旋转**满足**交换律：`R(φ)R(θ) = R(θ)R(φ)`。
     *   在 **R³ 及更高维度**中，旋转**不满足**交换律。
+
+

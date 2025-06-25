@@ -1457,6 +1457,19 @@ So far, we have discussed projections onto subspaces that pass through the origi
     $$ d(\mathbf{x}, L) = \|\mathbf{x} - \pi_L(\mathbf{x})\| = \|\mathbf{x} - (\mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0))\| = \|(\mathbf{x} - \mathbf{x}_0) - \pi_U(\mathbf{x} - \mathbf{x}_0)\| = d(\mathbf{x}-\mathbf{x}_0, U) $$
     This shows that the distance from a point to an affine space is equal to the distance from the translated point to its corresponding direction subspace.
 
+### 7. Core Application III: Projections and Least Squares Solutions
+
+[[Notion/Class/Proof/Moore Penrose Pseudo inverse\|Moore Penrose Pseudo inverse]]
+Orthogonal projection provides a powerful geometric framework for solving inconsistent linear systems of the form `Ax=b`, forming the foundation of the **Least Squares Method**.
+
+*   **The Root of the Problem:** When the equation `Ax=b` has no solution, it means geometrically that the vector `b` does not lie within the column space of the matrix `A`, denoted `Col(A)`.
+*   **The Solution Strategy:** Since it's impossible to find a point in `Col(A)` that is **equal** to `b`, we settle for the next best thing: finding the point in `Col(A)` that is **closest** to `b`.
+*   **Projection is the Answer:** By definition, this "closest point" is precisely the **orthogonal projection** of `b` onto `Col(A)`. We denote this projection as $\hat{\mathbf{b}} = \pi_{Col(A)}(\mathbf{b})$.
+*   **Solving the New Equation:** We now solve a new system of equations that is **guaranteed to have a solution**:
+    $$ A\hat{\mathbf{x}} = \hat{\mathbf{b}} $$
+    The solution to this equation, $\hat{\mathbf{x}}$, is the **least-squares solution** to the original problem.
+*   **Why is it called "Least Squares"?** Because this solution $\hat{\mathbf{x}}$ is the one that **minimizes** the squared length of the **error vector**, $\|\mathbf{b} - A\mathbf{x}\|^2$. The squared length of a vector is the **sum of the squares** of its components, hence the name "least squares."
+
 ## Part IV: A Detailed Explanation of Rotations
 
 Rotations are another important class of linear transformations, following projections, that play a central role in geometry, computer graphics, and robotics.
