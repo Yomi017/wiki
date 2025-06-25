@@ -1360,75 +1360,95 @@ Rotations are a fundamental class of geometric transformations that preserve the
     $$ R_\theta = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix} $$
 *   **Group Structure:** The set of all $n \times n$ rotation matrices forms a mathematical group known as the **Special Orthogonal Group**, denoted $SO(n)$.
 
-## Part III: Detail of Orthogonal Projections
+## Part III: A Detailed Explanation of Orthogonal Projections
 
-Projections are a critical class of linear transformations, widely used in graphics, coding theory, statistics, and machine learning.
+Projections are a critically important class of linear transformations with wide-ranging applications in computer graphics, coding theory, statistics, and machine learning.
 
 ### 1. The Importance and Concept of Orthogonal Projections
 
-*   **Motivation in Machine Learning:** In machine learning, we often deal with high-dimensional data that is difficult to analyze or visualize. The key insight is that most of the relevant information is often contained within a much lower-dimensional subspace.
-*   **The Goal (Dimensionality Reduction):** By projecting high-dimensional data onto a carefully chosen lower-dimensional "feature space", we can simplify the problem, reduce computational cost, and extract meaningful patterns. The objective is to perform this projection while **minimizing information loss**.
+*   **Motivation in Machine Learning:** In machine learning, we often deal with high-dimensional data that is difficult to analyze or visualize. A key insight is that most of the relevant information is often contained within a much lower-dimensional subspace.
+*   **Goal (Dimensionality Reduction):** By projecting high-dimensional data onto a carefully chosen low-dimensional "feature space," we can simplify problems, reduce computational costs, and extract meaningful patterns. The goal is to **minimize information loss** while performing this projection.
 *   **What is an Orthogonal Projection?**
-    *   It is a linear transformation that "drops" a vector from a higher-dimensional space onto a lower-dimensional subspace.
-    *   It is "orthogonal" because it does so in a way that **retains as much information as possible** by **minimizing the error** (the distance) between the original data and its projected image.
-    *   This property makes it central to linear regression, classification, and data compression.
+    *   It is a linear transformation that "drops" a vector from a high-dimensional space onto a lower-dimensional subspace.
+    *   It is "orthogonal" because it **preserves as much information as possible** by **minimizing the error** (distance) between the original data and its projected image.
+    *   This property makes it fundamental to linear regression, classification, and data compression.
 
-### 2. The Formal Definition and Properties of Projection
+### 2. Formal Definition and Properties of Projections
 
-*   **Algebraic Definition (Idempotence):** A linear mapping $\pi: V \to U$ is called a **projection** if applying it twice is the same as applying it once. This is known as the **idempotent property**.
+*   **Algebraic Definition (Idempotence):** A linear mapping $\pi: V \to U$ is called a **projection** if applying it twice has the same effect as applying it once. This is known as **idempotence**.
     $$ \pi^2 = \pi \quad (\text{or } \pi(\pi(\mathbf{x})) = \pi(\mathbf{x})) $$
     *   **Matrix Form:** A square matrix $P$ is a **projection matrix** if it satisfies $P^2 = P$.
-*   **Geometric Definition (Closest Point):** The **orthogonal projection** $\pi_U(\mathbf{x})$ of a vector $\mathbf{x}$ onto a subspace $U$ is the unique point in $U$ that is **closest** to $\mathbf{x}$.
+*   **Geometric Definition (Closest Point):** The **orthogonal projection** of a vector $\mathbf{x}$ onto a subspace $U$, denoted $\pi_U(\mathbf{x})$, is the unique point in $U$ that is **closest** to $\mathbf{x}$.
     *   This "closest point" condition is equivalent to the **orthogonality condition**: the difference vector $(\mathbf{x} - \pi_U(\mathbf{x}))$ must be orthogonal to every vector in the subspace $U$.
 
-### 3. Projection onto One-Dimensional Subspaces (Lines)
+### 3. Projection onto a One-Dimensional Subspace (a Line)
+
 ![Image/Class/Mathematics-for-AI/5.png](/img/user/Image/Class/Mathematics-for-AI/5.png)
 ![Image/Class/Mathematics-for-AI/6.png](/img/user/Image/Class/Mathematics-for-AI/6.png)
-We begin by deriving the projection formula for the simplest case: projecting a vector onto a line, assuming the standard dot product as the inner product unless stated otherwise.
 
-*   **Setup:**
-    *   Let $U$ be a one-dimensional subspace (a line through the origin).
-    *   Let $\mathbf{b}$ be a non-zero basis vector that spans this line, so $U = \text{span}\{\mathbf{b}\}$.
-*   **Derivation:**
-    1.  **Membership Property:** The projection $\pi_U(\mathbf{x})$ must lie on the line, so it must be a scalar multiple of the basis vector $\mathbf{b}$.
-        $$ \pi_U(\mathbf{x}) = \lambda\mathbf{b} $$
-        The goal is to find the scalar coordinate $\lambda$.
-    2.  **Orthogonality Property:** The error vector $(\mathbf{x} - \pi_U(\mathbf{x}))$ must be orthogonal to the basis vector $\mathbf{b}$.
-        $$ \langle \mathbf{x} - \lambda\mathbf{b}, \mathbf{b} \rangle = 0 $$
-    3.  **Solve for $\lambda$:** Using bilinearity, we get $\langle \mathbf{x}, \mathbf{b} \rangle - \lambda\langle \mathbf{b}, \mathbf{b} \rangle = 0$, which gives:
-        $$ \lambda = \frac{\langle \mathbf{x}, \mathbf{b} \rangle}{\langle \mathbf{b}, \mathbf{b} \rangle} = \frac{\mathbf{b}^T\mathbf{x}}{\|\mathbf{b}\|^2} $$
-        *(If $\|\mathbf{b}\|=1$, then $\lambda = \mathbf{b}^T\mathbf{x}$)*.
+We begin by deriving the projection formula for the simplest case: projecting a vector onto a line. Unless stated otherwise, we assume the standard dot product as the inner product.
+
+*   **Setup:** Let $U$ be a one-dimensional subspace (a line through the origin) spanned by a non-zero basis vector $\mathbf{b}$.
+*   **Derivation:** The projection $\pi_U(\mathbf{x})$ must be a scalar multiple of $\mathbf{b}$, i.e., $\pi_U(\mathbf{x}) = \lambda\mathbf{b}$. We can solve for the coordinate $\lambda$ by using the orthogonality condition $\langle \mathbf{x} - \lambda\mathbf{b}, \mathbf{b} \rangle = 0$.
 *   **Final Formulas for 1D Projection:**
-    *   **Projection Vector:**
-        $$ \pi_U(\mathbf{x}) = \left( \frac{\mathbf{b}^T\mathbf{x}}{\|\mathbf{b}\|^2} \right) \mathbf{b} $$
-    *   **Length of Projection:** The length of the projection is $\|\pi_U(\mathbf{x})\| = |\lambda|\|\mathbf{b}\|$. If $\mathbf{b}$ is a unit vector, this simplifies to $\|\pi_U(\mathbf{x})\| = |\mathbf{b}^T\mathbf{x}| = |\cos\omega|\|\mathbf{x}\|$, where $\omega$ is the angle between $\mathbf{x}$ and $\mathbf{b}$.
-    *   **Projection Matrix:** By rearranging the formula, $\pi_U(\mathbf{x}) = \left( \frac{\mathbf{b}\mathbf{b}^T}{\|\mathbf{b}\|^2} \right) \mathbf{x}$, we identify the projection matrix:
-        $$ P_\pi = \frac{\mathbf{b}\mathbf{b}^T}{\|\mathbf{b}\|^2} $$
-        This matrix is symmetric and has a rank of 1.
+    *   **Coordinate:** $\lambda = \frac{\mathbf{b}^T\mathbf{x}}{\|\mathbf{b}\|^2}$
+    *   **Projection Vector:** $\pi_U(\mathbf{x}) = \left( \frac{\mathbf{b}^T\mathbf{x}}{\|\mathbf{b}\|^2} \right) \mathbf{b}$
+    *   **Projection Matrix:** $P_\pi = \frac{\mathbf{b}\mathbf{b}^T}{\|\mathbf{b}\|^2}$
 
-### 4. Projection onto General Subspaces
+### 4. Projection onto a General Subspace
+
 ![Image/Class/Mathematics-for-AI/7.png](/img/user/Image/Class/Mathematics-for-AI/7.png)
-The three-step procedure for 1D projection generalizes to any m-dimensional subspace $U \subseteq \mathbb{R}^n$.
 
-*   **Setup:** Assume we have an ordered basis $\{\mathbf{b}_1, \dots, \mathbf{b}_m\}$ for $U$. We form the basis matrix $B = [\mathbf{b}_1, \dots, \mathbf{b}_m] \in \mathbb{R}^{n \times m}$.
-*   **Derivation:**
-    1.  **Membership Property:** The projection $\pi_U(\mathbf{x})$ is a linear combination of the basis vectors:
-        $$ \pi_U(\mathbf{x}) = \sum_{i=1}^{m} \lambda_i \mathbf{b}_i = B\boldsymbol{\lambda} $$
-    2.  **Orthogonality Property:** The error vector $(\mathbf{x} - \pi_U(\mathbf{x}))$ must be orthogonal to *all* basis vectors of $U$. This gives $m$ simultaneous equations:
-        $$ \mathbf{b}_i^T (\mathbf{x} - B\boldsymbol{\lambda}) = 0 \quad \text{for } i=1, \dots, m $$
-    3.  **Solve the Normal Equation:** The system of equations can be written compactly as $B^T(\mathbf{x} - B\boldsymbol{\lambda}) = \mathbf{0}$, which rearranges to the **Normal Equation**:
-        $$ B^T B \boldsymbol{\lambda} = B^T \mathbf{x} $$
-*   **Solving for the Projection:**
-    *   Since the columns of $B$ form a basis, they are linearly independent, which guarantees that the $m \times m$ matrix $B^T B$ is **invertible**.
-    *   **Coordinates $\boldsymbol{\lambda}$:** We can solve for the coordinate vector:
-        $$ \boldsymbol{\lambda} = (B^T B)^{-1} B^T \mathbf{x} $$
-        The matrix $(B^T B)^{-1} B^T$ is the **pseudoinverse** of $B$.
-    *   **Projection Vector $\pi_U(\mathbf{x})$:**
-        $$ \pi_U(\mathbf{x}) = B\boldsymbol{\lambda} = B(B^T B)^{-1} B^T \mathbf{x} $$
-    *   **Projection Matrix $P_\pi$:**
-        $$ P_\pi = B(B^T B)^{-1} B^T $$
+The three-step method for 1D projection can be generalized to any m-dimensional subspace $U \subseteq \mathbb{R}^n$.
 
-### 5. Remarks on Dimensions and Coordinates
+*   **Setup:** Assume we have a basis $\{\mathbf{b}_1, \dots, \mathbf{b}_m\}$ for $U$. Construct the basis matrix $B = [\mathbf{b}_1, \dots, \mathbf{b}_m]$.
+*   **Derivation:** The projection $\pi_U(\mathbf{x}) = B\boldsymbol{\lambda}$. The orthogonality condition $B^T(\mathbf{x} - B\boldsymbol{\lambda}) = \mathbf{0}$ leads to the **Normal Equation**.
+*   **Final Formulas:**
+    *   **Normal Equation:** $B^T B \boldsymbol{\lambda} = B^T \mathbf{x}$
+    *   **Coordinates:** $\boldsymbol{\lambda} = (B^T B)^{-1} B^T \mathbf{x}$
+    *   **Projection Vector:** $\pi_U(\mathbf{x}) = B(B^T B)^{-1} B^T \mathbf{x}$
+    *   **Projection Matrix:** $P_\pi = B(B^T B)^{-1} B^T$
 
-*   **The Projection Vector:** A projected vector $\pi_U(\mathbf{x})$ is still an n-dimensional vector (it has $n$ components), but it is constrained to lie within the m-dimensional subspace $U$.
-*   **The Power of Coordinates:** Crucially, this projected vector is fully determined by its **m coordinates** ($\lambda_1, \dots, \lambda_m$) with respect to the basis of $U$. This is the mathematical foundation of dimensionality reduction: we only need to store or use the $m$ coordinates and the $m$ basis vectors to perfectly represent the projected data, which is far more efficient than storing the original n-dimensional vectors.
+### 5. Core Application I: Gram-Schmidt Orthogonalization
+
+The Gram-Schmidt process is a classic algorithm for constructing an orthonormal basis, and its core idea is the **repeated application of orthogonal projection**.
+
+*   **Goal:** To transform a set of linearly independent vectors $\{\mathbf{b}_1, \dots, \mathbf{b}_n\}$ into a set of orthogonal vectors $\{\mathbf{u}_1, \dots, \mathbf{u}_n\}$ that span the same subspace.
+*   **Iterative Construction:**
+    1.  **First Step:** Start by choosing the first vector as the beginning of the new basis.
+        $$ \mathbf{u}_1 = \mathbf{b}_1 $$
+    2.  **Subsequent Steps (k=2 to n):** For each new vector $\mathbf{b}_k$, subtract its projection onto the **already constructed orthogonal subspace** $\text{span}\{\mathbf{u}_1, \dots, \mathbf{u}_{k-1}\}$. The remaining component is guaranteed to be orthogonal to that subspace.
+        $$ \mathbf{u}_k = \mathbf{b}_k - \pi_{\text{span}\{\mathbf{u}_1, \dots, \mathbf{u}_{k-1}\}}(\mathbf{b}_k) $$
+        Since the $\{\mathbf{u}_i\}$ are already orthogonal, the projection simplifies to:
+        $$ \mathbf{u}_k = \mathbf{b}_k - \sum_{i=1}^{k-1} \frac{\langle \mathbf{b}_k, \mathbf{u}_i \rangle}{\langle \mathbf{u}_i, \mathbf{u}_i \rangle} \mathbf{u}_i $$
+*   **Obtaining an Orthonormal Basis (ONB):** After obtaining each orthogonal vector $\mathbf{u}_k$, simply **normalize** it.
+    $$ \mathbf{e}_k = \frac{\mathbf{u}_k}{\|\mathbf{u}_k\|} $$
+
+*   **Example:** Orthogonalize the basis $\mathbf{b}_1 = [2, 0]^T, \mathbf{b}_2 = [1, 1]^T$ in $\mathbb{R}^2$.
+    1.  $\mathbf{u}_1 = \mathbf{b}_1 = \begin{bmatrix} 2 \\ 0 \end{bmatrix}$
+    2.  $\mathbf{u}_2 = \mathbf{b}_2 - \frac{\langle \mathbf{b}_2, \mathbf{u}_1 \rangle}{\langle \mathbf{u}_1, \mathbf{u}_1 \rangle} \mathbf{u}_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix} - \frac{2}{4} \begin{bmatrix} 2 \\ 0 \end{bmatrix} = \begin{bmatrix} 1 \\ 1 \end{bmatrix} - \begin{bmatrix} 1 \\ 0 \end{bmatrix} = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$
+    *   The resulting orthogonal basis is $\{ [2, 0]^T, [0, 1]^T \}$.
+
+### 6. Core Application II: Projection onto an Affine Subspace
+
+So far, we have discussed projections onto subspaces that pass through the origin. We now generalize this to **affine subspaces** (e.g., lines or planes that do not pass through the origin).
+
+*   **Definition:** An affine subspace $L$ can be represented as $L = \mathbf{x}_0 + U$, where $\mathbf{x}_0$ is a **support point** (a displacement vector) and $U$ is a **direction subspace** parallel to $L$ that passes through the origin.
+
+*   **Solution Strategy: Translate-Project-Translate Back**
+    1.  **Translate to the Origin:** Subtract the support point $\mathbf{x}_0$ from both the point to be projected, $\mathbf{x}$, and the affine space $L$. This transforms the problem into projecting the new vector $(\mathbf{x} - \mathbf{x}_0)$ onto the familiar direction subspace $U$.
+    2.  **Standard Projection:** Compute the orthogonal projection of the vector $(\mathbf{x} - \mathbf{x}_0)$ onto the subspace $U$, which is $\pi_U(\mathbf{x} - \mathbf{x}_0)$.
+    3.  **Translate Back:** Translate the result back to its original position by adding the support point $\mathbf{x}_0$.
+
+*   **Final Formula:**
+    $$ \pi_L(\mathbf{x}) = \mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0) $$
+
+*   **Mathematical Proof:** We want to find the point $\mathbf{y}^* \in L$ that minimizes the distance $\|\mathbf{x} - \mathbf{y}\|^2$.
+    *   Since $\mathbf{y} \in L$, it can be written as $\mathbf{y} = \mathbf{x}_0 + \mathbf{u}$ for some $\mathbf{u} \in U$.
+    *   Minimizing $\|\mathbf{x} - (\mathbf{x}_0 + \mathbf{u})\|^2$ is equivalent to minimizing $\|(\mathbf{x} - \mathbf{x}_0) - \mathbf{u}\|^2$.
+    *   By definition, the $\mathbf{u}^*$ that minimizes this distance is the projection of $(\mathbf{x} - \mathbf{x}_0)$ onto $U$, so $\mathbf{u}^* = \pi_U(\mathbf{x} - \mathbf{x}_0)$.
+    *   Therefore, the closest point is $\mathbf{y}^* = \mathbf{x}_0 + \mathbf{u}^* = \mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0)$.
+
+*   **Distance from a Point to an Affine Subspace:**
+    $$ d(\mathbf{x}, L) = \|\mathbf{x} - \pi_L(\mathbf{x})\| = \|\mathbf{x} - (\mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0))\| = \|(\mathbf{x} - \mathbf{x}_0) - \pi_U(\mathbf{x} - \mathbf{x}_0)\| = d(\mathbf{x}-\mathbf{x}_0, U) $$
+    This shows that the distance from a point to an affine space is equal to the distance from the translated point to its corresponding direction subspace.

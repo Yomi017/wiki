@@ -1154,49 +1154,65 @@ $$ (B^T B)\boldsymbol{\lambda} = B^T\mathbf{x} $$
 ![Image/Class/Mathematics-for-AI/6.png](/img/user/Image/Class/Mathematics-for-AI/6.png)
 我们从最简单的情况开始推导投影公式：将一个向量投影到一条直线上。除非另有说明，我们都假设使用标准的点积作为内积。
 
-*   **设定：**
-    *   令 $U$ 为一个一维子空间（一条过原点的直线）。
-    *   令 $\mathbf{b}$ 为一个非零的基向量，它张成了这条直线，因此 $U = \text{span}\{\mathbf{b}\}$。
-*   **推导过程：**
-    1.  **隶属属性：** 投影 $\pi_U(\mathbf{x})$ 必须位于直线上，所以它一定是基向量 $\mathbf{b}$ 的一个标量倍。
-        $$ \pi_U(\mathbf{x}) = \lambda\mathbf{b} $$
-        我们的目标是求出这个标量坐标 $\lambda$。
-    2.  **正交属性：** 误差向量 $(\mathbf{x} - \pi_U(\mathbf{x}))$ 必须与基向量 $\mathbf{b}$ 正交。
-        $$ \langle \mathbf{x} - \lambda\mathbf{b}, \mathbf{b} \rangle = 0 $$
-    3.  **求解 $\lambda$：** 利用内积的双线性性质，我们得到 $\langle \mathbf{x}, \mathbf{b} \rangle - \lambda\langle \mathbf{b}, \mathbf{b} \rangle = 0$，解出 $\lambda$：
-        $$ \lambda = \frac{\langle \mathbf{x}, \mathbf{b} \rangle}{\langle \mathbf{b}, \mathbf{b} \rangle} = \frac{\mathbf{b}^T\mathbf{x}}{\|\mathbf{b}\|^2} $$
-        *（如果 $\|\mathbf{b}\|=1$，那么 $\lambda = \mathbf{b}^T\mathbf{x}$）*。
+*   **设定：** 令 $U$ 为由非零基向量 $\mathbf{b}$ 张成的一维子空间（一条过原点的直线）。
+*   **推导过程：** 投影 $\pi_U(\mathbf{x})$ 必须是 $\mathbf{b}$ 的一个标量倍，即 $\pi_U(\mathbf{x}) = \lambda\mathbf{b}$。通过正交条件 $\langle \mathbf{x} - \lambda\mathbf{b}, \mathbf{b} \rangle = 0$，我们可以解出坐标 $\lambda$。
 *   **一维投影的最终公式：**
-    *   **投影向量：**
-        $$ \pi_U(\mathbf{x}) = \left( \frac{\mathbf{b}^T\mathbf{x}}{\|\mathbf{b}\|^2} \right) \mathbf{b} $$
-    *   **投影的长度：** 投影的长度为 $\|\pi_U(\mathbf{x})\| = |\lambda|\|\mathbf{b}\|$。如果 $\mathbf{b}$ 是一个单位向量，这个公式简化为 $\|\pi_U(\mathbf{x})\| = |\mathbf{b}^T\mathbf{x}| = |\cos\omega|\|\mathbf{x}\|$，其中 $\omega$ 是 $\mathbf{x}$ 和 $\mathbf{b}$ 之间的夹角。
-    *   **投影矩阵：** 通过重新排列公式，$\pi_U(\mathbf{x}) = \left( \frac{\mathbf{b}\mathbf{b}^T}{\|\mathbf{b}\|^2} \right) \mathbf{x}$，我们可以确定投影矩阵：
-        $$ P_\pi = \frac{\mathbf{b}\mathbf{b}^T}{\|\mathbf{b}\|^2} $$
-        这个矩阵是对称的，并且秩为1。
+    *   **坐标：** $\lambda = \frac{\mathbf{b}^T\mathbf{x}}{\|\mathbf{b}\|^2}$
+    *   **投影向量：** $\pi_U(\mathbf{x}) = \left( \frac{\mathbf{b}^T\mathbf{x}}{\|\mathbf{b}\|^2} \right) \mathbf{b}$
+    *   **投影矩阵：** $P_\pi = \frac{\mathbf{b}\mathbf{b}^T}{\|\mathbf{b}\|^2}$
 
 ### 4. 投影到一般子空间
 ![Image/Class/Mathematics-for-AI/7.png](/img/user/Image/Class/Mathematics-for-AI/7.png)
 用于一维投影的三步法可以推广到任何 m 维子空间 $U \subseteq \mathbb{R}^n$。
 
-*   **设定：** 假设我们有 $U$ 的一个有序基 $\{\mathbf{b}_1, \dots, \mathbf{b}_m\}$。我们构建基矩阵 $B = [\mathbf{b}_1, \dots, \mathbf{b}_m] \in \mathbb{R}^{n \times m}$。
-*   **推导过程：**
-    1.  **隶属属性：** 投影 $\pi_U(\mathbf{x})$ 是基向量的线性组合：
-        $$ \pi_U(\mathbf{x}) = \sum_{i=1}^{m} \lambda_i \mathbf{b}_i = B\boldsymbol{\lambda} $$
-    2.  **正交属性：** 误差向量 $(\mathbf{x} - \pi_U(\mathbf{x}))$ 必须与 $U$ 的*所有*基向量正交。这给出了 m 个联立方程：
-        $$ \mathbf{b}_i^T (\mathbf{x} - B\boldsymbol{\lambda}) = 0 \quad \text{对于 } i=1, \dots, m $$
-    3.  **求解正规方程：** 这个方程组可以紧凑地写为 $B^T(\mathbf{x} - B\boldsymbol{\lambda}) = \mathbf{0}$，重新整理后得到**正规方程 (Normal Equation)**：
-        $$ B^T B \boldsymbol{\lambda} = B^T \mathbf{x} $$
-*   **求解投影：**
-    *   由于 $B$ 的列向量构成一个基，它们是线性无关的，这保证了 $m \times m$ 矩阵 $B^T B$ 是**可逆的**。
-    *   **坐标 $\boldsymbol{\lambda}$：** 我们可以解出坐标向量：
-        $$ \boldsymbol{\lambda} = (B^T B)^{-1} B^T \mathbf{x} $$
-        矩阵 $(B^T B)^{-1} B^T$ 被称为 $B$ 的**伪逆 (pseudoinverse)**。
-    *   **投影向量 $\pi_U(\mathbf{x})$：**
-        $$ \pi_U(\mathbf{x}) = B\boldsymbol{\lambda} = B(B^T B)^{-1} B^T \mathbf{x} $$
-    *   **投影矩阵 $P_\pi$：**
-        $$ P_\pi = B(B^T B)^{-1} B^T $$
+*   **设定：** 假设 $U$ 有一个基 $\{\mathbf{b}_1, \dots, \mathbf{b}_m\}$，构建基矩阵 $B = [\mathbf{b}_1, \dots, \mathbf{b}_m]$。
+*   **推导过程：** 投影 $\pi_U(\mathbf{x}) = B\boldsymbol{\lambda}$。通过正交条件 $B^T(\mathbf{x} - B\boldsymbol{\lambda}) = \mathbf{0}$，我们得到**正规方程 (Normal Equation)**。
+*   **最终公式：**
+    *   **正规方程：** $B^T B \boldsymbol{\lambda} = B^T \mathbf{x}$
+    *   **坐标：** $\boldsymbol{\lambda} = (B^T B)^{-1} B^T \mathbf{x}$
+    *   **投影向量：** $\pi_U(\mathbf{x}) = B(B^T B)^{-1} B^T \mathbf{x}$
+    *   **投影矩阵：** $P_\pi = B(B^T B)^{-1} B^T$
 
-### 5. 关于维度和坐标的说明
+### 5. 核心应用 I：Gram-Schmidt正交化
 
-*   **投影向量：** 一个投影后的向量 $\pi_U(\mathbf{x})$ 仍然是一个n维向量（它有n个分量），但它被限制在m维子空间 $U$ 内。
-*   **坐标的力量：** 至关重要的是，这个投影向量完全由它相对于 $U$ 的基的**m个坐标**（$\lambda_1, \dots, \lambda_m$）所确定。这就是维度约减的数学基础：我们只需要存储或使用这m个坐标和m个基向量，就可以完美地表示投影后的数据，这比存储原始的n维向量要高效得多。
+Gram-Schmidt过程是构造一组标准正交基的经典算法，其核心思想就是**反复利用正交投影**。
+
+*   **目标：** 将一组线性无关的向量 $\{\mathbf{b}_1, \dots, \mathbf{b}_n\}$ 转换为一组正交向量 $\{\mathbf{u}_1, \dots, \mathbf{u}_n\}$，并且两组向量张成相同的子空间。
+*   **迭代构造法：**
+    1.  **第一步：** 选择第一个向量作为新基的起点。
+        $$ \mathbf{u}_1 = \mathbf{b}_1 $$
+    2.  **后续步骤 (k=2 to n)：** 对于每一个新的向量 $\mathbf{b}_k$，减去它在**已经构造好的正交子空间** $\text{span}\{\mathbf{u}_1, \dots, \mathbf{u}_{k-1}\}$ 上的投影。剩下的分量就必然与该子空间正交。
+        $$ \mathbf{u}_k = \mathbf{b}_k - \pi_{\text{span}\{\mathbf{u}_1, \dots, \mathbf{u}_{k-1}\}}(\mathbf{b}_k) $$
+        由于 $\{ \mathbf{u}_i \}$ 已经正交，投影可以更简单地写成：
+        $$ \mathbf{u}_k = \mathbf{b}_k - \sum_{i=1}^{k-1} \frac{\langle \mathbf{b}_k, \mathbf{u}_i \rangle}{\langle \mathbf{u}_i, \mathbf{u}_i \rangle} \mathbf{u}_i $$
+*   **获得标准正交基 (ONB)：** 在每一步得到正交向量 $\mathbf{u}_k$ 后，对其进行**标准化**即可。
+    $$ \mathbf{e}_k = \frac{\mathbf{u}_k}{\|\mathbf{u}_k\|} $$
+
+*   **示例：** 对 $\mathbb{R}^2$ 中的基 $\mathbf{b}_1 = [2, 0]^T, \mathbf{b}_2 = [1, 1]^T$ 进行正交化。
+    1.  $\mathbf{u}_1 = \mathbf{b}_1 = \begin{bmatrix} 2 \\ 0 \end{bmatrix}$
+    2.  $\mathbf{u}_2 = \mathbf{b}_2 - \frac{\langle \mathbf{b}_2, \mathbf{u}_1 \rangle}{\langle \mathbf{u}_1, \mathbf{u}_1 \rangle} \mathbf{u}_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix} - \frac{2}{4} \begin{bmatrix} 2 \\ 0 \end{bmatrix} = \begin{bmatrix} 1 \\ 1 \end{bmatrix} - \begin{bmatrix} 1 \\ 0 \end{bmatrix} = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$
+    *   最终得到正交基 $\{ [2, 0]^T, [0, 1]^T \}$。
+
+### 6. 核心应用 II：投影到仿射子空间
+
+到目前为止，我们讨论的都是投影到过原点的子空间。现在我们将其推广到不过原点的**仿射子空间**（例如，不过原点的直线或平面）。
+
+*   **定义：** 一个仿射子空间 $L$ 可以表示为 $L = \mathbf{x}_0 + U$，其中 $\mathbf{x}_0$ 是一个**支持点**（位移向量），$U$ 是一个与 $L$平行的、过原点的**方向子空间**。
+
+*   **求解策略：平移-投影-移回**
+    1.  **平移至原点：** 从待投影点 $\mathbf{x}$ 和仿射空间 $L$ 中都减去支持点 $\mathbf{x}_0$。这使得问题转化为将新向量 $(\mathbf{x} - \mathbf{x}_0)$ 投影到我们熟悉的方向子空间 $U$ 上。
+    2.  **标准投影：** 计算向量 $(\mathbf{x} - \mathbf{x}_0)$ 在子空间 $U$ 上的正交投影 $\pi_U(\mathbf{x} - \mathbf{x}_0)$。
+    3.  **移回原位：** 将投影结果平移回原来的位置，即加上支持点 $\mathbf{x}_0$。
+
+*   **最终公式：**
+    $$ \pi_L(\mathbf{x}) = \mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0) $$
+
+*   **数学证明：** 我们要找到点 $\mathbf{y}^* \in L$ 来最小化距离 $\|\mathbf{x} - \mathbf{y}\|^2$。
+    *   因为 $\mathbf{y} \in L$，所以它可以写成 $\mathbf{y} = \mathbf{x}_0 + \mathbf{u}$，其中 $\mathbf{u} \in U$。
+    *   最小化 $\|\mathbf{x} - (\mathbf{x}_0 + \mathbf{u})\|^2$ 就等价于最小化 $\|(\mathbf{x} - \mathbf{x}_0) - \mathbf{u}\|^2$。
+    *   根据定义，使这个距离最小的 $\mathbf{u}^*$ 正是向量 $(\mathbf{x} - \mathbf{x}_0)$ 在子空间 $U$ 上的投影，即 $\mathbf{u}^* = \pi_U(\mathbf{x} - \mathbf{x}_0)$。
+    *   因此，最近点 $\mathbf{y}^* = \mathbf{x}_0 + \mathbf{u}^* = \mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0)$。
+
+*   **点到仿射子空间的距离：**
+    $$ d(\mathbf{x}, L) = \|\mathbf{x} - \pi_L(\mathbf{x})\| = \|\mathbf{x} - (\mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0))\| = \|(\mathbf{x} - \mathbf{x}_0) - \pi_U(\mathbf{x} - \mathbf{x}_0)\| = d(\mathbf{x}-\mathbf{x}_0, U) $$
+    这表明，点到仿射空间的距离，等于平移后的点到其方向子空间的距离。
