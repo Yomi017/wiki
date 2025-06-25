@@ -1105,7 +1105,7 @@ $$ (B^T B)\boldsymbol{\lambda} = B^T\mathbf{x} $$
 *   **诱导的几何性质：**
     *   **长度 (范数):** $\|f\| = \sqrt{\int_{a}^{b} f(x)^2 \,dx}$
     *   **正交性：** 如果 $\langle f, g \rangle = 0$，则两个函数正交。
-*   **意义：** 这种推广是**傅里叶级数**的数学基础。[[Notion/Class/Concept/Fourier Series Explained\|Fourier Series Explained]]
+*   **意义：** 这种推广是**傅里叶级数**的数学基础。[[Notion/Class/Concept/Fourier Series\|Fourier Series]]
 
 ### 2. 正交投影
 

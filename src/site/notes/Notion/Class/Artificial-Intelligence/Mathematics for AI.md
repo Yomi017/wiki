@@ -1330,7 +1330,7 @@ The concept of an inner product can be extended from the familiar space $\mathbb
     *   **Length (Norm):** $\|f\| = \sqrt{\int_{a}^{b} f(x)^2 \,dx}$
     *   **Distance:** $d(f, g) = \|f - g\|$
     *   **Orthogonality:** Two functions are orthogonal if $\langle f, g \rangle = 0$.
-*   **Significance:** This generalization is crucial for fields like signal processing and quantum mechanics, and it forms the mathematical basis for **Fourier series**, which decompose functions into a sum of orthogonal sine and cosine functions.[[Notion/Class/Concept/Fourier Series Explained\|Fourier Series Explained]]
+*   **Significance:** This generalization is crucial for fields like signal processing and quantum mechanics, and it forms the mathematical basis for **Fourier series**, which decompose functions into a sum of orthogonal sine and cosine functions.[[Notion/Class/Concept/Fourier Series\|Fourier Series]]
 
 ### 2. Orthogonal Projections
 
