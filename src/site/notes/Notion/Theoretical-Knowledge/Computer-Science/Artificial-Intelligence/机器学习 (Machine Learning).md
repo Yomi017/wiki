@@ -412,7 +412,9 @@ $$ y = f(\mathbf{x}; \theta) $$
 $$ \theta^* = \arg\min_{\theta} L(\theta) $$
 这意味着我们要寻找使损失函数 $L$ 达到最小值的参数向量 $\theta$。
 
-### 2.3.1 梯度下降 (Gradient Descent)
+### 2.3.1 核心优化算法：梯度下降及其变体
+
+#### 2.3.1.1 梯度下降 (Gradient Descent)
 
 梯度下降是一种广泛应用于机器学习和深度学习中的迭代优化算法，用于寻找函数的最小值。其基本思想是沿着损失函数梯度下降最快的方向逐步调整参数。
 
@@ -450,65 +452,16 @@ $$ \theta^* = \arg\min_{\theta} L(\theta) $$
     *   可以设定最大迭代次数 (或最大 epoch 数)。
     *   可以监控损失函数的值，当其变化很小或不再下降时停止。
     *   可以监控在验证集上的性能，当验证集性能不再提升（甚至开始下降，表明过拟合）时停止（早停法 Early Stopping）。
+
 ![Image/Computer-Science/Machine Learning/10.png](/img/user/Image/Computer-Science/Machine%20Learning/10.png)
-**注：**
-- 一个**神经元 (Neurou)**是一个基本的计算单元。
-- 一个**激活函数**（如 Sigmoid）是神经元计算过程中的一个关键组成部分，它引入非线性。
-- 当我们说“一个 Sigmoid 神经元”或在图中画一个 Sigmoid 符号时，我们通常指的就是一个以 Sigmoid 作为其激活函数的神经元/单元。
-- **这整个体系，即由相互连接的“神经元”（或单元，每个单元执行加权求和与非线性激活函数如 Sigmoid、ReLU 等操作）组成的、分层的结构，就叫做神经网络 (Neural Network)。**
-- 如果这个网络包含多个隐藏层，它就是一个**深度神经网络 (Deep Neural Network, DNN)**
-**对应关系是：**
-- 一个 Sigmoid (或其他激活函数) 是**一个神经元计算的一部分**。
-- **多个神经元**可以组成**一个隐藏层 (Hidden Layer)**。
-- **多个隐藏层**构成了**一个深度神经网络**
 
-**拓展：**
-**1. 为什么我们要的是 "Deep" 的 network 而不是 "Fat" 的？**
-[[Notion/Theoretical-Knowledge/Computer-Science/Artificial-Intelligence/Question/Deep 而非 Fat 的 Neural Network\|Deep 而非 Fat 的 Neural Network]]
-**2. 为什么我们不 "Deeper" ?**
-[[Notion/Theoretical-Knowledge/Computer-Science/Artificial-Intelligence/Question/不一直 Deeper 的神经网络\|不一直 Deeper 的神经网络]]
-
-#### 梯度下降的变体：批量大小的选择 (Variants of Gradient Descent: The Choice of Batch Size)
+#### 2.3.1.2 批量大小的选择 (The Choice of Batch Size)
 
 在实践中，我们很少一次性使用整个训练集来计算梯度并更新参数。相反，我们会根据每次更新所使用的样本数量，将梯度下降分为三种主要类型。**批量大小 (Batch Size)** 的选择是一个重要的超参数，它在**计算效率**和**模型性能**之间做出了权衡。
 
-##### 1. 批量梯度下降 (Batch Gradient Descent / Full Batch)
-
-*   **定义**: 批量大小 (Batch size) = 训练样本总数 N。
-*   **过程**: 在每次参数更新前，**计算整个训练数据集**上的损失函数，然后根据这个总损失的梯度来更新一次参数。
-*   **更新频率**: 每个 Epoch 只更新一次。
-    *   (对应图中左侧: "Update after seeing all the 20 examples")
-*   **优点 (Pros)**:
-    *   **强大/稳定 (Powerful)**: 梯度的计算非常准确，因为它考虑了所有数据。优化路径非常平滑，直接朝向最小值点前进。
-    *   理论上保证收敛到凸函数（convex）的全局最小值或非凸函数（non-convex）的局部最小值。
-*   **缺点 (Cons)**:
-    *   **耗时长 (Long time for cooldown)**: 当数据集非常大时，计算一次梯度的成本极高，导致训练过程非常缓慢。
-    *   **内存需求高**: 需要将整个数据集加载到内存中。
-    *   可能会陷入比较“尖锐”的局部最小值中。
-
-##### 2. 随机梯度下降 (Stochastic Gradient Descent, SGD)
-
-*   **定义**: 批量大小 (Batch size) = 1。
-*   **过程**: **每看到一个训练样本**，就计算该单个样本的损失和梯度，并立即更新一次参数。
-*   **更新频率**: 如果有 N 个样本，每个 Epoch 会更新 N 次。
-    *   (对应图中右侧: "Update for each example. Update 20 times in an epoch")
-*   **优点 (Pros)**:
-    *   **更新快 (Short time for cooldown)**: 参数更新非常频繁，训练速度快。
-    *   **有助于跳出局部最优**: 梯度的“噪声”性质（因为单个样本的梯度可能不代表全局方向）有时反而是一种优势，可以帮助优化过程跳出较差的局部最小值或鞍点，具有一定的正则化效果。
-*   **缺点 (Cons)**:
-    *   **噪声大 (Noisy)**: 每次更新的方向非常不稳定，导致损失函数下降的路径非常曲折（如上图右侧的锯齿状路径），收敛过程波动很大。
-    *   无法充分利用现代计算硬件（如GPU）的并行计算优势。
-
-##### 3. 小批量梯度下降 (Mini-batch Gradient Descent)
-
-*   **定义**: 批量大小 (Batch size) 是一个介于 1 和 N 之间的值（例如 32, 64, 128）。
-*   **过程**: 每次从训练集中抽取一小批（a mini-batch）样本，计算这批样本的平均损失和梯度，并更新一次参数。
-*   **这是现代深度学习中应用最广泛的方法。**
-*   **优点 (Pros)**:
-    *   **完美折衷**: 平衡了批量梯度下降和随机梯度下降的优缺点。
-    *   **高效利用硬件**: 可以充分利用GPU的并行计算能力，处理速度远快于SGD。
-    *   **稳定且快速**: 相比SGD，梯度估计更准确，收敛过程更稳定；相比Batch GD，更新速度快得多。
-    *   保留了适度的噪声，有助于模型泛化和逃离坏的局部极值。
+*   **批量梯度下降 (Batch Gradient Descent / Full Batch)**: 批量大小 = N (整个数据集)。
+*   **随机梯度下降 (Stochastic Gradient Descent, SGD)**: 批量大小 = 1。
+*   **小批量梯度下降 (Mini-batch Gradient Descent)**: 批量大小介于 1 和 N 之间，是现代深度学习的**标准做法**。
 
 | 特性       | 批量梯度下降 (Batch GD) | 随机梯度下降 (SGD) | 小批量梯度下降 (Mini-batch GD)    |
 | :------- | :---------------- | :----------- | :------------------------- |
@@ -519,7 +472,94 @@ $$ \theta^* = \arg\min_{\theta} L(\theta) $$
 | **优点**   | 梯度准确，稳定           | 更新快，能跳出局部最优  | **综合了两者的优点，是实践首选**         |
 | **缺点**   | 速度慢，易陷于尖锐极值       | 噪声大，收敛不稳定    | 需要额外设定 batch size 超参数      |
 
-### 2.3.2 优化进阶：泰勒展开与损失曲面近似 (Advanced Optimization: Taylor Expansion & Loss Surface Approximation)
+**但是由于GPU的并行运算，在数据集较小的时候，Mini-batch GD不一定比Batch GD快**
+
+#### 2.3.1.3 动量法 (Momentum)
+
+为了解决梯度下降在狭窄山谷中震荡和在平坦区域停滞的问题，可以引入**动量 (Momentum)**。
+
+*   **核心思想**: 模拟物理惯性。参数的更新方向不仅取决于当前梯度，还受**历史累积的更新方向**影响。
+    ![16.png](/img/user/Image/Computer-Science/Machine%20Learning/16.png)
+    *   一个从山上滚下的小球，其惯性（动量）能帮助它冲过小的坑洼（局部最小值）和平台（鞍点），并平滑掉在山谷两侧的震荡。
+
+*   **算法**:
+    1.  计算当前梯度: $\mathbf{g}^t = \nabla L(\theta^{t-1})$
+    2.  更新动量向量: $\mathbf{m}^t = \lambda \mathbf{m}^{t-1} + \mathbf{g}^t$ (其中 $\lambda$ 是动量衰减因子，通常为0.9)
+    3.  更新参数: $\theta^t = \theta^{t-1} - \eta \mathbf{m}^t$
+
+*   **效果**:
+    *   **加速收敛**: 在梯度方向一致的区域，动量累积，步长增大。
+    *   **减少震荡**: 在梯度方向反复震荡的区域，动量会抵消掉相反方向的更新。
+
+---
+### 2.3.2 优化中的泛化与几何视角
+
+#### 2.3.2.1 批量大小对模型泛化能力的影响
+
+除了影响训练速度和稳定性，批量大小还会对模型的**泛化能力 (Generalization Performance)** 产生显著影响。泛化能力指的是模型在**未见过的测试数据**上的表现，通常用**验证集准确率 (validation accuracy)** 来衡量。
+
+![Image/Computer-Science/Machine Learning/13.png](/img/user/Image/Computer-Science/Machine%20Learning/13.png)
+
+上图展示了在两个不同的数据集（MNIST 和 CIFAR-10）上，最终达到的训练准确率（train acc）和验证准确率（validation acc）与批量大小（batch size）的关系。
+
+**关键观察 (Key Observations):**
+
+1.  **大批量 (Large Batch) 倾向于损害泛化能力**:
+    *   在这两个实验中，当批量大小变得非常大时（例如，超过1000），**验证集准确率（橙色线）** 明显下降。
+    *   这意味着虽然模型在训练集上可能表现尚可（虽然训练准确率也在下降），但它在新数据上的表现变差了。我们称之为**泛化差距 (Generalization Gap)** 变大。
+
+2.  **小批量 (Small Batch) 通常能获得更好的泛化能力**:
+    *   使用较小的批量大小（例如，1到几百之间）时，模型在验证集上取得了更高的准确率。
+    *   这表明小批量训练出的模型具有更好的泛化能力。
+
+**为什么会出现这种现象？—— 损失曲面的“平坦度”**
+
+一个被广泛接受的解释是，**小批量梯度下降所引入的噪声有助于优化过程找到更“平坦”的局部最小值，而大批量梯度下降倾向于收敛到更“尖锐”的局部最小值**。
+
+*   **平坦的最小值 (Flat Minima)**: 像一个宽阔的盆地。即使测试数据与训练数据的分布有轻微差异，模型参数在这个盆地里稍微移动一下，损失值的变化也不大。因此，模型对新数据的适应性更强，**泛化能力更好**。小批量梯度下降的噪声使其难以在尖锐的谷底稳定下来，更容易在宽阔的盆地中找到平衡。
+
+*   **尖锐的最小值 (Sharp Minima)**: 像一个狭窄的深谷。模型在训练集上可能达到了极低的损失，但只要测试数据的分布稍有不同，参数的微小偏离就会导致损失值急剧上升。因此，模型**泛化能力差**。大批量梯度下降的平滑路径使其能够精确地滑入这种尖锐的谷底。
+
+**论文实证：《On Large-Batch Training for Deep Learning: Generalization Gap and Sharp Minima》**
+
+这篇著名的论文 (https://arxiv.org/abs/1609.04836) 通过大量实验系统地验证了这一现象。
+
+![14.jpg](/img/user/Image/Computer-Science/Machine%20Learning/14.jpg)
+
+*   **实验设置**:
+    *   **小批量 (Small Batch, SB)**: 固定为 256。
+    *   **大批量 (Large Batch, LB)**: 设置为数据集大小的 10%。
+    *   在多种网络架构（全连接、浅层/深层卷积网络）和多个数据集（MNIST, TIMIT, CIFAR-10, CIFAR-100）上进行对比。
+
+*   **实验结论**:
+    *   **在测试数据上，小批量总是更好 (Small batch is better on testing data?)**: 表格中的 "Testing Accuracy" 一栏清楚地显示，对于所有实验（F1, F2, C1-C4），SB 的测试准确率都显著高于 LB 的测试准确率。
+    *   **训练准确率不代表一切**: 尽管在某些情况下，大批量（LB）的训练准确率（Training Accuracy）可以与小批量（SB）相媲美，甚至更高，但这并没有转化为更好的泛化能力。
+
+**为什么“带噪声”的更新更好？**
+
+![Image/Computer-Science/Machine Learning/15.jpg](/img/user/Image/Computer-Science/Machine%20Learning/15.jpg)
+
+这张示意图从另一个角度解释了为什么小批量的噪声更新是有益的。
+
+*   **Full Batch (左图)**:
+    *   使用全批量计算的梯度指向的是**整个训练集**的平均损失 $L$ 的下降方向。
+    *   优化过程沿着平滑的路径下降，如果它进入一个“尖锐”的局部最小值（图中所示），它就会被**困住 (stuck)**，因为在该点的梯度为零。
+
+*   **Small Batch (右图)**:
+    *   在同一点，不同的小批量数据会产生不同的损失函数曲面（例如 $L^1$ 和 $L^2$）。
+    *   在一次更新中，模型可能看到的是 $L^1$ 的损失曲面，并沿着其梯度方向移动。
+    *   在下一次更新中，它看到的是 $L^2$ 的损失曲面，并沿着新的梯度方向移动。
+    *   即使模型在某一个批次的损失曲面（如 $L^1$）上看起来被**困住 (stuck)** 了，但下一个批次（如 $L^2$）会提供一个不同的、通常非零的梯度，使得模型能够继续**训练 (trainable)** 和移动。
+    *   这种由不同 mini-batch 带来的“抖动”和“噪声”，使得优化过程能够探索更广泛的参数空间，避免过早地陷入第一个遇到的（可能很差的）局部最小值。
+
+**总结：**
+
+*   **小批量**：训练速度快（按更新次数算），噪声大，有助于模型跳出坏的局部极值，并找到泛化能力更好的“平坦”最小值。实验数据和理论分析都表明，**较小的批量通常能带来更好的测试性能**。
+*   **大批量**：梯度计算稳定，但计算成本高，且容易收敛到泛化能力较差的“尖锐”最小值。
+
+因此，在实践中，选择一个合适的（不大也不太小）的 **mini-batch size**（如32, 64, 128, 256等）是在训练效率和模型最终性能之间取得平衡的关键策略。
+
+#### 2.3.2.2 优化进阶：泰勒展开与损失曲面近似 (Advanced Optimization: Taylor Expansion & Loss Surface Approximation)
 
 在梯度下降中，我们利用损失函数的一阶导数（梯度）来确定下降方向。为了更深入地理解优化过程，特别是更高级的优化算法（如牛顿法），我们可以使用**泰勒级数 (Taylor Series)** 来近似损失函数。
 
@@ -538,7 +578,7 @@ $$ L(\theta) \approx L(\theta') + (\theta - \theta')^T g + \frac{1}{2} (\theta -
     *   $H$ 是损失函数在点 $\theta'$ 的**海森矩阵 (Hessian Matrix)**，即损失函数的二阶偏导数矩阵 ($H_{ij} = \frac{\partial^2 L}{\partial \theta_i \partial \theta_j}$)。
     *   这一项引入了关于损失曲面**曲率 (curvature)** 的信息。它用一个二次函数来更精确地描述损失曲面的形状（是“平坦”的碗还是“陡峭”的碗）。
 
-#### 临界点分析 (Analysis at Critical Points)
+**临界点分析 (Analysis at Critical Points)**
 
 当梯度下降进行到某一步时，如果梯度 $\mathbf{g} = \nabla L(\theta') = 0$，我们称 $\theta'$ 为一个**临界点 (Critical Point)**。在临界点，梯度下降会停止更新，因为它找不到下降的方向。此时，泰勒展开的一阶项为零，损失函数的行为完全由二阶项决定：
 $$ L(\theta) \approx L(\theta') + \frac{1}{2} (\theta - \theta')^T H (\theta - \theta') $$
@@ -549,7 +589,7 @@ $$ L(\theta) \approx L(\theta') + \frac{1}{2} (\theta - \theta')^T H (\theta - \
 *   如果对于所有非零向量 $\mathbf{v}$，都有 $\mathbf{v}^T H \mathbf{v} < 0$（即 $H$ 是负定矩阵），那么 $L(\theta) < L(\theta')$。这意味着 $\theta'$ 是一个**局部最大值点 (Local Maxima)**。
 *   如果对于某些向量 $\mathbf{v}$，$\mathbf{v}^T H \mathbf{v} > 0$，而对于另一些向量 $\mathbf{v}$，$\mathbf{v}^T H \mathbf{v} < 0$（即 $H$ 是不定矩阵），那么 $\theta'$ 是一个**鞍点 (Saddle Point)**。
 
-#### 如何逃离鞍点 (Don't be afraid of Saddle Point!)
+**如何逃离鞍点 (Don't be afraid of Saddle Point!)**
 
 ![Image/Computer-Science/Machine Learning/12.png](/img/user/Image/Computer-Science/Machine%20Learning/12.png)
 
@@ -586,16 +626,14 @@ $$ L(\theta) \approx L(\theta') + \frac{1}{2} (\theta - \theta')^T H (\theta - \
     *   **优点**: 收敛速度通常比梯度下降快得多，因为它利用了曲率信息，能够更直接地跳向最小值点。
     *   **缺点**: 计算和存储海森矩阵 $H$ 以及其逆矩阵 $H^{-1}$ 的开销巨大。对于有数百万参数的深度神经网络来说，这是不现实的。
 
-因此，在深度学习中，虽然我们不直接使用标准的牛顿法，但许多先进的优化器（如 Adam、RMSProp 等）都受到了“利用曲率信息来调整步长”这一思想的启发，它们通过各种方式来近似海森矩阵的信息，以实现比朴素梯度下降更快的收敛。泰勒展开为理解这些高级优化算法提供了坚实的理论基础。
+因此，在深度学习中，虽然我们不直接使用标准的牛ton法，但许多先进的优化器（如 Adam、RMSProp 等）都受到了“利用曲率信息来调整步长”这一思想的启发，它们通过各种方式来近似海森矩阵的信息，以实现比朴素梯度下降更快的收敛。泰勒展开为理解这些高级优化算法提供了坚实的理论基础。
 
-#### “最小比率”：一个用于分析损失曲面几何的指标 (The "Minimum Ratio": A Metric for Analyzing Loss Surface Geometry)
+**“最小比率”：一个用于分析损失曲面几何的指标 (The "Minimum Ratio": A Metric for Analyzing Loss Surface Geometry)**
 
 **重要澄清**: 此处讨论的 "Minimum ratio" 是一个用于分析海森矩阵特性的指标，与线性规划单纯形法 (Simplex Method) 中的 "Minimum Ratio Test" **完全无关**。
 
 在深度学习的优化研究中，研究者们有时会使用一个比率来量化损失函数在某个特定点 $\theta$ 附近的几何形状，特别是判断它有多像一个真正的“谷底”（局部最小值）。你提供的图片中就定义了这样一个比率：
-
 $$ \text{Minimum ratio} = \frac{\text{Number of Positive Eigenvalues}}{\text{Total Number of Eigenvalues}} $$
-
 **这个指标的意义是什么？**
 
 这个比率衡量了在当前点，损失曲面在所有主轴方向中，有多少个方向是“向上弯曲”的（即具有正曲率）。
@@ -624,3 +662,21 @@ $$ \text{Minimum ratio} = \frac{\text{Number of Positive Eigenvalues}}{\text{Tot
 这个名字可能有些令人困惑。一个可能的解释是，这个比率是用来**分析和表征损失函数的最小值点 (loss minimum)** 的。一个“好的”最小值点，其“Minimum ratio”应该接近1。因此，这个比率可以看作是衡量一个临界点“有多好”或者“有多像一个真正的最小值”的指标。在文献中，你可能也会看到它被称为**正特征值比率 (Positive Eigenvalue Ratio)** 或**局部凸性比率 (Local Convexity Ratio)**，这些名字可能更具描述性。
 
 在训练过程中，模型参数从一个随机初始点开始，可能会经过许多“Minimum ratio”较低的区域（鞍点），最终收敛到一个“Minimum ratio”接近1的区域（一个好的局部最小值）。
+
+---
+**注：**
+- 一个**神经元 (Neuron)**是一个基本的计算单元。
+- 一个**激活函数**（如 Sigmoid）是神经元计算过程中的一个关键组成部分，它引入非线性。
+- 当我们说“一个 Sigmoid 神经元”或在图中画一个 Sigmoid 符号时，我们通常指的就是一个以 Sigmoid 作为其激活函数的神经元/单元。
+- **这整个体系，即由相互连接的“神经元”（或单元，每个单元执行加权求和与非线性激活函数如 Sigmoid、ReLU 等操作）组成的、分层的结构，就叫做神经网络 (Neural Network)。**
+- 如果这个网络包含多个隐藏层，它就是一个**深度神经网络 (Deep Neural Network, DNN)**
+**对应关系是：**
+- 一个 Sigmoid (或其他激活函数) 是**一个神经元计算的一部分**。
+- **多个神经元**可以组成**一个隐藏层 (Hidden Layer)**。
+- **多个隐藏层**构成了**一个深度神经网络**
+
+**拓展：**
+**1. 为什么我们要的是 "Deep" 的 network 而不是 "Fat" 的？**
+[[Notion/Theoretical-Knowledge/Computer-Science/Artificial-Intelligence/Question/Deep 而非 Fat 的 Neural Network\|Deep 而非 Fat 的 Neural Network]]
+**2. 为什么我们不 "Deeper" ?**
+[[Notion/Theoretical-Knowledge/Computer-Science/Artificial-Intelligence/Question/不一直 Deeper 的神经网络\|不一直 Deeper 的神经网络]]

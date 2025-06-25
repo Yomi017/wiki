@@ -823,7 +823,7 @@ Recalling our overview of Discrete Linear Transformations above, should we want 
 图3.7(a)显示了4×4像素图像的集合。图3.7(b)显示了将IDCT应用于图3.7(a)中图像的结果。图3.7(b)中的图像集合被称为基，因为其中任何一个图像的DCT都会产生一个只有一个非零系数的矩阵Y，因此它们代表了DCT“分解”任何输入图像的基图像。
 回顾我们上面对离散线性变换的概述，如果我们要从其DCT Y中恢复图像X，我们只需取出Y的每个元素并将其乘以图3.7(b)中对应的矩阵。实际上，图3.7(b)引入了DCT基的一个非常显著的特性：它编码空间频率。通过忽略具有较小DCT系数的空间频率可以实现压缩。想想棋盘图像——它具有高空间频率分量，几乎所有低频分量都可以被去除。相反，模糊图像往往具有较少的高空间频率分量，此时高频分量（在图3.7(b)的右下角）可以设置为零，作为“可接受的近似”。这就是JPEG背后不可逆压缩的原理。
 
-![13.png](/img/user/Image/Computer-Science/Information%20and%20entropy/13.png)
+![Image/Computer-Science/Information and entropy/13.png](/img/user/Image/Computer-Science/Information%20and%20entropy/13.png)
 
 *   **Core:** Discrete Cosine Transformation (DCT) is a specific type of discrete linear transformation (`Y = CᵀXC`) used in JPEG, where the transformation matrix C is defined using cosine functions and its inverse is its transpose (`C⁻¹ = Cᵀ`). This allows images (X) to be transformed into a matrix of coefficients (Y) in the spatial frequency domain.
 *   **Distinction:** The key advantage of DCT for compression is that its basis matrices (representing spatial frequencies) allow for **lossy compression**: coefficients corresponding to less perceptible high-frequency components (which have smaller values) can be discarded or set to zero, leading to an "acceptable approximation" (e.g., in JPEG).
