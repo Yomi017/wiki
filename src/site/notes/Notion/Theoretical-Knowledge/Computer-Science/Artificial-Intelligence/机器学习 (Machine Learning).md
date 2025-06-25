@@ -486,6 +486,7 @@ $$ \theta^* = \arg\min_{\theta} L(\theta) $$
     1.  计算当前梯度: $\mathbf{g}^t = \nabla L(\theta^{t-1})$
     2.  更新动量向量: $\mathbf{m}^t = \lambda \mathbf{m}^{t-1} + \mathbf{g}^t$ (其中 $\lambda$ 是动量衰减因子，通常为0.9)
     3.  更新参数: $\theta^t = \theta^{t-1} - \eta \mathbf{m}^t$
+    4.  初始值: $m_0=0,m^1=-\eta g^0,m^2=-\lambda\eta g^0-\eta g^1,\cdots$
 
 *   **效果**:
     *   **加速收敛**: 在梯度方向一致的区域，动量累积，步长增大。

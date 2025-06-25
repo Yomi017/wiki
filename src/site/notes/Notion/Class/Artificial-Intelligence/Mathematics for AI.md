@@ -1257,3 +1257,100 @@ If the basis for $U$ is **orthonormal**, the columns of $B$ are orthonormal. In 
 *   The projection formula becomes: $\mathbf{p} = B\boldsymbol{\lambda} = B(B^T\mathbf{x}) = (BB^T)\mathbf{x}$.
 
 The matrix $P = BB^T$ is called the **projection matrix**. This simplified formula only works when the basis is orthonormal. For a general, non-orthogonal basis, one must solve the full Normal Equation.
+
+# Lecture 4: Analytic Geometry: Orthonormal Basis, Orthogonal Complement, Inner Product of Functions, Orthogonal Projections, Rotations
+
+## Part I: Orthonormal Basis and Orthogonal Complement
+
+### 1. Orthonormal Basis
+
+*   **Foundation:** In an n-dimensional vector space, a basis is a set of n linearly independent vectors. The inner product allows us to define geometric concepts like length and angle.
+*   **Definition:** An **orthonormal basis** is a special type of basis where all basis vectors are mutually orthogonal (perpendicular) and each basis vector is a unit vector (has a length of 1).
+    *   **Formally:** For a basis $\{\mathbf{b}_1, \dots, \mathbf{b}_n\}$ of a vector space $V$:
+        *   **Orthogonality:** $\langle \mathbf{b}_i, \mathbf{b}_j \rangle = 0$ for all $i \neq j$.
+        *   **Normalization:** $\langle \mathbf{b}_i, \mathbf{b}_i \rangle = \|\mathbf{b}_i\|^2 = 1$ for all $i$.
+    *   **Orthogonal Basis:** If only the orthogonality condition holds (vectors are perpendicular but not necessarily unit length), the basis is called an **orthogonal basis**.
+*   **Canonical Example:** The standard Cartesian basis in $\mathbb{R}^n$ (e.g., $\{\mathbf{e}_1, \mathbf{e}_2, \mathbf{e}_3\}$ in $\mathbb{R}^3$) is the most common example of an orthonormal basis.
+*   **Example in $\mathbb{R}^2$:** The vectors $\mathbf{b}_1 = \frac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ 1 \end{pmatrix}$ and $\mathbf{b}_2 = \frac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ -1 \end{pmatrix}$ form an orthonormal basis because $\mathbf{b}_1^T \mathbf{b}_2 = 0$ and $\|\mathbf{b}_1\| = \|\mathbf{b}_2\| = 1$.
+
+### 2. Gram-Schmidt Process: Constructing an Orthonormal Basis
+
+The Gram-Schmidt process is a fundamental algorithm that transforms any set of linearly independent vectors (a basis) into an orthonormal basis for the same subspace.
+
+*   **Goal:** Given a basis $\{\mathbf{a}_1, \dots, \mathbf{a}_n\}$, produce an orthonormal basis $\{\mathbf{q}_1, \dots, \mathbf{q}_n\}$.
+*   **Algorithm Steps:**
+    1.  **Initialize:** Start with the first vector. Normalize it to get the first orthonormal basis vector.
+        $$ \mathbf{q}_1 = \frac{\mathbf{a}_1}{\|\mathbf{a}_1\|} $$
+    2.  **Iterate and Orthogonalize:** For each subsequent vector $\mathbf{a}_k$ (from $k=2$ to $n$):
+        a.  **Project and Subtract:** Calculate the projection of $\mathbf{a}_k$ onto the subspace already spanned by the previously found orthonormal vectors $\{\mathbf{q}_1, \dots, \mathbf{q}_{k-1}\}$. Subtract this projection from $\mathbf{a}_k$ to get a vector $\mathbf{v}_k$ that is orthogonal to that subspace.
+            $$ \mathbf{v}_k = \mathbf{a}_k - \sum_{j=1}^{k-1} \langle \mathbf{a}_k, \mathbf{q}_j \rangle \mathbf{q}_j $$
+        b.  **Normalize:** Normalize the resulting orthogonal vector $\mathbf{v}_k$ to make it a unit vector.
+            $$ \mathbf{q}_k = \frac{\mathbf{v}_k}{\|\mathbf{v}_k\|} $$
+*   **Result:** The set $\{\mathbf{q}_1, \dots, \mathbf{q}_n\}$ is an orthonormal basis for the same space spanned by the original vectors $\{\mathbf{a}_1, \dots, \mathbf{a}_n\}$.
+
+### 3. Orthogonal Complement
+
+The orthogonal complement generalizes the idea of perpendicularity from single vectors to entire subspaces.
+
+*   **Definition:** Let $U$ be an $M$-dimensional subspace of a $D$-dimensional vector space $V$. The **orthogonal complement** of $U$, denoted $U^\perp$, is the set of all vectors in $V$ that are orthogonal to *every* vector in $U$.
+    $$ U^\perp = \{ \mathbf{v} \in V \mid \langle \mathbf{v}, \mathbf{u} \rangle = 0 \text{ for all } \mathbf{u} \in U \} $$
+*   **Key Properties:**
+    1.  **Intersection:** The only vector that lies in both a subspace and its orthogonal complement is the zero vector: $U \cap U^\perp = \{\mathbf{0}\}$.
+    2.  **Dimension:** The dimensions of a subspace and its orthogonal complement sum to the dimension of the total space:
+        $$ \dim(U) + \dim(U^\perp) = \dim(V) $$
+    3.  **Orthogonal Decomposition:** Any vector $\mathbf{x} \in V$ can be uniquely decomposed into a sum of a component in $U$ and a component in $U^\perp$. This is written as a **direct sum**:
+        $$ V = U \oplus U^\perp $$
+
+### 4. Applications and Examples of Orthogonal Complements
+
+*   **Geometric Interpretation:** Orthogonal complements provide a powerful way to describe geometric objects.
+    *   In $\mathbb{R}^3$, the orthogonal complement of a plane (a 2D subspace) is the line perpendicular to it (a 1D subspace), often called the **normal line**. The basis vector for this line is the plane's **normal vector**.
+    *   More generally, in $\mathbb{R}^n$, the orthogonal complement of a hyperplane (an (n-1)-dimensional subspace) is a line, and vice-versa.
+*   **Example in $\mathbb{R}^3$:**
+    *   Let $U = \text{span}\{\begin{pmatrix} 1 \\ 0 \\ 0 \end{pmatrix}, \begin{pmatrix} 0 \\ 1 \\ 0 \end{pmatrix}\}$ be the xy-plane.
+    *   Its orthogonal complement $U^\perp$ is the set of all vectors orthogonal to the xy-plane, which is the z-axis: $U^\perp = \text{span}\{\begin{pmatrix} 0 \\ 0 \\ 1 \end{pmatrix}\}$.
+    *   We can see that $\dim(U) + \dim(U^\perp) = 2 + 1 = 3 = \dim(\mathbb{R}^3)$.
+
+*   **Clarification on Dimension:** It's important to remember that if $U$ is a proper subspace of $V$, its dimension must be strictly less than the dimension of $V$ ($\dim(U) < \dim(V)$), even though the vectors in $U$ have the same number of coordinates as the vectors in $V$.
+
+## Part II: Inner Product of Functions, Orthogonal Projections, and Rotations
+
+### 1. Inner Product of Functions
+
+The concept of an inner product can be extended from the familiar space $\mathbb{R}^n$ to vector spaces of functions, enabling us to apply geometric intuition to abstract objects like polynomials or signals.
+
+*   **Definition:** For the vector space of continuous functions on an interval $[a, b]$, the standard inner product between two functions $f(x)$ and $g(x)$ is defined by the integral:
+    $$ \langle f, g \rangle := \int_{a}^{b} f(x)g(x) \,dx $$
+*   **Induced Geometry:** This definition allows us to measure:
+    *   **Length (Norm):** $\|f\| = \sqrt{\int_{a}^{b} f(x)^2 \,dx}$
+    *   **Distance:** $d(f, g) = \|f - g\|$
+    *   **Orthogonality:** Two functions are orthogonal if $\langle f, g \rangle = 0$.
+*   **Significance:** This generalization is crucial for fields like signal processing and quantum mechanics, and it forms the mathematical basis for **Fourier series**, which decompose functions into a sum of orthogonal sine and cosine functions.
+
+### 2. Orthogonal Projections
+
+Orthogonal projection is a core operation for finding the "best approximation" or "closest point" of a vector within a given subspace. It is the geometric foundation for solving least-squares problems.
+
+*   **Concept:** The orthogonal projection of a vector $\mathbf{x}$ onto a subspace $U$ is the unique vector $\mathbf{p} \in U$ such that the error vector $(\mathbf{x} - \mathbf{p})$ is orthogonal to the entire subspace $U$.
+*   **The Projection Formula:**
+    1.  **Form a Basis Matrix:** Create a matrix $B$ whose columns are a basis for the subspace $U$.
+    2.  **Solve the Normal Equation:** Find the coordinate vector $\boldsymbol{\lambda}$ by solving the system:
+        $$ (B^T B)\boldsymbol{\lambda} = B^T\mathbf{x} $$
+    3.  **Compute the Projection:** The projection vector is then given by:
+        $$ \mathbf{p} = B\boldsymbol{\lambda} $$
+*   **[[Notion/Class/Proof/Projection Matrix\|Projection Matrix]]:** The linear transformation that maps any vector $\mathbf{x}$ to its projection $\mathbf{p}$ is represented by the projection matrix $P = B(B^T B)^{-1}B^T$.
+*   **Special Case (Orthonormal Basis):** If the columns of $B$ form an orthonormal basis, then $B^T B = I$, and the formulas simplify significantly:
+    *   The coordinates are $\boldsymbol{\lambda} = B^T\mathbf{x}$.
+    *   The projection is $\mathbf{p} = (BB^T)\mathbf{x}$.
+
+### 3. Rotations
+
+Rotations are a fundamental class of geometric transformations that preserve the shape and size of objects. In linear algebra, they are represented by a special type of matrix.
+
+*   **Definition:** A rotation is a linear transformation, represented by a matrix $R$, that preserves lengths and angles.
+*   **Matrix Properties:** A matrix $R$ represents a pure rotation if it satisfies two conditions:
+    1.  **Orthogonality:** The matrix must be orthogonal, meaning $R^T R = I$. This ensures that lengths and angles are preserved.
+    2.  **Orientation Preservation:** The determinant of the matrix must be `+1`, i.e., $\det(R) = 1$. (An orthogonal matrix with determinant `-1` represents a reflection, which is a "mirror image" transformation).
+*   **2D Rotation:** The matrix for a counter-clockwise rotation by an angle $\theta$ in the 2D plane is:
+    $$ R_\theta = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix} $$
+*   **Group Structure:** The set of all $n \times n$ rotation matrices forms a mathematical group known as the **Special Orthogonal Group**, denoted $SO(n)$.
