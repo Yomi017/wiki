@@ -1216,7 +1216,7 @@ Gram-Schmidt过程是构造一组标准正交基的经典算法，其核心思�
     *   最小化 $\|\mathbf{x} - (\mathbf{x}_0 + \mathbf{u})\|^2$ 就等价于最小化 $\|(\mathbf{x} - \mathbf{x}_0) - \mathbf{u}\|^2$。
     *   根据定义，使这个距离最小的 $\mathbf{u}^*$ 正是向量 $(\mathbf{x} - \mathbf{x}_0)$ 在子空间 $U$ 上的投影，即 $\mathbf{u}^* = \pi_U(\mathbf{x} - \mathbf{x}_0)$。
     *   因此，最近点 $\mathbf{y}^* = \mathbf{x}_0 + \mathbf{u}^* = \mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0)$。
-     ![Image/Class/Mathematics-for-AI/11.png](/img/user/Image/Class/Mathematics-for-AI/11.png)![Image/Class/Mathematics-for-AI/12.png](/img/user/Image/Class/Mathematics-for-AI/12.png)![Image/Class/Mathematics-for-AI/13.png](/img/user/Image/Class/Mathematics-for-AI/13.png)
+     ![Image/Class/Mathematics-for-AI/11.png](/img/user/Image/Class/Mathematics-for-AI/11.png)![Image/Class/Mathematics-for-AI/12.png](/img/user/Image/Class/Mathematics-for-AI/12.png)![Image/Class/Mathematics-for-AI/13.png](/img/user/Image/Class/Mathematics-for-AI/13.png)![14.png](/img/user/Image/Class/Mathematics-for-AI/14.png)
 *   **点到仿射子空间的距离：**
     $$ d(\mathbf{x}, L) = \|\mathbf{x} - \pi_L(\mathbf{x})\| = \|\mathbf{x} - (\mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0))\| = \|(\mathbf{x} - \mathbf{x}_0) - \pi_U(\mathbf{x} - \mathbf{x}_0)\| = d(\mathbf{x}-\mathbf{x}_0, U) $$
     这表明，点到仿射空间的距离，等于平移后的点到其方向子空间的距离。
@@ -1282,6 +1282,7 @@ Gram-Schmidt过程是构造一组标准正交基的经典算法，其核心思�
     1.  **基变换到笛卡尔坐标：** $\mathbf{x}_{\text{cartesian}} = F\mathbf{x}_F$
     2.  **用标准矩阵旋转：** $\mathbf{x}'_{\text{rotated}} = R(\theta) \mathbf{x}_{\text{cartesian}}$
     3.  **（可选）变换回原基：** $\mathbf{y}_F = F^{-1}\mathbf{x}'_{\text{rotated}}$
+    4.  $\Rightarrow M=FR(\theta)F^{-1}$
 *   **旋转一个向量空间：** 要旋转整个向量空间，只需旋转其所有基向量即可。如果一个空间的基由矩阵 $B=[\mathbf{b}_1, \dots, \mathbf{b}_k]$ 的列给出，那么旋转后的新基矩阵为 $B' = [R(\theta)\mathbf{b}_1, \dots, R(\theta)\mathbf{b}_k] = R(\theta)B$。
 
 ### 3. R³ 中的旋转
@@ -1457,6 +1458,7 @@ Gram-Schmidt过程是构造一组标准正交基的经典算法，其核心思�
 *   **循环不变性 (Cyclic Property)**:
     *   对于 $A \in \mathbb{R}^{n \times k}, B \in \mathbb{R}^{k \times n}$，有 $\text{tr}(AB) = \text{tr}(BA)$。
     *   **推论**: $\text{tr}(ABC) = \text{tr}(BCA) = \text{tr}(CAB)$。
+![15.png](/img/user/15.png)
 *   **基无关性 (Basis-Independence)**:
     *   迹对于**相似变换**是不变的。如果 $B = S^{-1}AS$，那么 $\text{tr}(B) = \text{tr}(A)$。
     *   这意味着一个线性变换的迹是一个内在属性，不随坐标基的选择而改变。
@@ -1473,3 +1475,73 @@ Gram-Schmidt过程是构造一组标准正交基的经典算法，其核心思�
     *   $\lambda^{n-1}$ 项的系数与迹相关：$(-1)^{n-1}\text{tr}(A)$。
 *   **核心应用**:
     *   **特征值**: 特征多项式的根（即方程 $p_A(\lambda) = 0$ 的解）就是矩阵 $A$ 的**特征值**。
+
+## 第二部分：特征值与特征向量 (Eigenvalues and Eigenvectors)
+
+特征值和特征向量（简称“特征分析”）是线性代数中威力最强大的工具之一。它提供了一种全新的视角来理解和刻画一个方阵及其所代表的线性变换，揭示了变换最本质、最核心的特性。
+
+## 1. 特征值与特征向量的定义与几何意义
+
+### 1.1 定义
+
+*   **动机：** 对于一个给定的线性变换（由矩阵 `A` 代表），我们特别关心那些**方向保持不变**的特殊向量。当变换作用于这些向量时，它们只会被拉伸或压缩，而不会发生方向偏转。
+*   **特征值方程 (Eigenvalue Equation)**:
+    对于一个方阵 $A \in \mathbb{R}^{n \times n}$，如果存在一个**标量 $\lambda$** 和一个**非零向量 $\mathbf{x} \in \mathbb{R}^n \setminus \{0\}$**，满足以下方程：
+    $$ A\mathbf{x} = \lambda\mathbf{x} $$
+    那么：
+    *   $\lambda$ 被称为矩阵 $A$ 的一个**特征值 (Eigenvalue)**。
+    *   $\mathbf{x}$ 被称为对应于特征值 $\lambda$ 的一个**特征向量 (Eigenvector)**。
+
+### 1.2 几何意义：变换下的“不变方向”
+
+*   **一般向量 vs. 特征向量**:
+    *   当一个线性变换 $A$ 作用于一个**普通向量**时，该向量的大小和方向通常都会改变。
+    *   当 $A$ 作用于一个**特征向量 $\mathbf{x}$** 时，它的**方向保持不变**（或完全反向），仅仅是在这个方向上被**拉伸或压缩**了 $\lambda$ 倍。
+        *   如果 $\lambda > 1$，向量被拉长。
+        *   如果 $0 < \lambda < 1$，向量被缩短。
+        *   如果 $\lambda < 0$，向量的方向被完全翻转（180°），并根据$|\lambda|$进行缩放。
+        *   如果 $\lambda = 1$，向量保持不变（是变换的“不动点”）。
+        *   如果 $\lambda = 0$，向量被“压扁”到零向量。
+*   **示例**:
+    对于矩阵 $A = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}$：
+    *   **特征向量**: 取 $\mathbf{x}_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$。计算 $A\mathbf{x}_1 = \begin{bmatrix} 3 \\ 3 \end{bmatrix} = 3 \begin{bmatrix} 1 \\ 1 \end{bmatrix} = 3\mathbf{x}_1$。向量 $\mathbf{x}_1$ 的方向不变，只是被拉长了3倍。因此，$\lambda=3$ 是一个特征值，$\mathbf{x}_1$ 是其对应的特征向量。
+    *   **非特征向量**: 取 $\mathbf{y} = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$。计算 $A\mathbf{y} = \begin{bmatrix} 2 \\ 1 \end{bmatrix}$。结果向量的方向发生了偏转，所以 $\mathbf{y}$ 不是一个特征向量。
+
+### 1.3 特征向量的非唯一性
+
+*   如果 $\mathbf{x}$ 是一个特征向量，那么任何与它**共线 (collinear)** 的非零向量 $c\mathbf{x}$ (其中 $c \neq 0$) 也是对应于同一个特征值 $\lambda$ 的特征向量。
+*   **证明**:
+    $$ A(c\mathbf{x}) = c(A\mathbf{x}) = c(\lambda\mathbf{x}) = \lambda(c\mathbf{x}) $$
+*   **结论**: 特征向量定义的不是一个单一的向量，而是一个**方向**，即一条穿过原点的直线。这条直线上的所有非零向量都是具有相同特征值的特征向量。
+
+## 2. 特征值的计算与等价刻画
+
+如何系统地找到一个矩阵的特征值？这需要我们将特征值方程转化为一个我们熟悉的问题。
+
+*   **核心思想**: 将特征值方程 $A\mathbf{x} = \lambda\mathbf{x}$ 变形。
+    $$ A\mathbf{x} - \lambda\mathbf{x} = \mathbf{0} $$
+    $$ A\mathbf{x} - \lambda I \mathbf{x} = \mathbf{0} $$
+    $$ (A - \lambda I)\mathbf{x} = \mathbf{0} $$
+*   这个方程 $(A - \lambda I)\mathbf{x} = \mathbf{0}$ 是一个标准的**齐次线性方程组**。我们寻找的是它的**非平凡解 (nontrivial solution)**，因为根据定义，特征向量 $\mathbf{x}$ 不能是零向量。
+
+*   **特征值的等价刻画定理**: 对于 $\lambda \in \mathbb{R}$ 和 $A \in \mathbb{R}^{n \times n}$，以下四个命题是完全等价的：
+    1.  $\lambda$ 是 $A$ 的一个特征值。
+    2.  方程 $(A - \lambda I)\mathbf{x} = \mathbf{0}$ 存在一个非零解 $\mathbf{x} \neq \mathbf{0}$。
+    3.  矩阵 $(A - \lambda I)$ 是**奇异的 (singular)**，即它是不可逆的，或者说它的秩小于n: $\text{rk}(A - \lambda I) < n$。
+    4.  矩阵 $(A - \lambda I)$ 的**行列式为零**: $\det(A - \lambda I) = 0$。
+
+*   **计算方法**: 第四个命题为我们提供了计算特征值的具体方法。$\det(A - \lambda I)$ 正是我们之前定义的**特征多项式** $p_A(\lambda)$。因此：
+    > **一个标量 $\lambda$ 是矩阵 $A$ 的特征值，当且仅当它是特征多项式 $p_A(\lambda) = 0$ 的一个根。**
+
+## 3. 相关重要概念
+
+*   **代数重数 (Algebraic multiplicity)**: 一个特征值 $\lambda_i$ 作为特征多项式的根**出现的次数**。例如，如果 $p_A(\lambda) = (\lambda-2)^2(\lambda-5)$，那么特征值2的代数重数是2，特征值5的代数重数是1。
+
+*   **特征空间 (Eigenspace)**:
+    *   对于一个特定的特征值 $\lambda$，所有与之对应的特征向量，再加上**零向量**，共同构成了一个向量子空间。这个子空间被称为对应于 $\lambda$ 的**特征空间**，记为 $E_\lambda$。
+    *   $E_\lambda$ 就是齐次方程 $(A - \lambda I)\mathbf{x} = \mathbf{0}$ 的解空间，也就是矩阵 $(A - \lambda I)$ 的**核空间 (Kernel or Nullspace)**。
+    *   $E_\lambda = \text{Ker}(A - \lambda I)$。
+
+*   **谱 (Spectrum)**:
+    *   一个矩阵 $A$ 的所有特征值的**集合**被称为 $A$ 的**谱 (spectrum)**，有时也写作 $\sigma(A)$。
+    *   例如，如果一个矩阵的特征值是 -1, 3, 5，那么它的谱就是 $\{-1, 3, 5\}$。

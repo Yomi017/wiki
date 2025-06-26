@@ -1453,7 +1453,7 @@ So far, we have discussed projections onto subspaces that pass through the origi
     *   Minimizing $\|\mathbf{x} - (\mathbf{x}_0 + \mathbf{u})\|^2$ is equivalent to minimizing $\|(\mathbf{x} - \mathbf{x}_0) - \mathbf{u}\|^2$.
     *   By definition, the $\mathbf{u}^*$ that minimizes this distance is the projection of $(\mathbf{x} - \mathbf{x}_0)$ onto $U$, so $\mathbf{u}^* = \pi_U(\mathbf{x} - \mathbf{x}_0)$.
     *   Therefore, the closest point is $\mathbf{y}^* = \mathbf{x}_0 + \mathbf{u}^* = \mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0)$.
-![Image/Class/Mathematics-for-AI/11.png](/img/user/Image/Class/Mathematics-for-AI/11.png)![Image/Class/Mathematics-for-AI/12.png](/img/user/Image/Class/Mathematics-for-AI/12.png)![Image/Class/Mathematics-for-AI/13.png](/img/user/Image/Class/Mathematics-for-AI/13.png)
+![Image/Class/Mathematics-for-AI/11.png](/img/user/Image/Class/Mathematics-for-AI/11.png)![Image/Class/Mathematics-for-AI/12.png](/img/user/Image/Class/Mathematics-for-AI/12.png)![Image/Class/Mathematics-for-AI/13.png](/img/user/Image/Class/Mathematics-for-AI/13.png)![Image/Class/Mathematics-for-AI/14.png](/img/user/Image/Class/Mathematics-for-AI/14.png)
 *   **Distance from a Point to an Affine Subspace:**
     $$ d(\mathbf{x}, L) = \|\mathbf{x} - \pi_L(\mathbf{x})\| = \|\mathbf{x} - (\mathbf{x}_0 + \pi_U(\mathbf{x} - \mathbf{x}_0))\| = \|(\mathbf{x} - \mathbf{x}_0) - \pi_U(\mathbf{x} - \mathbf{x}_0)\| = d(\mathbf{x}-\mathbf{x}_0, U) $$
     This shows that the distance from a point to an affine space is equal to the distance from the translated point to its corresponding direction subspace.
@@ -1520,6 +1520,7 @@ This is a more direct geometric proof that does not rely on the idea of basis ch
     1.  **Change Basis to Cartesian:** $\mathbf{x}_{\text{cartesian}} = F\mathbf{x}_F$
     2.  **Rotate with Standard Matrix:** $\mathbf{x}'_{\text{rotated}} = R(\theta) \mathbf{x}_{\text{cartesian}}$
     3.  **(Optional) Change Basis Back:** $\mathbf{y}_F = F^{-1}\mathbf{x}'_{\text{rotated}}$
+    4.  $\Rightarrow M=FR(\theta)F^{-1}$
 *   **Rotating a Vector Space:** To rotate an entire vector space, you simply rotate all of its basis vectors. If the basis of a space is given by the columns of a matrix $B=[\mathbf{b}_1, \dots, \mathbf{b}_k]$, the new rotated basis matrix is $B' = [R(\theta)\mathbf{b}_1, \dots, R(\theta)\mathbf{b}_k] = R(\theta)B$.
 
 ### 3. Rotations in $\mathbb{R}^3$
