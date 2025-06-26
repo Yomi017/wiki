@@ -76,7 +76,7 @@ $$ \langle \mathbf{x}, \mathbf{y} \rangle = \mathbf{x}^T A \mathbf{y} $$
     我们令 **`L_chol = Lᵀ`**。由于 `L` 是下三角矩阵，`L_chol` 就是一个**上三角矩阵**。
     所以我们证明了 `A = U Uᵀ` 才是 `L Lᵀ` 分解。`A = L_cholᵀ L_chol`
 
-等等，这里有个转置的细节。标准的Cholesky分解是 `A = LLᵀ`，其中 `L` 是下三角。让我们重新整理一下 `U` 和 `L` 的关系。
+这里有个转置的细节。标准的Cholesky分解是 `A = LLᵀ`，其中 `L` 是下三角。让我们重新整理一下 `U` 和 `L` 的关系。
 
 令 `A = UᵀU`，其中 `U` 是上三角。这被称为Cholesky分解的 "U-T-U" 形式。
 令 `A = LLᵀ`，其中 `L` 是下三角。这是标准的Cholesky分解。
