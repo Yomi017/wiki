@@ -1433,6 +1433,7 @@ The Gram-Schmidt process is a classic algorithm for constructing an orthonormal 
     2.  $\mathbf{u}_2 = \mathbf{b}_2 - \frac{\langle \mathbf{b}_2, \mathbf{u}_1 \rangle}{\langle \mathbf{u}_1, \mathbf{u}_1 \rangle} \mathbf{u}_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix} - \frac{2}{4} \begin{bmatrix} 2 \\ 0 \end{bmatrix} = \begin{bmatrix} 1 \\ 1 \end{bmatrix} - \begin{bmatrix} 1 \\ 0 \end{bmatrix} = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$
     *   The resulting orthogonal basis is $\{ [2, 0]^T, [0, 1]^T \}$.
 
+**拓展：[[Notion/Class/Concept/Cholesky分解\|Cholesky分解]]
 ### 6. Core Application II: Projection onto an Affine Subspace
 
 So far, we have discussed projections onto subspaces that pass through the origin. We now generalize this to **affine subspaces** (e.g., lines or planes that do not pass through the origin).
@@ -1601,3 +1602,5 @@ Any complex 3D rotation can be decomposed into a sequence of fundamental rotatio
 *   **Commutativity:**
     *   In **$\mathbb{R}^2$**, rotations **are commutative**: $R(\phi)R(\theta) = R(\theta)R(\phi)$.
     *   In **$\mathbb{R}^3$ and higher dimensions**, rotations are **not commutative**.
+
+# Lecture 5: Matrix Decompositions: Determinant and Trace, Eigenvalues and Eigenvectors, Cholesky Decomposition, Eigendecomposition and Diagonalization
