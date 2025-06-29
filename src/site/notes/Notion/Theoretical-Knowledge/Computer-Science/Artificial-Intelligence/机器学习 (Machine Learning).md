@@ -681,3 +681,67 @@ $$ \text{Minimum ratio} = \frac{\text{Number of Positive Eigenvalues}}{\text{Tot
 [[Notion/Theoretical-Knowledge/Computer-Science/Artificial-Intelligence/Question/Deep 而非 Fat 的 Neural Network\|Deep 而非 Fat 的 Neural Network]]
 **2. 为什么我们不 "Deeper" ?**
 [[Notion/Theoretical-Knowledge/Computer-Science/Artificial-Intelligence/Question/不一直 Deeper 的神经网络\|不一直 Deeper 的神经网络]]
+
+#### 2.3.2.3 优化再进阶：自适应学习率 (Adaptive Learning Rate)
+
+在标准的梯度下降法中，所有参数共享同一个固定的学习率 $\eta$。然而，这往往不是最优的策略。
+
+**核心思想：不同的参数需要不同的学习率。**
+![17.png](/img/user/Image/Computer-Science/Machine%20Learning/17.png)
+
+观察上图的损失曲面等高线图。这是一个狭长的“山谷”形状，是优化中非常典型的情况。
+
+*   **横轴 ($w_1$) 方向**:
+    *   这个方向非常平缓，梯度值很小。
+    *   如果我们使用一个很小的学习率，那么在 $w_1$ 方向上的更新会非常缓慢，就像图中蓝色箭头所示，需要很多步才能前进一点点。
+    *   因此，在平缓的方向上，我们**需要一个较大的学习率 (Larger Learning Rate)** 来加速收敛。
+
+*   **纵轴 ($w_2$) 方向**:
+    *   这个方向非常陡峭，梯度值很大。
+    *   如果我们使用一个较大的学习率，那么在 $w_2$ 方向上的更新步长会非常大，导致参数在“山谷”的两壁之间剧烈震荡，甚至可能无法收敛，就像图中绿色箭头所示。
+    *   因此，在陡峭的方向上，我们**需要一个较小的学习率 (Smaller Learning Rate)** 来保证稳定性和收敛。
+
+这个矛盾揭示了固定学习率的局限性。一个理想的优化器应该能够**自动地**为每个参数调整学习率，即实现**自适应学习率**。
+
+#### **自适应学习率的数学形式**
+
+这张幻灯片提出了一个构建自适应学习率的通用框架。
+
+1.  **标准梯度下降更新规则**:
+    *   对于第 `i` 个参数 $\theta_i$，其在第 `t` 次迭代的更新规则是：
+        $$ \theta_{i}^{t+1} \leftarrow \theta_{i}^{t} - \eta g_i^t $$
+    *   其中，$g_i^t = \frac{\partial L}{\partial \theta_i}|_{\theta=\theta^t}$ 是当前时刻的梯度。
+    *   这里的学习率 `η` 是一个全局的、固定的**超参数 (hyperparameter)**。
+
+2.  **引入参数依赖的学习率**:
+    *   为了让学习率对每个参数“自适应”，我们可以将全局学习率 `η` 除以一个**与该参数相关的项** $\sigma_i^t$。
+        $$ \theta_{i}^{t+1} \leftarrow \theta_{i}^{t} - \frac{\eta}{\sigma_i^t} g_i^t $$
+    *   这里的 $\frac{\eta}{\sigma_i^t}$ 就是第 `i` 个参数在第 `t` 时刻的**有效学习率 (effective learning rate)**。
+    *   **关键问题**: 如何设计这个**参数依赖 (Parameter dependent)** 的项 $\sigma_i^t$？
+
+#### **如何设计 $\sigma_i^t$？**
+
+我们的目标是让陡峭方向的有效学习率变小，平缓方向的有效学习率变大。
+
+*   **陡峭方向**的特点是：历史梯度值很大。
+*   **平缓方向**的特点是：历史梯度值很小。
+
+一个自然的想法就是，让 $\sigma_i^t$ **累积该参数过去所有梯度的大小**。
+
+*   如果参数 $\theta_i$ 的历史梯度一直很大（陡峭），那么 $\sigma_i^t$ 就会很大，导致有效学习率 $\frac{\eta}{\sigma_i^t}$ 变小。
+*   如果参数 $\theta_i$ 的历史梯度一直很小（平缓），那么 $\sigma_i^t$ 就会很小，导致有效学习率 $\frac{\eta}{\sigma_i^t}$ 变大。
+
+这正是许多先进优化算法的核心思想：
+
+*   **Adagrad (Adaptive Gradient Algorithm)**:
+    *   它将 $\sigma_i^t$ 定义为该参数**历史梯度值的平方和的平方根**。
+        $$ \sigma_i^t = \sqrt{\sum_{k=0}^{t} (g_i^k)^2} $$
+    *   Adagrad 的更新规则就是：
+        $$ \theta_{i}^{t+1} \leftarrow \theta_{i}^{t} - \frac{\eta}{\sqrt{\sum_{k=0}^{t} (g_i^k)^2}} g_i^t $$
+
+*   **RMSProp (Root Mean Square Propagation)** 和 **Adam (Adaptive Moment Estimation)**:
+    *   它们是对 Adagrad 的改进。Adagrad 有一个缺点：由于梯度平方和是单调递增的，学习率会随着训练不断下降，最终可能变得过小而导致训练提前停止。
+    *   RMSProp 和 Adam 引入了**指数移动平均 (exponential moving average)** 来计算 $\sigma_i^t$，只考虑最近一段时间的梯度大小，而不是全部历史梯度。这使得 $\sigma_i^t$ 能够动态调整，避免了学习率过早衰减的问题。
+![18.png](/img/user/18.png)
+**总结**:
+通过为每个参数设计一个依赖于其历史梯度大小的归一化项 $\sigma_i^t$，自适应优化算法能够有效地为不同参数分配不同的学习率，从而在面对复杂损失曲面（如狭长山谷）时，实现比标准梯度下降更快、更稳定的收敛。这为我们后续理解 Adagrad、RMSProp 和 Adam 等优化器奠定了基础。
