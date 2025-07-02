@@ -2295,8 +2295,6 @@ $$ \hat{A}_{(k)} = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^T $$
         4.  组合结果：
             $$ \frac{\partial L}{\partial \boldsymbol{\theta}} = 2\mathbf{e}^T(-\Phi) = -2\mathbf{e}^T\Phi = -2(\mathbf{y}_{\text{obs}} - \Phi\boldsymbol{\theta})^T\Phi $$
 
----
-
 ### 6. 矩阵的梯度 (Gradients of/with respect to Matrices)
 
 #### 6.1 概念与挑战
@@ -2310,7 +2308,7 @@ $$ \hat{A}_{(k)} = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^T $$
     *   **问题**: 对于 $\mathbf{f} = A\mathbf{x}$，计算 $\frac{d\mathbf{f}}{dA}$。
     *   **推导**:
         1.  输出的第 `i` 个分量 $f_i = \sum_{j=1}^{N} A_{ij} x_j$。
-        2.  计算 $f_i$ 对 $A_{mn}$ 的偏导数：$\frac{\partial f_i}{\partial A_{mn}} = \begin{cases} x_n & \text{if } i=m \\ 0 & \text{if } i \neq m \end{cases}$ *(这里幻灯片的 `xk if i=j` 似乎有误，根据推导应该是 `xn if i=m`。我们以推导为准)*。
+        2.  计算 $f_i$ 对 $A_{mn}$ 的偏导数：$\frac{\partial f_i}{\partial A_{mn}} = \begin{cases} x_n & \text{if } i=m \\ 0 & \text{if } i \neq m \end{cases}$ 
         3.  这个结果表明，输出 $f_i$ **只依赖于**矩阵 $A$ 的**第 i 行** $A_{i,:}$。
         4.  对该行求导的结果是：
             $$ \frac{\partial f_i}{\partial A_{i,:}} = \mathbf{x}^T $$
@@ -2328,3 +2326,112 @@ $$ \hat{A}_{(k)} = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^T $$
             $$ \frac{\partial F_{i,:}}{\partial A_{i,:}} = B^T $$
         *   对整个输出 $F$ 求导时，其雅可比矩阵也呈块状结构。例如，对输出的第 `i` 行 $F_{i,:}$ 求导，其结果为：
             $$ \frac{\partial F_{i,:}}{\partial A} = \begin{bmatrix} 0 & \cdots & 0 & \underbrace{B^T}_{\text{i-th block}} & 0 & \cdots & 0 \end{bmatrix} $$
+
+## 第三部分：矩阵微积分实用恒等式与证明
+
+直接通过定义计算矩阵和向量的梯度通常非常繁琐。在实践中，我们更多地是依赖于一些已经证明的、可以直接套用的**求导恒等式**。本节将介绍一些在机器学习和优化中最重要的恒等式。
+
+### 7. 核心求导恒等式
+
+在下面的公式中，我们假设变量 `X` 是一个矩阵，`x`, `a`, `b` 是向量。
+
+#### 7.1 涉及转置、迹和行列式的恒等式
+
+*   **转置的导数**:
+    $$ \frac{\partial}{\partial X} f(X)^T = \left( \frac{\partial f(X)}{\partial X} \right)^T $$
+    *   **解读**: 对一个矩阵值函数的转置求导，等于先求导再对结果（通常是一个高维张量）进行相应的“转置”操作。
+
+*   **迹的导数 (Trace Trick)**:
+    $$ \frac{\partial}{\partial X} \text{tr}(f(X)) = \text{tr}\left( \frac{\partial f(X)}{\partial X} \right) $$
+    *   **解读**: 迹 `tr(·)` 算子和求导 `∂/∂X` 算子可以**交换顺序**。这个技巧在推导复杂标量损失函数对矩阵的梯度时极其有用。
+
+*   **行列式的导数**:
+    $$ \frac{\partial}{\partial X} \det(f(X)) = \det(f(X)) \text{tr}\left( f(X)^{-1} \frac{\partial f(X)}{\partial X} \right) $$
+    *   **解读**: 行列式的导数与原行列式、原函数的逆以及原函数的导数有关。这个公式也被称为**雅可比公式 (Jacobi's Formula)**。
+
+#### 7.2 涉及逆矩阵和双线性/二次型的恒等式
+
+*   **逆矩阵的导数**:
+    $$ \frac{\partial}{\partial X} f(X)^{-1} = -f(X)^{-1} \left( \frac{\partial f(X)}{\partial X} \right) f(X)^{-1} $$
+    *   **类比**: 这与标量求导 `d/dx(1/f) = -f'/f²` 非常相似，但由于矩阵乘法不可交换，顺序非常重要。
+
+*   **线性形式的梯度**:
+    $$ \frac{\partial \mathbf{x}^T\mathbf{a}}{\partial \mathbf{x}} = \frac{\partial \mathbf{a}^T\mathbf{x}}{\partial \mathbf{x}} = \mathbf{a}^T $$
+    *   **证明**: `f(x) = Σ aᵢxᵢ`。对 `xₖ` 求偏导 `∂f/∂xₖ = aₖ`。将所有偏导数 `aₖ` 组成行向量，即得到 `aᵀ`。
+
+*   **双线性形式 (Bilinear Form) 的梯度**:
+    $$ \frac{\partial \mathbf{a}^T X \mathbf{b}}{\partial X} = \mathbf{a}\mathbf{b}^T $$
+    *   **证明**: `f(X) = Σᵢ Σⱼ aᵢ Xᵢⱼ bⱼ`。对 `Xₖₗ` 求偏导，只有当 `i=k` 且 `j=l` 时项不为零，结果为 `aₖbₗ`。将所有偏导数组成矩阵，即得到外积 `abᵀ`。
+
+*   **二次型 (Quadratic Form) 的梯度**:
+    $$ \frac{\partial \mathbf{x}^T B \mathbf{x}}{\partial \mathbf{x}} = \mathbf{x}^T(B + B^T) $$
+    *   **证明**: `f(x) = Σᵢ Σⱼ xᵢ Bᵢⱼ xⱼ`。对 `xₖ` 求偏导，需要使用乘法法则，最终会得到两项。一项来自 `xᵢ` (当`i=k`)，另一项来自 `xⱼ` (当`j=k`)。整理后得到 `[Bx]ₖ + [Bᵀx]ₖ`，即 `(B+Bᵀ)x` 的第 k 项。将其写成行向量形式即为 `xᵀ(B+Bᵀ)`。
+    *   **重要特例**: 如果矩阵 $B$ 是**对称的** ($B=B^T$)，则梯度简化为：
+        $$ \frac{\partial \mathbf{x}^T B \mathbf{x}}{\partial \mathbf{x}} = 2\mathbf{x}^T B $$
+        这与标量求导 `d/dx(bx²) = 2bx` 的形式非常相似。
+
+*   **加权最小二乘的梯度**:
+    $$ \frac{\partial}{\partial \mathbf{s}} (\mathbf{x} - A\mathbf{s})^T W (\mathbf{x} - A\mathbf{s}) = -2(\mathbf{x} - A\mathbf{s})^T W A $$
+    *   **前提**: $W$ 是一个对称矩阵。
+    *   **解读**: 这是二次型梯度公式的一个直接应用，通过链式法则推导得出。它是解决加权最小二乘问题的关键。
+
+这些恒等式构成了矩阵微积分的“公式表”，在推导机器学习算法的梯度时，可以直接引用，从而避免了繁琐的逐元素求导。
+### 7. 核心求导恒等式与证明
+
+####7.1 线性形式的梯度 (Gradient of a Linear Form)
+
+*   **恒等式**:
+    $$ \frac{\partial \mathbf{x}^T\mathbf{a}}{\partial \mathbf{x}} = \frac{\partial \mathbf{a}^T\mathbf{x}}{\partial \mathbf{x}} = \mathbf{a}^T $$
+*   **证明**:
+    1.  设 $f(\mathbf{x}) = \mathbf{x}^T\mathbf{a}$。由于点积满足交换律，$\mathbf{x}^T\mathbf{a} = \mathbf{a}^T\mathbf{x}$。我们展开这个标量函数：
+        $$ f(\mathbf{x}) = \sum_{i=1}^n x_i a_i $$
+    2.  我们来计算梯度，即对 $\mathbf{x}$ 的每一个分量 $x_k$ 求偏导数：
+        $$ \frac{\partial f}{\partial x_k} = \frac{\partial}{\partial x_k} \left( \sum_{i=1}^n x_i a_i \right) $$
+    3.  在这个求和中，只有当 $i=k$ 时，项 $x_i a_i$ 才与 $x_k$ 有关。所有其他项（当 $i \neq k$ 时）对于求导来说都是常数，其导数为0。
+    4.  因此，偏导数简化为：
+        $$ \frac{\partial f}{\partial x_k} = \frac{\partial}{\partial x_k} (x_k a_k) = a_k $$
+    5.  将所有这些偏导数 `aₖ` 组合成一个行向量，就得到了梯度：
+        $$ \frac{\partial f}{\partial \mathbf{x}} = \begin{bmatrix} \frac{\partial f}{\partial x_1} & \cdots & \frac{\partial f}{\partial x_n} \end{bmatrix} = \begin{bmatrix} a_1 & \cdots & a_n \end{bmatrix} = \mathbf{a}^T $$
+    6.  证毕。
+
+#### 7.2 双线性形式的梯度 (Gradient of a Bilinear Form)
+
+*   **恒等式**:
+    $$ \frac{\partial \mathbf{a}^T X \mathbf{b}}{\partial X} = \mathbf{a}\mathbf{b}^T $$
+*   **证明**:
+    1.  设 $f(X) = \mathbf{a}^T X \mathbf{b}$，其中 $\mathbf{a} \in \mathbb{R}^m, X \in \mathbb{R}^{m \times n}, \mathbf{b} \in \mathbb{R}^n$。这是一个标量函数。我们将其展开：
+        $$ f(X) = \sum_{i=1}^m \sum_{j=1}^n a_i X_{ij} b_j $$
+    2.  我们要计算 $f(X)$ 对矩阵 $X$ 中任意一个元素 $X_{kl}$ 的偏导数。
+        $$ \frac{\partial f}{\partial X_{kl}} = \frac{\partial}{\partial X_{kl}} \left( \sum_{i=1}^m \sum_{j=1}^n a_i X_{ij} b_j \right) $$
+    3.  在这个双重求和中，只有当求和的下标 `i` 和 `j` 同时等于我们求导的下标 `k` 和 `l` 时（即 `i=k` 且 `j=l`），这一项才与变量 $X_{kl}$ 有关。
+    4.  因此，所有其他项的偏导数都为0，只剩下一项：
+        $$ \frac{\partial f}{\partial X_{kl}} = \frac{\partial}{\partial X_{kl}} (a_k X_{kl} b_l) = a_k b_l $$
+    5.  这个结果 `aₖbₗ` 正是矩阵外积 $\mathbf{a}\mathbf{b}^T$ 在第 `k` 行第 `l` 列的元素。
+    6.  由于这对所有 `k` 和 `l` 都成立，所以整个梯度矩阵就是：
+        $$ \frac{\partial f}{\partial X} = \mathbf{a}\mathbf{b}^T $$
+    7.  证毕。
+
+#### 7.3 二次型的梯度 (Gradient of a Quadratic Form)
+
+*   **恒等式**:
+    $$ \frac{\partial \mathbf{x}^T B \mathbf{x}}{\partial \mathbf{x}} = \mathbf{x}^T(B + B^T) $$
+*   **证明**:
+    1.  设 $f(\mathbf{x}) = \mathbf{x}^T B \mathbf{x}$，其中 $\mathbf{x} \in \mathbb{R}^n, B \in \mathbb{R}^{n \times n}$。我们将其展开：
+        $$ f(\mathbf{x}) = \sum_{i=1}^n \sum_{j=1}^n x_i B_{ij} x_j $$
+    2.  我们计算 $f(\mathbf{x})$ 对向量 $\mathbf{x}$ 的任意一个分量 $x_k$ 的偏导数。这里需要使用乘法法则，因为 $x_k$ 可能以 $x_i$ 或 $x_j$ 的形式出现。
+        $$ \frac{\partial f}{\partial x_k} = \frac{\partial}{\partial x_k} \left( \sum_{i=1}^n \sum_{j=1}^n x_i B_{ij} x_j \right) = \sum_{i=1}^n \sum_{j=1}^n B_{ij} \frac{\partial}{\partial x_k}(x_i x_j) $$
+    3.  利用克罗内克-德尔塔符号 $\delta_{ik}$（当 $i=k$ 时为1，否则为0），我们有 $\frac{\partial x_i}{\partial x_k} = \delta_{ik}$。应用乘法法则：
+        $$ \frac{\partial}{\partial x_k}(x_i x_j) = \frac{\partial x_i}{\partial x_k} x_j + x_i \frac{\partial x_j}{\partial x_k} = \delta_{ik}x_j + x_i\delta_{jk} $$
+    4.  将其代回求和式：
+        $$ \frac{\partial f}{\partial x_k} = \sum_{i=1}^n \sum_{j=1}^n B_{ij} (\delta_{ik}x_j + x_i\delta_{jk}) $$
+        这个双重求和可以拆成两部分：
+        $$ = \sum_{i=1}^n \sum_{j=1}^n B_{ij} \delta_{ik}x_j + \sum_{i=1}^n \sum_{j=1}^n B_{ij} x_i\delta_{jk} $$
+    5.  在第一部分，由于 $\delta_{ik}$ 的存在，只有当 $i=k$ 时项不为零，所以它简化为 $\sum_{j=1}^n B_{kj}x_j$。这正是矩阵-向量乘积 $(B\mathbf{x})$ 的第 `k` 个元素。
+    6.  在第二部分，由于 $\delta_{jk}$ 的存在，只有当 $j=k$ 时项不为零，所以它简化为 $\sum_{i=1}^n x_i B_{ik}$。这可以看作是 `x` 与 `B` 的第 k 列的点积，也等于矩阵-向量乘积 $(B^T\mathbf{x})$ 的第 `k` 个元素。
+    7.  因此，我们得到：
+        $$ \frac{\partial f}{\partial x_k} = (B\mathbf{x})_k + (B^T\mathbf{x})_k = ((B+B^T)\mathbf{x})_k $$
+    8.  将所有这些偏导数 `(B+Bᵀ)x` 的分量组合成一个行向量，就得到了梯度：
+        $$ \frac{\partial f}{\partial \mathbf{x}} = ((B+B^T)\mathbf{x})^T = \mathbf{x}^T(B+B^T)^T = \mathbf{x}^T(B^T+B) $$
+    9.  证毕。
+*   **重要特例**: 如果矩阵 $B$ 是**对称的** ($B=B^T$)，那么 $B+B^T = 2B$，梯度简化为：
+    $$ \frac{\partial \mathbf{x}^T B \mathbf{x}}{\partial \mathbf{x}} = 2\mathbf{x}^T B $$
