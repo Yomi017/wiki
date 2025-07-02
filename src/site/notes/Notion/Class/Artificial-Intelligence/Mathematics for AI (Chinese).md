@@ -2357,7 +2357,7 @@ $$ \hat{A}_{(k)} = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^T $$
 
 *   **线性形式的梯度**:
     $$ \frac{\partial \mathbf{x}^T\mathbf{a}}{\partial \mathbf{x}} = \frac{\partial \mathbf{a}^T\mathbf{x}}{\partial \mathbf{x}} = \mathbf{a}^T $$
-    *   **证明**: `f(x) = Σ aᵢxᵢ`。对 `xₖ` 求偏导 `∂f/∂xₖ = aₖ`。将所有偏导数 `aₖ` 组成行向量，即得到 `aᵀ`。
+    *   **证明**: $f(x) = Σ aᵢxᵢ$ 。对 `xₖ` 求偏导 `∂f/∂xₖ = aₖ`。将所有偏导数 `aₖ` 组成行向量，即得到 `aᵀ`。
 
 *   **双线性形式 (Bilinear Form) 的梯度**:
     $$ \frac{\partial \mathbf{a}^T X \mathbf{b}}{\partial X} = \mathbf{a}\mathbf{b}^T $$
