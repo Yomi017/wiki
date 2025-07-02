@@ -2,10 +2,6 @@
 {"dg-publish":true,"permalink":"/notion/class/artificial-intelligence/mathematics-for-ai-chinese/"}
 ---
 
-好的，这是您提供的全部讲义内容的中文翻译版本。翻译力求准确传达原文的数学概念，并保留了原有的结构和格式。
-
-***
-
 # 第一讲：线性代数：线性方程组、矩阵、向量空间、线性无关
 
 ## 第一部分：概念
@@ -2167,3 +2163,168 @@ $$ \hat{A}_{(k)} = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^T $$
     *   **右奇异向量 `V` 的列**: 可被解释为用户的**“原型”或“偏好群组”**。
     *   **奇异值 `Σ` 的对角元**: 代表了每个“主题-原型”模式的**强度**。
 *   通过保留少数几个最大的奇异值，SVD能够提取出数据中最主要的、潜在的结构，从而使数据变得**可解释**，并能够用于预测和推荐。
+
+# 第七讲：向量微积分 (Vector Calculus)
+
+**讲座主题**: 单变量函数微分，偏微分与梯度，向量值函数的梯度，矩阵的梯度，梯度计算实用恒等式
+
+---
+
+## 第一部分：从单变量到多变量微积分
+
+本讲座将从最基础的微积分概念开始，逐步推广到处理向量和矩阵的多元微积分，这对于理解和实现机器学习中的优化算法至_关重要。
+
+### 1. 核心概念回顾
+
+**1.1 函数 (Functions)**
+
+*   **核心**: 函数是建立输入与输出之间关系的核心数学工具。
+*   **定义**: 一个函数 $f$ 将一个**输入 (input)** $x$ 映射到一个**输出 (target)** $f(x)$。
+*   **记法**: $f: \mathbb{R}^D \to \mathbb{R}$，其中 $x \mapsto f(x)$。
+
+**1.2 梯度在机器学习中的作用**
+
+*   **重要性**: 梯度指明了函数值**上升最快的方向 (direction of steepest ascent)**。在优化算法中，我们沿着梯度的反方向移动，以找到函数的最小值点。
+
+---
+
+### 2. 单变量函数的微分 (Differentiation of Univariate Functions)
+
+本节回顾了单变量微积分的基础。
+
+*   **差商 (Difference Quotient)**:
+    $$ \frac{\delta y}{\delta x} := \frac{f(x + \delta x) - f(x)}{\delta x} $$
+    差商计算的是函数图像上两点之间**割线的斜率**，代表了区间的**平均变化率**。
+
+*   **导数 (Derivative)**:
+    当 $\delta x$ (或记为 $h$) 趋近于 0 时，割线逼近**切线**。这条切线的斜率就是函数 $f$ 在点 $x$ 的**导数**。
+    $$ \frac{df}{dx} := \lim_{h \to 0} \frac{f(x+h) - f(x)}{h} $$
+    导数代表了函数在该点的**瞬时变化率**。
+
+---
+
+### 3. 泰勒级数 (Taylor Series)
+
+泰勒级数是微积分中一个极其强大的工具，它允许我们将一个复杂的、可微的函数**用一个无穷多项式来表示**，从而在局部近似和分析函数的行为。
+
+#### 3.1 泰勒多项式 (Taylor Polynomial)
+
+*   **定义**: 函数 $f: \mathbb{R} \to \mathbb{R}$ 在点 $x_0$ 处的 **n 阶泰勒多项式** $T_n(x)$ 是泰勒级数的**有限项截断**，它提供了对原函数的一个**局部近似**。其定义为：
+    $$ T_n(x) := \sum_{k=0}^{n} \frac{f^{(k)}(x_0)}{k!} (x - x_0)^k $$
+    其中 $f^{(k)}(x_0)$ 是函数 $f$ 在点 $x_0$ 的 **k 阶导数**。
+*   **近似的意义**: 阶数 `n` 越高，泰勒多项式在 $x_0$ 附近就越能精确地模拟原函数 $f(x)$ 的行为。
+
+#### 3.2 泰勒级数与麦克劳林级数
+
+*   **泰勒级数**: 当 n 趋近于无穷时，泰勒多项式就变成了**泰勒级数**。这要求函数是**无限次可微的** ($f \in C^\infty$)。
+    $$ T_\infty(x) = \sum_{k=0}^{\infty} \frac{f^{(k)}(x_0)}{k!} (x - x_0)^k $$
+*   **麦克劳林级数 (Maclaurin Series)** 是泰勒级数的一个重要特例，即在展开点 **$x_0 = 0$** 处展开。
+
+#### 3.3 泰勒级数与幂级数的关系
+
+*   **幂级数 (Power Series)** 是任何形如 $\sum_{k=0}^{\infty} a_k (x-c)^k$ 的无穷级数。
+*   **泰勒级数是幂级数的一个特例**，其特殊之处在于，系数 $a_k$ 不是任意的，而是由函数 $f$ 在展开点 $c$ 的各阶导数唯一确定的：
+    $$ a_k = \frac{f^{(k)}(c)}{k!} $$
+
+## **第二部分：多元函数的微分**
+
+现在，我们将微积分的思想从单变量函数推广到处理多个变量的函数，这是向量微积分的核心。
+
+### 4. 偏导数与梯度
+
+#### 4.1 偏导数 (Partial Derivative)
+
+*   **核心思想**: 计算多变量函数对其中**一个变量**的变化率，同时**将所有其他变量视为常数**。
+*   **定义**:
+    $$ \frac{\partial f}{\partial x_i} := \lim_{h \to 0} \frac{f(x_1, \dots, x_i+h, \dots, x_n) - f(\mathbf{x})}{h} $$
+
+#### 4.2 梯度 (Gradient)
+
+*   **定义**: 一个多元**标量值**函数 $f(\mathbf{x})$ 的**梯度**，是将其对**每一个**自变量的偏导数收集到一个**行向量**中。
+*   **记法与符号约定**: 在本课程的语境下，以下符号是等价的，都代表梯度：
+    $$ \frac{df}{d\mathbf{x}} = \frac{\partial f}{\partial \mathbf{x}} = \nabla_{\mathbf{x}}f = \begin{bmatrix} \frac{\partial f}{\partial x_1} & \frac{\partial f}{\partial x_2} & \cdots & \frac{\partial f}{\partial x_n} \end{bmatrix} $$
+*   **维度**: 如果 $\mathbf{x} \in \mathbb{R}^n$ (列向量)，其梯度是 **$1 \times n$ 的行向量**。
+*   **几何意义**: 梯度向量指向函数值**上升最快**的方向。
+
+---
+
+### 5. 雅可比矩阵与多元链式法则
+
+#### 5.1 雅可比矩阵 (Jacobian Matrix)
+
+*   **推广**: 当我们的函数是一个**向量值**函数，即 $\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^m$ 时，我们需要一个矩阵来包含所有的导数信息。
+*   **定义**: 函数 $\mathbf{f}$ 的**雅可比矩阵** $J$ 是一个 $m \times n$ 的矩阵，其第 `i` 行是输出向量的第 `i` 个分量 $f_i$ 的梯度。
+    $$ J = \frac{d\mathbf{f}}{d\mathbf{x}} = \begin{bmatrix} \nabla_{\mathbf{x}}f_1 \\ \nabla_{\mathbf{x}}f_2 \\ \vdots \\ \nabla_{\mathbf{x}}f_m \end{bmatrix} = \begin{bmatrix} \frac{\partial f_1}{\partial x_1} & \cdots & \frac{\partial f_1}{\partial x_n} \\ \vdots & \ddots & \vdots \\ \frac{\partial f_m}{\partial x_1} & \cdots & \frac{\partial f_m}{\partial x_n} \end{bmatrix} \quad \text{其中 } J_{ij} = \frac{\partial f_i}{\partial x_j} $$
+*   **梯度是雅可比矩阵的特例**: 当函数是标量值时 ($m=1$)，其 $1 \times n$ 的雅可比矩阵就是我们之前定义的梯度（行向量）。
+
+#### 5.2 多元链式法则 (Chain Rule for Multivariate Functions)
+
+*   **核心法则**: 链式法则是计算复合函数导数的基础。它的通用形式是**雅可比矩阵的乘积**。
+*   **形式**: 对于复合函数 $\mathbf{h}(\mathbf{x}) = \mathbf{g}(\mathbf{f}(\mathbf{x}))$，其导数为：
+    $$ \frac{\partial \mathbf{h}}{\partial \mathbf{x}} = \frac{\partial \mathbf{g}}{\partial \mathbf{f}} \frac{\partial \mathbf{f}}{\partial \mathbf{x}} $$
+*   **解读**: 这是一个**矩阵乘法**。如果 $\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^m$ 且 $\mathbf{g}: \mathbb{R}^m \to \mathbb{R}^p$，那么最终结果 $\frac{\partial \mathbf{h}}{\partial \mathbf{x}}$ 是一个 $p \times n$ 的雅可比矩阵。
+*   **通用性**: 这个法则适用于任意层数的函数复合，例如 $g(f(h(x)))$ 的导数是 $\frac{dg}{df}\frac{df}{dh}\frac{dh}{dx}$。
+#### 5.3 核心求导示例
+
+*   **示例1: 线性变换的雅可比**
+    *   **问题**: 计算函数 $\mathbf{f}(\mathbf{x}) = A\mathbf{x}$ 对 $\mathbf{x}$ 的导数（雅可比矩阵），其中 $A \in \mathbb{R}^{M \times N}$。
+    *   **推导**:
+        1.  函数的第 `i` 个分量是 $f_i(\mathbf{x}) = \sum_{j=1}^N A_{ij}x_j$。
+        2.  计算其对 $x_k$ 的偏导数：$\frac{\partial f_i}{\partial x_k} = A_{ik}$。
+        3.  将这些偏导数 $J_{ik} = A_{ik}$ 填入雅可比矩阵：
+            $$ \frac{d\mathbf{f}}{d\mathbf{x}} = \begin{bmatrix}
+            \frac{\partial f_1}{\partial x_1} & \cdots & \frac{\partial f_1}{\partial x_N} \\
+            \vdots & \ddots & \vdots \\
+            \frac{\partial f_M}{\partial x_1} & \cdots & \frac{\partial f_M}{\partial x_N}
+            \end{bmatrix} = \begin{bmatrix}
+            A_{11} & \cdots & A_{1N} \\
+            \vdots & \ddots & \vdots \\
+            A_{M1} & \cdots & A_{MN}
+            \end{bmatrix}
+            $$
+    *   **结论**:
+        $$ \frac{d(A\mathbf{x})}{d\mathbf{x}} = A $$
+
+*   **示例2：最小二乘损失的梯度**
+    *   **问题**: 计算损失函数 $L(\boldsymbol{\theta}) = \|\mathbf{y}_{\text{obs}} - \Phi\boldsymbol{\theta}\|^2$ 对参数 $\boldsymbol{\theta}$ 的梯度 $\frac{\partial L}{\partial \boldsymbol{\theta}}$。
+    *   **重要性**: 这是线性回归等模型的核心优化问题。
+    *   **步骤 (使用链式法则)**:
+        1.  设误差 $\mathbf{e}(\boldsymbol{\theta}) = \mathbf{y}_{\text{obs}} - \Phi\boldsymbol{\theta}$，则 $L(\mathbf{e}) = \mathbf{e}^T\mathbf{e}$。
+        2.  应用链式法则：$\frac{\partial L}{\partial \boldsymbol{\theta}} = \frac{\partial L}{\partial \mathbf{e}} \frac{\partial \mathbf{e}}{\partial \boldsymbol{\theta}}$。
+        3.  计算各部分：$\frac{\partial L}{\partial \mathbf{e}} = 2\mathbf{e}^T$ (这是一个 $1 \times N$ 的梯度)，$\frac{\partial \mathbf{e}}{\partial \boldsymbol{\theta}} = -\Phi$ (这是一个 $N \times D$ 的雅可比矩阵)。
+        4.  组合结果：
+            $$ \frac{\partial L}{\partial \boldsymbol{\theta}} = 2\mathbf{e}^T(-\Phi) = -2\mathbf{e}^T\Phi = -2(\mathbf{y}_{\text{obs}} - \Phi\boldsymbol{\theta})^T\Phi $$
+
+---
+
+### 6. 矩阵的梯度 (Gradients of/with respect to Matrices)
+
+#### 6.1 概念与挑战
+
+*   **张量结构**: 当我们对矩阵求导时，例如计算 $m \times n$ 矩阵 $A$ 对 $p \times q$ 矩阵 $B$ 的导数，结果是一个复杂的**四维张量**。其第 `(i,j,k,l)` 个元素是 $\frac{\partial A_{ij}}{\partial B_{kl}}$。
+*   **实践中的简化**: 在实践中，直接处理高维张量很不方便。一个常用的技巧是**将矩阵“展平”(flatten)** 为向量，然后问题就退化为我们熟悉的向量对向量求导，其结果是一个大的雅可比矩阵。
+
+#### 6.2 核心示例推导
+
+*   **示例1: 向量函数对矩阵的梯度**
+    *   **问题**: 对于 $\mathbf{f} = A\mathbf{x}$，计算 $\frac{d\mathbf{f}}{dA}$。
+    *   **推导**:
+        1.  输出的第 `i` 个分量 $f_i = \sum_{j=1}^{N} A_{ij} x_j$。
+        2.  计算 $f_i$ 对 $A_{mn}$ 的偏导数：$\frac{\partial f_i}{\partial A_{mn}} = \begin{cases} x_n & \text{if } i=m \\ 0 & \text{if } i \neq m \end{cases}$ *(这里幻灯片的 `xk if i=j` 似乎有误，根据推导应该是 `xn if i=m`。我们以推导为准)*。
+        3.  这个结果表明，输出 $f_i$ **只依赖于**矩阵 $A$ 的**第 i 行** $A_{i,:}$。
+        4.  对该行求导的结果是：
+            $$ \frac{\partial f_i}{\partial A_{i,:}} = \mathbf{x}^T $$
+    *   **结论 (雅可比矩阵结构)**: 对整个输出向量 $\mathbf{f}$ 求导时，其对 $A$ 的梯度是一个块状结构的雅可比矩阵。例如，对 $f_i$ 的导数部分，其结构是一个在第 `i` 个块位置上为 $\mathbf{x}^T$ 的大行向量：
+        $$ \frac{\partial f_i}{\partial A} = \begin{bmatrix} \mathbf{0}^T & \cdots & \mathbf{0}^T & \underbrace{\mathbf{x}^T}_{\text{i-th block}} & \mathbf{0}^T & \cdots & \mathbf{0}^T \end{bmatrix} $$
+
+*   **示例2: 矩阵函数对矩阵的梯度**
+    *   **问题**: 对于 $F = AB$，计算 $\frac{dF}{dA}$。
+    *   **推导**:
+        1.  输出矩阵的元素 $F_{ik} = \sum_{j=1}^{N} A_{ij} B_{jk}$。
+        2.  计算其对 $A_{mn}$ 的偏导数：$\frac{\partial F_{ik}}{\partial A_{mn}} = \begin{cases} B_{nk} & \text{if } i=m \\ 0 & \text{if } i \neq m \end{cases}$。
+        3.  这个结果表明，输出矩阵 $F$ 的第 `i` 行 $F_{i,:}$ **只依赖于**输入矩阵 $A$ 的**第 i 行** $A_{i,:}$。
+    *   **结论 (块状雅可比)**:
+        *   对 $A$ 的第 `i` 行求导，我们得到一个矩阵：
+            $$ \frac{\partial F_{i,:}}{\partial A_{i,:}} = B^T $$
+        *   对整个输出 $F$ 求导时，其雅可比矩阵也呈块状结构。例如，对输出的第 `i` 行 $F_{i,:}$ 求导，其结果为：
+            $$ \frac{\partial F_{i,:}}{\partial A} = \begin{bmatrix} 0 & \cdots & 0 & \underbrace{B^T}_{\text{i-th block}} & 0 & \cdots & 0 \end{bmatrix} $$
