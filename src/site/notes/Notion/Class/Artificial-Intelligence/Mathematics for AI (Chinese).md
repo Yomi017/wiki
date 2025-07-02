@@ -2365,7 +2365,7 @@ $$ \hat{A}_{(k)} = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^T $$
 
 *   **二次型 (Quadratic Form) 的梯度**:
     $$ \frac{\partial \mathbf{x}^T B \mathbf{x}}{\partial \mathbf{x}} = \mathbf{x}^T(B + B^T) $$
-    *   **证明**: `f(x) = Σᵢ Σⱼ xᵢ Bᵢⱼ xⱼ`。对 `xₖ` 求偏导，需要使用乘法法则，最终会得到两项。一项来自 `xᵢ` (当`i=k`)，另一项来自 `xⱼ` (当`j=k`)。整理后得到 `[Bx]ₖ + [Bᵀx]ₖ`，即 `(B+Bᵀ)x` 的第 k 项。将其写成行向量形式即为 `xᵀ(B+Bᵀ)`。
+    *   **证明**: $f(x) = Σᵢ Σⱼ xᵢ Bᵢⱼ xⱼ$ 。对 `xₖ` 求偏导，需要使用乘法法则，最终会得到两项。一项来自 `xᵢ` (当`i=k`)，另一项来自 `xⱼ` (当`j=k`)。整理后得到 `[Bx]ₖ + [Bᵀx]ₖ`，即 `(B+Bᵀ)x` 的第 k 项。将其写成行向量形式即为 `xᵀ(B+Bᵀ)`。
     *   **重要特例**: 如果矩阵 $B$ 是**对称的** ($B=B^T$)，则梯度简化为：
         $$ \frac{\partial \mathbf{x}^T B \mathbf{x}}{\partial \mathbf{x}} = 2\mathbf{x}^T B $$
         这与标量求导 `d/dx(bx²) = 2bx` 的形式非常相似。
