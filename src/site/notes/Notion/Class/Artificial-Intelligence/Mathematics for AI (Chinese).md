@@ -2374,11 +2374,16 @@ $$ \hat{A}_{(k)} = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^T $$
     $$ \frac{\partial}{\partial \mathbf{s}} (\mathbf{x} - A\mathbf{s})^T W (\mathbf{x} - A\mathbf{s}) = -2(\mathbf{x} - A\mathbf{s})^T W A $$
     *   **前提**: $W$ 是一个对称矩阵。
     *   **解读**: 这是二次型梯度公式的一个直接应用，通过链式法则推导得出。它是解决加权最小二乘问题的关键。
-
+*   **逐元素函数 (Element-wise Function) 的雅可比**:
+    *   设 `g(·)` 是一个作用于标量的函数，当我们将其逐元素应用于向量 $\mathbf{x}$ 时，得到向量函数 $\mathbf{f}(\mathbf{x}) = g(\mathbf{x}) = [g(x_1), g(x_2), \dots]^T$。
+    *   其雅可比矩阵是一个**对角矩阵**：
+        $$ \frac{d g(\mathbf{x})}{d\mathbf{x}} = \text{diag}(g'(\mathbf{x})) = \begin{bmatrix} g'(x_1) & 0 & \cdots & 0 \\ 0 & g'(x_2) & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & g'(x_n) \end{bmatrix} $$
+    *   **示例**:
+        $$ \frac{d(\sin(\mathbf{x}))}{d\mathbf{x}} = \text{diag}(\cos(\mathbf{x})) $$
 这些恒等式构成了矩阵微积分的“公式表”，在推导机器学习算法的梯度时，可以直接引用，从而避免了繁琐的逐元素求导。
-### 7. 核心求导恒等式与证明
+### 8. 核心求导恒等式与证明
 
-####7.1 线性形式的梯度 (Gradient of a Linear Form)
+#### 8.1 线性形式的梯度 (Gradient of a Linear Form)
 
 *   **恒等式**:
     $$ \frac{\partial \mathbf{x}^T\mathbf{a}}{\partial \mathbf{x}} = \frac{\partial \mathbf{a}^T\mathbf{x}}{\partial \mathbf{x}} = \mathbf{a}^T $$
@@ -2394,7 +2399,7 @@ $$ \hat{A}_{(k)} = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^T $$
         $$ \frac{\partial f}{\partial \mathbf{x}} = \begin{bmatrix} \frac{\partial f}{\partial x_1} & \cdots & \frac{\partial f}{\partial x_n} \end{bmatrix} = \begin{bmatrix} a_1 & \cdots & a_n \end{bmatrix} = \mathbf{a}^T $$
     6.  证毕。
 
-#### 7.2 双线性形式的梯度 (Gradient of a Bilinear Form)
+#### 8.2 双线性形式的梯度 (Gradient of a Bilinear Form)
 
 *   **恒等式**:
     $$ \frac{\partial \mathbf{a}^T X \mathbf{b}}{\partial X} = \mathbf{a}\mathbf{b}^T $$
@@ -2411,7 +2416,7 @@ $$ \hat{A}_{(k)} = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^T $$
         $$ \frac{\partial f}{\partial X} = \mathbf{a}\mathbf{b}^T $$
     7.  证毕。
 
-#### 7.3 二次型的梯度 (Gradient of a Quadratic Form)
+#### 8.3 二次型的梯度 (Gradient of a Quadratic Form)
 
 *   **恒等式**:
     $$ \frac{\partial \mathbf{x}^T B \mathbf{x}}{\partial \mathbf{x}} = \mathbf{x}^T(B + B^T) $$
