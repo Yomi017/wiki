@@ -317,7 +317,7 @@ $$w^*, b^* = \arg\min_{w, b} L(w, b)$$
 *   一旦这些参数的数值被学习确定下来，整个模型就变成了一个**具体的、参数已知的函数**。
 *   我们**使用这个参数已知的函数和学习到的参数值**来对新的输入数据进行**预测**。
 
-#### 2.1.4 模型的未知参数集 ($\theta$) (The Set of Unknown Parameters in the Model, $\theta$)
+### 2.1.4 模型的未知参数集 ($\theta$) (The Set of Unknown Parameters in the Model, $\theta$)
 
 在我们定义的神经网络模型中，例如单隐藏层网络：
 $$ y = f(\mathbf{x}; W, \mathbf{b}_{hidden}, \mathbf{c}^T, b_{output}) = \mathbf{c}^T \sigma(W \mathbf{x} + \mathbf{b}_{hidden}) + b_{output} $$
@@ -367,6 +367,46 @@ $$ y = f(\mathbf{x}; \theta) $$
 **下一步：**
 在明确了模型的函数形式 $f(\mathbf{x}; \theta)$ 并识别出所有未知参数 $\theta$ 之后，机器学习的下一步骤将是定义一个代价函数来评估使用特定 $\theta$ 时模型的表现，然后使用优化算法来找到使代价函数最小化的最优 $\theta^*$。
 
+### 2.1.5 模型的扩展：从回归到多分类 (Extending the Model: From Regression to Multi-class Classification)
+
+到目前为止，我们讨论的模型（例如 $y = b + \sum_i c_i a_i$）主要用于**回归任务**，即预测一个连续的数值。但是，许多现实世界的问题是**分类任务**，特别是**多分类 (Multi-class Classification)**，例如将图像识别为“猫”、“狗”或“鸟”。
+
+为了让我们的神经网络能够处理多分类问题，我们需要对模型的**输出层**进行修改。
+
+1.  **修改输出层结构**:
+    *   在回归任务中，输出层通常只有一个神经元，输出一个标量值。
+    *   在一个有 $K$ 个类别的多分类任务中，输出层需要有 **$K$ 个神经元**，每个神经元对应一个类别。
+    *   网络最后一层在激活函数之前的输出，我们称之为** logits**。对于一个输入样本 $\mathbf{x}$，模型会输出一个包含 $K$ 个分数的向量 $\mathbf{z} = [z_1, z_2, \dots, z_K]$。其中，$z_i$ 可以被看作是模型认为输入样本属于第 $i$ 类的原始置信度分数。
+
+2.  **转换输出为概率分布**:
+    *   这些原始的 logits 分数（$z_i$）可以是任意实数（正数、负数或零），并且它们的和不一定为 1。这不符合我们对“概率”的直观理解。
+    *   我们需要一个函数，能将这个 logits 向量 $\mathbf{z}$ 转换成一个有效的**概率分布**向量 $\mathbf{\hat{y}}$，其中每个元素 $\hat{y}_i$ 表示样本属于第 $i$ 类的概率。这个概率分布需要满足两个条件：
+        1.  所有概率值都在 0 和 1 之间 ($0 \le \hat{y}_i \le 1$)。
+        2.  所有概率值之和为 1 ($\sum_{i=1}^K \hat{y}_i = 1$)。
+    *   这个转换函数就是 **Softmax 函数**。
+
+
+### 2.1.6 输出层激活函数：Softmax (Output Layer Activation: Softmax)
+
+Softmax 函数通常用作多分类神经网络输出层的激活函数。它接收一个包含 $K$ 个实数值的向量（logits），并将其转换为一个 $K$ 维的概率分布。
+
+**定义与计算 (Definition and Calculation):**
+
+如上图所示，假设神经网络的输出层在应用 Softmax 之前的原始输出（logits）为向量 $\mathbf{y}_{raw} = [y_1, y_2, \dots, y_K]$ (注意：此处的 $y_i$ 对应我们之前提到的 logits $z_i$)。Softmax 函数计算得到最终的概率输出 $\mathbf{y'} = [y'_1, y'_2, \dots, y'_K]$ (此处的 $y'_i$ 对应我们最终的预测概率 $\hat{y}_i$)。
+
+对于第 $i$ 个类别的概率 $y'_i$，其计算公式为：
+$$ y'_i = \frac{\exp(y_i)}{\sum_{j=1}^{K} \exp(y_j)} $$
+
+**计算步骤:**
+
+1.  **取指数 (Exponentiate)**: 对每一个原始输出分数 $y_i$ 应用指数函数 $\exp(\cdot)$。这有两个作用：
+    *   将所有值（包括负数和零）映射到正数。
+    *   放大不同分数之间的差异，使得较大的分数在指数化后变得更大。
+2.  **求和 (Sum)**: 将所有指数化后的值 $\exp(y_j)$ 相加，得到一个归一化常数。
+3.  **归一化 (Normalize)**: 将每个指数化后的值 $\exp(y_i)$ 除以这个总和。
+
+经过 Softmax 处理后，输出向量 $\mathbf{y'}$ 的每个元素 $y'_i$ 都在 [0, 1] 区间内，并且所有元素的总和为 1，因此可以被完美地解释为模型预测的概率分布。$y'_i$ 就代表了模型预测输入样本属于类别 $i$ 的概率。
+
 ## 2.2 步骤二：定义代价函数/损失函数以评估模型 (Step 2: Define Cost/Loss Function to Evaluate the Model)
 
 在**步骤一 (2.1)** 中，我们定义了一个带有未知参数 $\theta$ 的模型函数 $y = f(\mathbf{x}; \theta)$。现在，我们需要一种方法来衡量这个模型在使用特定参数集 $\theta$ 时，其预测结果与真实目标值之间的差异有多大。这个衡量标准就是**代价函数 (Cost Function)** 或 **损失函数 (Loss Function)**。
@@ -403,6 +443,33 @@ $$ y = f(\mathbf{x}; \theta) $$
 
 *   **损失函数的角色 (The Role of the Loss Function):**
     损失函数不仅告诉我们当前这组参数 $\theta$ 的表现如何，更重要的是，它的梯度将指导我们如何调整这些参数以改进模型。
+
+### 2.2.2 分类问题的损失函数：交叉熵 (Loss Function for Classification: Cross-Entropy)
+
+现在我们有了模型的概率输出 $\mathbf{\hat{y}}$（即 Softmax 的输出 $\mathbf{y'}$），我们需要一个损失函数来衡量这个预测的概率分布与**真实的类别标签**之间的差距。对于分类问题，最常用的损失函数是**交叉熵损失 (Cross-Entropy Loss)**。
+
+**真实标签的表示：One-Hot 编码**
+
+首先，我们需要将真实的类别标签表示成和模型输出相同维度的概率分布。这通常通过 **One-Hot 编码**实现。如果一个样本的真实类别是第 $k$ 类（在一个共 $K$ 个类别的任务中），那么它的 One-Hot 编码向量 $\mathbf{y}_{true}$ 就是一个长度为 $K$ 的向量，其中第 $k$ 个元素为 1，其余所有元素都为 0。
+
+*   **例子**: 对于三分类问题（猫、狗、鸟），如果一个样本是“狗”（第2类），它的 One-Hot 标签就是 $[0, 1, 0]$。
+
+**交叉熵损失的计算**
+
+交叉熵损失衡量了两个概率分布之间的“距离”。给定真实标签的 One-Hot 向量 $\mathbf{y}_{true}$ 和模型预测的概率向量 $\mathbf{\hat{y}}$，交叉熵损失 $L$ 的计算公式为：
+
+$$ L(\theta) = - \sum_{k=1}^{K} y_{true,k} \cdot \log(\hat{y}_k) $$
+
+*   由于 $\mathbf{y}_{true}$ 是 One-Hot 编码，其中只有一个元素为 1（假设是第 $c$ 个元素，代表正确类别），其余都为 0。因此，上述求和可以简化为：
+    $$ L(\theta) = - \log(\hat{y}_c) $$
+    其中 $\hat{y}_c$ 是模型预测输入样本为**正确类别**的概率。
+
+*   **直观理解**:
+    *   最小化交叉熵损失 $L = -\log(\hat{y}_c)$，等价于**最大化正确类别的预测概率 $\hat{y}_c$**。
+    *   当模型对正确类别的预测概率 $\hat{y}_c$ 接近 1 时，$\log(\hat{y}_c)$ 接近 0，损失 $L$ 也接近 0。
+    *   当模型对正确类别的预测概率 $\hat{y}_c$ 接近 0 时，$\log(\hat{y}_c)$ 趋向于 $-\infty$，损失 $L$ 趋向于 $+\infty$。
+
+这样，通过使用 Softmax 输出层和交叉熵损失函数，我们可以构建和训练用于解决多分类问题的深度神经网络，并通过梯度下降等优化算法来调整参数 $\theta$，使得模型对正确类别的预测概率越来越高。
 
 ## 2.3 步骤三：参数优化 (Step 3: Optimization)
 
@@ -742,6 +809,7 @@ $$ \text{Minimum ratio} = \frac{\text{Number of Positive Eigenvalues}}{\text{Tot
 *   **RMSProp (Root Mean Square Propagation)** 和 **Adam (Adaptive Moment Estimation)**:
     *   它们是对 Adagrad 的改进。Adagrad 有一个缺点：由于梯度平方和是单调递增的，学习率会随着训练不断下降，最终可能变得过小而导致训练提前停止。
     *   RMSProp 和 Adam 引入了**指数移动平均 (exponential moving average)** 来计算 $\sigma_i^t$，只考虑最近一段时间的梯度大小，而不是全部历史梯度。这使得 $\sigma_i^t$ 能够动态调整，避免了学习率过早衰减的问题。
-![18.png](/img/user/18.png)
+![18.png](/img/user/Image/Computer-Science/Machine%20Learning/18.png)
 **总结**:
-通过为每个参数设计一个依赖于其历史梯度大小的归一化项 $\sigma_i^t$，自适应优化算法能够有效地为不同参数分配不同的学习率，从而在面对复杂损失曲面（如狭长山谷）时，实现比标准梯度下降更快、更稳定的收敛。这为我们后续理解 Adagrad、RMSProp 和 Adam 等优化器奠定了基础。
+通过为每个参数设计一个依赖于其历史梯度大小的归一化项 $\sigma_i^t$，自适应优化算法能够有效地为不同参数分配不同的学习率，从而在面对复杂损失曲面（如狭长山谷）时，实现比标准梯度下降更快、更稳定的收敛。这为我们后续理解 Adagrad、RMSProp 和 Adam 等优化器奠定了基础。 
+
