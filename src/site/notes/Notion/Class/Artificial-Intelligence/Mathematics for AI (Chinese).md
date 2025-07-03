@@ -2862,8 +2862,8 @@ $$ D^2f(\mathbf{x}_0) [\boldsymbol{\delta}^{\otimes 2}] = \sum_{i=1}^D \sum_{j=1
 ![Image/Class/Mathematics-for-AI/16.png](/img/user/Image/Class/Mathematics-for-AI/16.png)![Image/Class/Mathematics-for-AI/17.png](/img/user/Image/Class/Mathematics-for-AI/17.png)
 #### 13.5 完整展开 (Full Series to Order n)
 
-* **表达**:$$f(\mathbf{x})=\sum\_{k=0}^n\tfrac1{k!}D^k f(\mathbf{x}\_0)[\delta^{\otimes k}]+R\_n(\mathbf{x}),
-]$$
+* **表达**:
+* $$f(\mathbf{x})=\sum_{k=0}^n\tfrac1{k!}D^k f(\mathbf{x}_0)[\delta^{\otimes k}]+R_n(\mathbf{x})$$
 * **余项**: $R_n$ 可用 Lagrange 或积分形式表示。
 * **Lagrange 余项**:
   $R_n=\tfrac1{(n+1)!}D^{n+1}f(\xi)[\delta^{\otimes(n+1)}].$
