@@ -231,7 +231,7 @@ $$ P(\mathcal{D}_{train} \text{ is bad}) \le M \cdot 2\exp(-2\epsilon^2N) $$
 根据之前的推导，为了让这个差距 $\delta$ 变小，我们需要：
 *   **更大的训练集 $N$ (Larger N)**
 *   **更小的模型库 $|\mathcal{H}|$ (smaller |H|)**
-
+[[Notion/Theoretical-Knowledge/Computer-Science/Artificial-Intelligence/Question/和霍夫丁不等式相关的过拟合原因 (The reasons for overfitting related to Hofding's inequality)\|和霍夫丁不等式相关的过拟合原因 (The reasons for overfitting related to Hofding's inequality)]]
 然而，这两个目标，特别是对模型库 $|\mathcal{H}|$ 的要求，引发了一个深刻的权衡。
 
 #### **两个相互冲突的目标**
