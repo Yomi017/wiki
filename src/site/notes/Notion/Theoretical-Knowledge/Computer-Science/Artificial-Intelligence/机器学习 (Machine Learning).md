@@ -990,7 +990,7 @@ $$ \text{Minimum ratio} = \frac{\text{Number of Positive Eigenvalues}}{\text{Tot
 *   **RMSProp (Root Mean Square Propagation)** 和 **Adam (Adaptive Moment Estimation)**:
     *   它们是对 Adagrad 的改进。Adagrad 有一个缺点：由于梯度平方和是单调递增的，学习率会随着训练不断下降，最终可能变得过小而导致训练提前停止。
     *   RMSProp 和 Adam 引入了**指数移动平均 (exponential moving average)** 来计算 $\sigma_i^t$，只考虑最近一段时间的梯度大小，而不是全部历史梯度。这使得 $\sigma_i^t$ 能够动态调整，避免了学习率过早衰减的问题。
-![18.png](/img/user/Image/Computer-Science/Machine%20Learning/18.png)
+![Image/Computer-Science/Machine Learning/18.png](/img/user/Image/Computer-Science/Machine%20Learning/18.png)
 **总结**:
 通过为每个参数设计一个依赖于其历史梯度大小的归一化项 $\sigma_i^t$，自适应优化算法能够有效地为不同参数分配不同的学习率，从而在面对复杂损失曲面（如狭长山谷）时，实现比标准梯度下降更快、更稳定的收敛。这为我们后续理解 Adagrad、RMSProp 和 Adam 等优化器奠定了基础。 
 
