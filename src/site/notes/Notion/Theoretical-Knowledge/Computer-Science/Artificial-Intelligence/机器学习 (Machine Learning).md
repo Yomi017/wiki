@@ -727,7 +727,7 @@ $$ \theta^* = \arg\min_{\theta} L(\theta) $$
 为了解决梯度下降在狭窄山谷中震荡和在平坦区域停滞的问题，可以引入**动量 (Momentum)**。
 
 *   **核心思想**: 模拟物理惯性。参数的更新方向不仅取决于当前梯度，还受**历史累积的更新方向**影响。
-    ![16.png](/img/user/Image/Computer-Science/Machine%20Learning/16.png)
+    ![Image/Computer-Science/Machine Learning/16.png](/img/user/Image/Computer-Science/Machine%20Learning/16.png)
     *   一个从山上滚下的小球，其惯性（动量）能帮助它冲过小的坑洼（局部最小值）和平台（鞍点），并平滑掉在山谷两侧的震荡。
 
 *   **算法**:
@@ -935,7 +935,7 @@ $$ \text{Minimum ratio} = \frac{\text{Number of Positive Eigenvalues}}{\text{Tot
 在标准的梯度下降法中，所有参数共享同一个固定的学习率 $\eta$。然而，这往往不是最优的策略。
 
 **核心思想：不同的参数需要不同的学习率。**
-![17.png](/img/user/Image/Computer-Science/Machine%20Learning/17.png)
+![Image/Computer-Science/Machine Learning/17.png](/img/user/Image/Computer-Science/Machine%20Learning/17.png)
 
 观察上图的损失曲面等高线图。这是一个狭长的“山谷”形状，是优化中非常典型的情况。
 

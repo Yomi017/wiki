@@ -2856,3 +2856,5 @@ $D^k_{\mathbf{x}}f(\mathbf{x}_0)$ 代表了函数 $f$ 在点 $\mathbf{x}_0$ 的 
     将这些项组合起来，我们就得到了在优化中最常用、最重要的二阶多元泰勒展开：
     $$ f(\mathbf{x}) \approx f(\mathbf{x}_0) + (\nabla_{\mathbf{x}}f)(\mathbf{x}_0)^T (\mathbf{x} - \mathbf{x}_0) + \frac{1}{2} (\mathbf{x} - \mathbf{x}_0)^T H(\mathbf{x}_0) (\mathbf{x} - \mathbf{x}_0) $$
     这个公式用一个**二次函数**来近似原函数 $f(\mathbf{x})$ 在 $\mathbf{x}_0$ 附近的形状，是**牛顿法**等二阶优化算法的理论基础。
+
+![Image/Class/Mathematics-for-AI/16.png](/img/user/Image/Class/Mathematics-for-AI/16.png)![Image/Class/Mathematics-for-AI/17.png](/img/user/Image/Class/Mathematics-for-AI/17.png)
