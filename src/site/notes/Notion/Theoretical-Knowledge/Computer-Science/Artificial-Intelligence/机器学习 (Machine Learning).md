@@ -953,8 +953,6 @@ $$ \text{Minimum ratio} = \frac{\text{Number of Positive Eigenvalues}}{\text{Tot
 
 #### **自适应学习率的数学形式**
 
-这张幻灯片提出了一个构建自适应学习率的通用框架。
-
 1.  **标准梯度下降更新规则**:
     *   对于第 `i` 个参数 $\theta_i$，其在第 `t` 次迭代的更新规则是：
         $$ \theta_{i}^{t+1} \leftarrow \theta_{i}^{t} - \eta g_i^t $$
