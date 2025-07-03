@@ -2838,17 +2838,20 @@ $D^k_{\mathbf{x}}f(\mathbf{x}_0)$ 代表了函数 $f$ 在点 $\mathbf{x}_0$ 的 
 现在我们可以理解多元泰勒级数中每一项的真正含义了。每一项都是一个 k 阶导数张量和一个 k 阶位移张量的**缩并 (Contraction)**，结果是一个标量。
 
 *   **零阶项 (k=0)**:
-    $$ \frac{1}{0!}D^0f(\mathbf{x}_0) = f(\mathbf{x}_0) $$$$ D^0f(\mathbf{x}_0) [\boldsymbol{\delta}^{\otimes 0}] = f(\mathbf{x}_0) $$
+    $$ \frac{1}{0!}D^0f(\mathbf{x}_0) = f(\mathbf{x}_0) $$ 
+$$ D^0f(\mathbf{x}_0) [\boldsymbol{\delta}^{\otimes 0}] = f(\mathbf{x}_0) $$
 *   **一阶项 (k=1)**:
     *   $D^1f(\mathbf{x}_0)$ 是一个 $1 \times D$ 的行向量 (梯度)。
     *   $\boldsymbol{\delta}^{\otimes 1}$ 是一个 $D \times 1$ 的列向量。
     *   它们的缩并就是**点积**:
-        $$ \frac{1}{1!}(\nabla_{\mathbf{x}}f)(\mathbf{x}_0) \cdot \boldsymbol{\delta} = (\nabla_{\mathbf{x}}f)(\mathbf{x}_0)^T (\mathbf{x} - \mathbf{x}_0) $$$$ D^1f(\mathbf{x}_0) [\boldsymbol{\delta}^{\otimes 1}] = \sum_{i=1}^D \frac{\partial f}{\partial x_i} \delta_i = (\nabla f)^T \boldsymbol{\delta} $$
+        $$ \frac{1}{1!}(\nabla_{\mathbf{x}}f)(\mathbf{x}_0) \cdot \boldsymbol{\delta} = (\nabla_{\mathbf{x}}f)(\mathbf{x}_0)^T (\mathbf{x} - \mathbf{x}_0) $$ 
+$$ D^1f(\mathbf{x}_0) [\boldsymbol{\delta}^{\otimes 1}] = \sum_{i=1}^D \frac{\partial f}{\partial x_i} \delta_i = (\nabla f)^T \boldsymbol{\delta} $$
 *   **二阶项 (k=2)**:
     *   $D^2f(\mathbf{x}_0)$ 是一个 $D \times D$ 的矩阵 (海森矩阵 $H$)。
     *   $\boldsymbol{\delta}^{\otimes 2}$ 是一个 $D \times D$ 的矩阵 ($\boldsymbol{\delta}\boldsymbol{\delta}^T$)。
     *   它们的缩并是一种**双点积 (double dot product)**，在矩阵形式下可以方便地写成**二次型**:
-        $$ \frac{1}{2!} \boldsymbol{\delta}^T H \boldsymbol{\delta} = \frac{1}{2} (\mathbf{x} - \mathbf{x}_0)^T H(\mathbf{x}_0) (\mathbf{x} - \mathbf{x}_0) $$$$ D^2f(\mathbf{x}_0) [\boldsymbol{\delta}^{\otimes 2}] = \sum_{i=1}^D \sum_{j=1}^D H_{ij} \delta_i \delta_j = \boldsymbol{\delta}^T H \boldsymbol{\delta} $$
+        $$ \frac{1}{2!} \boldsymbol{\delta}^T H \boldsymbol{\delta} = \frac{1}{2} (\mathbf{x} - \mathbf{x}_0)^T H(\mathbf{x}_0) (\mathbf{x} - \mathbf{x}_0) $$ 
+$$ D^2f(\mathbf{x}_0) [\boldsymbol{\delta}^{\otimes 2}] = \sum_{i=1}^D \sum_{j=1}^D H_{ij} \delta_i \delta_j = \boldsymbol{\delta}^T H \boldsymbol{\delta} $$
 *   **三阶项 (k = 3):**
     $$ D^3f(\mathbf{x}_0) [\boldsymbol{\delta}^{\otimes 3}] = \sum_{i=1}^D \sum_{j=1}^D \sum_{k=1}^D \left(\frac{\partial^3 f}{\partial x_i \partial x_j \partial x_k}\right) \delta_i \delta_j \delta_k $$
 *   **最终的二阶泰勒展开**:
