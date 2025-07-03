@@ -2441,6 +2441,8 @@ $$ \hat{A}_{(k)} = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^T $$
 
 ## 第一部分：反向传播与自动微分 (Backpropagation and Automatic Differentiation)
 
+[[Notion/Theoretical-Knowledge/Computer-Science/Artificial-Intelligence/机器学习 (Machine Learning)\|机器学习 (Machine Learning)]]
+
 在机器学习中，我们通过优化算法（如梯度下降）来调整模型参数，而这些算法的核心就是计算目标函数（损失函数）相对于模型参数的梯度。对于深度神经网络这样复杂的复合函数，如何高效、准确地计算梯度，是一个至关重要的问题。
 
 ### 1. 梯度计算的挑战
@@ -2481,3 +2483,158 @@ $$ \hat{A}_{(k)} = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^T $$
     *   $\mathbf{f}_i := \sigma_i(A_{i-1}\mathbf{f}_{i-1} + \mathbf{b}_{i-1})$, for $i=1, \dots, K$
 
 在这个层层嵌套的结构中，计算最终损失函数相对于任何一层参数（如 $A_{i-1}$）的梯度，都需要系统性地、从后向前地应用链式法则，这正是反向传播算法所做的事情。
+
+### 4. 反向传播的核心思想：逐层计算与梯度复用
+
+#### 4.1 训练目标与梯度
+
+*   **目标**: 训练一个深度网络，就是找到一组最优的参数 $\theta = \{A_0, \mathbf{b}_0, \dots, A_{K-1}, \mathbf{b}_{K-1}\}$，使得损失函数 $L(\theta)$（例如，均方误差 $L = \|\mathbf{y} - \mathbf{f}_K(\theta, \mathbf{x})\|^2$）最小化。
+*   **方法**: 使用基于梯度的优化算法。这要求我们计算出损失 $L$ 相对于**所有**参数的梯度。
+*   **策略**: 我们不把所有参数看作一个巨大的向量来求梯度，而是**逐层 (layer by layer)** 分别计算损失 $L$ 相对于每一层参数 $\theta_j = \{A_j, \mathbf{b}_j\}$ 的偏导数 $\frac{\partial L}{\partial \theta_j}$。最后，将所有这些逐层梯度拼接起来，就得到了完整的总梯度 $\frac{\partial L}{\partial \theta}$，用于更新参数。
+
+#### 4.2 链式法则的系统性应用
+
+下图展示了如何利用链式法则来系统性地计算每一层的梯度。
+
+*   **符号说明**:
+    *   $\mathbf{f}_i$: 第 `i` 层的输出向量。
+    *   $\theta_i = \{A_{i-1}, \mathbf{b}_{i-1}\}$: 第 `i` 层的参数。
+
+*   **梯度计算链条**:
+    要计算损失 $L$ 相对于第 `i` 层参数 $\theta_i$ 的梯度 $\frac{\partial L}{\partial \theta_i}$，我们需要将从最终损失 $L$ 到 $\theta_i$ 的所有“影响”路径串联起来：
+    $$ \frac{\partial L}{\partial \theta_i} = \frac{\partial L}{\partial \mathbf{f}_K} \frac{\partial \mathbf{f}_K}{\partial \mathbf{f}_{K-1}} \cdots \frac{\partial \mathbf{f}_{i+1}}{\partial \mathbf{f}_i} \frac{\partial \mathbf{f}_i}{\partial \theta_i} $$
+
+    *   $\frac{\partial L}{\partial \mathbf{f}_K}$: 损失函数对网络最终输出的梯度。这是计算的**起点**。
+    *   $\frac{\partial \mathbf{f}_{j+1}}{\partial \mathbf{f}_j}$: 第 `j+1` 层的输出对第 `j` 层输出的梯度。这描述了**层与层之间的梯度传播**。
+    *   $\frac{\partial \mathbf{f}_i}{\partial \theta_i}$: 第 `i` 层的输出对**其自身参数**的梯度。这是我们最终需要的**“本地”梯度**。
+
+#### 4.3 反向传播的精髓：梯度复用
+
+观察上面的梯度计算链条，我们可以发现一个极其重要的模式。
+
+*   **计算 $\frac{\partial L}{\partial \theta_i}$**:
+    $$ \frac{\partial L}{\partial \theta_i} = \left( \frac{\partial L}{\partial \mathbf{f}_K} \frac{\partial \mathbf{f}_K}{\partial \mathbf{f}_{K-1}} \cdots \frac{\partial \mathbf{f}_{i+1}}{\partial \mathbf{f}_i} \right) \frac{\partial \mathbf{f}_i}{\partial \theta_i} $$
+
+*   **计算前一层 $\frac{\partial L}{\partial \theta_{i-1}}$**:
+    $$ \frac{\partial L}{\partial \theta_{i-1}} = \left( \frac{\partial L}{\partial \mathbf{f}_K} \frac{\partial \mathbf{f}_K}{\partial \mathbf{f}_{K-1}} \cdots \frac{\partial \mathbf{f}_{i+1}}{\partial \mathbf{f}_i} \right) \frac{\partial \mathbf{f}_i}{\partial \mathbf{f}_{i-1}} \frac{\partial \mathbf{f}_{i-1}}{\partial \theta_{i-1}} $$
+
+**关键洞察**:
+计算 $\frac{\partial L}{\partial \theta_{i-1}}$ 时，其公式中的巨大括号部分 $\left( \frac{\partial L}{\partial \mathbf{f}_K} \cdots \frac{\partial \mathbf{f}_{i+1}}{\partial \mathbf{f}_i} \right)$，**与计算 $\frac{\partial L}{\partial \theta_i}$ 时完全一样！**
+
+这个括号里的部分，其实就是损失 $L$ 相对于第 `i` 层输出 $\mathbf{f}_i$ 的梯度，我们称之为“误差信号”或“上游梯度” $\frac{\partial L}{\partial \mathbf{f}_i}$。
+
+**算法流程 (反向传播)**:
+1.  **从最后一层开始**: 计算 $\frac{\partial L}{\partial \mathbf{f}_K}$。
+2.  **计算最后一层的参数梯度**: $\frac{\partial L}{\partial \theta_K} = \frac{\partial L}{\partial \mathbf{f}_K} \frac{\partial \mathbf{f}_K}{\partial \theta_K}$。
+3.  **向后传播梯度**: 计算损失相对于倒数第二层输出的梯度：
+    $$ \frac{\partial L}{\partial \mathbf{f}_{K-1}} = \frac{\partial L}{\partial \mathbf{f}_K} \frac{\partial \mathbf{f}_K}{\partial \mathbf{f}_{K-1}} $$
+4.  **计算倒数第二层的参数梯度**: $\frac{\partial L}{\partial \theta_{K-1}} = \frac{\partial L}{\partial \mathbf{f}_{K-1}} \frac{\partial \mathbf{f}_{K-1}}{\partial \theta_{K-1}}$。
+5.  **重复**: 不断地将“上游梯度” $\frac{\partial L}{\partial \mathbf{f}_i}$ 向后乘以一个“本地雅可比矩阵” $\frac{\partial \mathbf{f}_i}{\partial \mathbf{f}_{i-1}}$，得到新的“上游梯度” $\frac{\partial L}{\partial \mathbf{f}_{i-1}}$，然后用它来计算当前层的参数梯度。
+
+**结论**:
+反向传播算法的本质就是**高效地复用中间计算结果**。通过从后向前逐层计算和传递“误差信号”（即损失对各层输出的梯度），它避免了为每个参数从头开始计算整个链式法则的巨大冗余，从而使得训练深度神经网络在计算上成为可能。
+
+### 5. 自动微分 (Automatic Differentiation, AD)
+
+自动微分是一套更通用、更底层的技术，而反向传播是它在神经网络中的一种具体实现。
+
+#### 5.1 什么是自动微分？
+
+*   **定义**: 自动微分 (AD) 是一系列技术，它能够通过系统性地将**链式法则**应用于构成一个函数的**基本运算**（如加、减、乘、除、`sin`, `exp` 等），来计算出该函数（通常由计算机程序定义）的**精确导数**（在机器精度内）。
+*   **核心思想**: 任何复杂的函数计算过程，都可以被分解为一系列简单的、可微的基本操作。AD 通过追踪这些操作，并自动应用链式法则，来得到最终的梯度。
+*   **与反向传播的关系**: **反向传播是反向模式自动微分 (Reverse-mode AD) 的一个特例**，它专门用于计算神经网络中标量值损失函数相对于所有参数的梯度。
+
+#### 5.2 计算图 (Computational Graph)
+
+为了系统性地应用链式法则，AD 将一个函数的计算过程表示为一个**有向无环图 (DAG)**，即**计算图**。
+
+*   **结构**:
+    *   **节点 (Nodes)**: 代表变量（输入、中间变量、输出）。
+    *   **边 (Edges)**: 代表基本操作或函数。
+*   **链式法则在计算图上的体现**:
+    *   对于一个函数 $y = b(a(x))$，其计算图可以看作是 `x -> a -> b -> y`。
+    *   计算总梯度 $\frac{dy}{dx}$，就需要将从输出到输入路径上的所有“本地梯度”相乘：
+        $$ \frac{dy}{dx} = \frac{dy}{db} \cdot \frac{db}{da} \cdot \frac{da}{dx} $$
+*   **中间变量的作用**:
+    *   将一个复杂的函数（如幻灯片中的例子）分解为一系列简单的中间变量，例如 `a=x²`, `b=exp(a)`, `c=a+b` ...
+    *   这样做不仅在计算函数值时可以复用结果、提高效率，更重要的是，它为应用链式法则、高效计算梯度提供了清晰的路径和结构。
+    *   现代深度学习框架（如 PyTorch, TensorFlow）的核心就是构建和操作这样的计算图。
+
+#### 5.3 自动微分的两种模式：前向模式 vs. 反向模式
+
+AD 主要有两种不同的计算策略，它们的区别在于应用链式法则的顺序。
+
+*   **前向模式 (Forward Mode / Forward Accumulation)**:
+    *   **方向**: 与数据流动的方向**相同**，即从**输入到输出** (从左到右) 计算梯度。
+    *   **过程 (对于 `y=b(a(x))` )**:
+        1.  先计算 $\frac{da}{dx}$。
+        2.  然后计算 $\frac{db}{da}$，并与上一步结果相乘，得到 $\frac{db}{dx} = \frac{db}{da}\frac{da}{dx}$。
+        3.  最后计算 $\frac{dy}{db}$，并与上一步结果相乘，得到最终的 $\frac{dy}{dx}$。
+    *   **适用场景**: 当**输入维度 `n` 远小于输出维度 `m`** (`n ≪ m`) 时非常高效。例如，计算一个函数的雅可比矩阵与某个特定方向向量的乘积 (Jacobian-vector product)。
+
+*   **反向模式 (Reverse Mode / Backpropagation)**:
+    *   **方向**: 与数据流动的方向**相反**，即从**输出到输入** (从右到左) 计算梯度。
+    *   **过程 (对于 `y=b(a(x))` )**:
+        1.  **前向传播**: 首先，需要执行一次完整的前向计算（从 `x` 到 `y`），并存储所有中间变量的值。
+        2.  **反向传播**:
+            *   从最终输出开始，计算 $\frac{dy}{db}$。
+            *   然后向后一步，计算 $\frac{dy}{da} = \frac{dy}{db}\frac{db}{da}$。
+            *   最后计算 $\frac{dy}{dx} = \frac{dy}{da}\frac{da}{dx}$。
+    *   **适用场景**: 当**输出维度 `m` 远小于输入维度 `n`** (`m ≪ n`) 时极其高效。
+    *   **这完美地匹配了神经网络的训练场景**：输入（参数 `θ`）的维度可能有数百万甚至上亿，而输出（损失函数 `L`）是一个**标量**（维度为1）。
+
+**结论**:
+**反向模式自动微分（即反向传播）**是深度学习能够成功训练拥有海量参数的模型的**计算基石**。它使得我们能够以仅仅比一次前向传播多一点的计算成本，高效地计算出损失函数相对于所有参数的精确梯度。
+
+### 6. 反向传播的具体流程：在计算图上应用链式法则
+
+#### 6.1 步骤一：前向传播与局部导数计算
+
+在反向传播开始之前，我们需要完成两件事：
+
+1.  **前向传播 (Forward Pass)**: 从输入 `x` 开始，按照计算图的顺序，一步步计算出所有的中间变量 (`a, b, c, ...`)，直到最终的输出 `f`。在这个过程中，所有中间变量的值都必须被**存储**下来，因为它们在反向传播时会被用到。
+
+2.  **计算局部导数 (Local Derivatives)**: 对于计算图中的每一个节点（或说每一个基本运算），我们都可以直接计算出其输出相对于其直接输入的导数。这些被称为“局部导数”。
+    *   例如，对于 `a = x²`，局部导数是 `∂a/∂x = 2x`。
+    *   对于 `c = a + b`，局部导数是 `∂c/∂a = 1` 和 `∂c/∂b = 1`。
+    *   这些局部导数非常简单，它们的计算公式是预先知道的。
+
+#### 6.2 步骤二：反向传播梯度
+
+这是反向传播算法的核心。我们从最终的输出 `f` 开始，**从后向前**地计算损失（或最终输出）相对于每一个中间变量和输入的梯度。
+
+*   **起点**: 最终输出 `f` 相对于自身的梯度是 1，即 `∂f/∂f = 1`。
+
+*   **传播规则 (多元链式法则)**:
+    要计算 `f` 相对于某个中间变量（例如 `c`）的梯度 `∂f/∂c`，我们需要找到所有**从 `c` 指向最终输出 `f` 的路径**，然后将所有路径上的梯度贡献**加起来**。
+    *   `∂f/∂c` 受到了所有“下游”节点（即所有以 `c` 作为输入的节点，如 `d` 和 `e`）的影响。
+    *   因此，`∂f/∂c` 等于它对所有子节点的贡献之和：
+        $$ \frac{\partial f}{\partial c} = \frac{\partial f}{\partial d} \frac{\partial d}{\partial c} + \frac{\partial f}{\partial e} \frac{\partial e}{\partial c} $$
+    *   这个公式可以被解读为：`f` 对 `c` 的总梯度 = (`f` 对 `d` 的梯度 × `d` 对 `c` 的局部梯度) + (`f` 对 `e` 的梯度 × `e` 对 `c` 的局部梯度)。
+
+*   **迭代计算**:
+我们从 `∂f/∂f = 1` 开始，利用这个规则，像剥洋葱一样，一层层地向后计算：
+$$\frac{\partial f}{\partial d} = \frac{\partial f}{\partial f} \cdot \frac{\partial f}{\partial d} = 1 \cdot 1 = 1$$
+$$\frac{\partial f}{\partial e} = \frac{\partial f}{\partial f} \cdot \frac{\partial f}{\partial e} = 1 \cdot 1 = 1$$
+$$\frac{\partial f}{\partial c} = \frac{\partial f}{\partial d} \cdot \frac{1}{2\sqrt{c}} + \frac{\partial f}{\partial e} \cdot (-\sin(c))$$
+$$\frac{\partial f}{\partial b} = \frac{\partial f}{\partial c} \cdot 1$$
+$$\frac{\partial f}{\partial a} = \frac{\partial f}{\partial b} \cdot e^a + \frac{\partial f}{\partial c} \cdot 1$$
+$$\frac{\partial f}{\partial x} = \frac{\partial f}{\partial a} \cdot 2x$$
+在每一步，我们都复用了上一步已经计算出的“上游梯度”（如 `∂f/∂c`），这正是其高效的原因。
+#### 6.3 自动微分的形式化表述
+
+我们可以将这个过程更形式化地描述。
+
+*   **计算图**: 任何一个计算过程都可以表示为一系列基本函数的组合。输入为 $x_1, \dots, x_d$，中间变量为 $x_{d+1}, \dots, x_{D-1}$，最终输出为 $x_D = f$。每个中间变量 $x_i$ 都是由其**父节点 (parent nodes)** $x_{\text{Pa}(x_i)}$ 通过一个基本函数 $g_i$ 计算得出的：
+    $$ x_i = g_i(x_{\text{Pa}(x_i)}) $$
+*   **反向模式梯度传播规则**:
+    *   初始化：$\frac{\partial f}{\partial x_D} = 1$。
+    *   对于任何一个变量 $x_i$（从 $i=D-1$ 向下到 $1$），其梯度为：
+        $$ \frac{\partial f}{\partial x_i} = \sum_{x_j : x_i \in \text{Pa}(x_j)} \frac{\partial f}{\partial x_j} \frac{\partial x_j}{\partial x_i} = \sum_{x_j : x_i \in \text{Pa}(x_j)} \frac{\partial f}{\partial x_j} \frac{\partial g_j}{\partial x_i} $$
+    *   **解读**: 一个节点的梯度，等于所有**以它为输入的子节点 (children nodes)** 的梯度，分别乘以对应的局部导数，然后**求和**。
+
+### 7. 自动微分的计算复杂度
+
+*   **惊人的效率**: 尽管梯度的最终数学表达式可能看起来比原函数复杂得多，但自动微分（特别是反向模式）的计算复杂度**与计算原函数本身的复杂度是同个数量级的**。
+*   **原因**: AD 通过将导数计算也视为计算图上的一个变量传递过程，复用了大量的中间结果。它计算梯度所需的运算次数，通常只是计算原函数所需运算次数的一个小的常数倍。
+*   **结论**: 这种高效性是自动微分和反向传播能够成为训练大规模、复杂机器学习模型（如深度神经网络）的实用技术的关键原因。
