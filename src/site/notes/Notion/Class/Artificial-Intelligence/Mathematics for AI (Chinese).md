@@ -2741,3 +2741,118 @@ $D^k_{\mathbf{x}}f(\mathbf{x}_0)$ 代表了函数 $f$ 在点 $\mathbf{x}_0$ 的 
 将这些项组合起来，我们就得到了在优化中最常用、最重要的**二阶多元泰勒展开**：
 $$ f(\mathbf{x}) \approx f(\mathbf{x}_0) + (\nabla_{\mathbf{x}}f)(\mathbf{x}_0) \cdot (\mathbf{x} - \mathbf{x}_0) + \frac{1}{2} (\mathbf{x} - \mathbf{x}_0)^T H(\mathbf{x}_0) (\mathbf{x} - \mathbf{x}_0) $$
 这个公式用一个**二次函数**来近似原函数 $f(\mathbf{x})$ 在 $\mathbf{x}_0$ 附近的形状，它比单纯的线性近似要精确得多，是**牛顿法**等二阶优化算法的理论基础。
+
+## 第四部分：使用梯度下降进行优化 (Optimization Using Gradient Descent)
+
+现在，我们将利用前面建立的微积分工具，特别是梯度和泰勒展开，来正式探讨机器学习中最核心的优化过程。
+
+### 11. 优化的基本思想
+
+*   **目标**: 对于一个给定的函数 $L(\boldsymbol{\theta})$（例如，机器学习中的损失函数），我们的目标是找到一组参数 $\boldsymbol{\theta}^*$，使得 $L(\boldsymbol{\theta}^*)$ 达到其（局部或全局）最小值。
+*   **迭代方法**: 我们通常从一个随机的初始点 $\boldsymbol{\theta}_0$ 开始，然后通过一系列迭代步骤，逐步走向更好的参数点：
+    $$ \boldsymbol{\theta}_{k+1} = \boldsymbol{\theta}_k + \Delta\boldsymbol{\theta}_k $$
+    这里的关键在于如何确定每一步的**更新方向和大小** $\Delta\boldsymbol{\theta}_k$。
+
+### 12. 梯度下降法 (Gradient Descent)
+
+梯度下降法是回答“如何确定更新方向”这个问题的最基本、最重要的方法。
+
+#### 12.1 核心思想：最速下降
+
+*   **回顾梯度**: 梯度 $\nabla_{\boldsymbol{\theta}}L$ 指向了函数值**上升最快**的方向。
+*   **最速下降方向**: 因此，梯度的**反方向** $-\nabla_{\boldsymbol{\theta}}L$ 就是函数值**下降最快**的方向。
+*   **算法**: 梯度下降法的策略非常直观：在当前位置，计算出最陡峭的下山方向，然后沿着这个方向迈出一小步。
+
+#### 12.2 更新规则
+
+梯度下降的迭代更新规则如下：
+$$ \boldsymbol{\theta}_{k+1} = \boldsymbol{\theta}_k - \eta \nabla_{\boldsymbol{\theta}}L(\boldsymbol{\theta}_k) $$
+其中：
+*   $\boldsymbol{\theta}_k$: 当前的参数位置。
+*   $\nabla_{\boldsymbol{\theta}}L(\boldsymbol{\theta}_k)$: 在当前位置计算出的梯度向量。
+*   $\eta$: **学习率 (Learning Rate)**，是一个正的标量超参数。它控制了我们每一步“下山”的步子迈多大。
+
+#### 12.3 学习率 $\eta$ 的重要性
+
+学习率的选择对优化过程至关重要：
+
+*   **学习率过小**:
+    *   **优点**: 更新过程稳定，不太可能错过最小值点。
+    *   **缺点**: 收敛速度非常慢，需要大量的迭代次数才能到达谷底。
+*   **学习率过大**:
+    *   **优点**: 开始时下降速度可能很快。
+    *   **缺点**: 可能会“跨过”最小值点，导致在谷底附近剧烈震荡，无法收敛，甚至可能导致损失值不降反升，使得优化过程发散。
+
+#### 12.4 梯度下降的几何解释：线性近似
+
+梯度下降的更新规则，可以从对损失函数的一阶泰勒展开（线性近似）来理解。在 $\boldsymbol{\theta}_k$ 附近：
+$$ L(\boldsymbol{\theta}) \approx L(\boldsymbol{\theta}_k) + (\nabla L(\boldsymbol{\theta}_k))^T (\boldsymbol{\theta} - \boldsymbol{\theta}_k) $$
+为了让 $L(\boldsymbol{\theta})$ 尽可能地小，我们需要让第二项 $(\nabla L(\boldsymbol{\theta}_k))^T (\boldsymbol{\theta} - \boldsymbol{\theta}_k)$ 尽可能地负。根据柯西-施瓦茨不等式，当位移向量 $(\boldsymbol{\theta} - \boldsymbol{\theta}_k)$ 的方向与梯度向量 $\nabla L(\boldsymbol{\theta}_k)$ 的方向**正好相反**时，这个点积的负值最大。
+
+因此，选择更新方向为 $-\nabla L(\boldsymbol{\theta}_k)$ 是在**局部线性近似**下最贪心、最有效的选择。
+
+### 13. 多元泰勒级数 (Multivariate Taylor Series)
+
+#### 13.1 定义
+
+*   **目标**: 将单变量泰勒级数 $\sum \frac{f^{(k)}(x_0)}{k!}(x-x_0)^k$ 推广到多元函数 $f: \mathbb{R}^D \to \mathbb{R}$。
+*   **定义**: 设函数 $f$ 在点 $\mathbf{x}_0$ 附近是平滑的（即高阶混合偏导连续且对称），并定义位移向量 $\boldsymbol{\delta} := \mathbf{x} - \mathbf{x}_0$。$f$ 在 $\mathbf{x}_0$ 处的多元泰勒级数可以紧凑地写为：
+    $$ f(\mathbf{x}) = \sum_{k=0}^{\infty} \frac{1}{k!} D^k_{\mathbf{x}}f(\mathbf{x}_0) [\boldsymbol{\delta}^{\otimes k}] $$
+    *（注：这里的 `[...]` 不是矩阵，而是一种表示张量缩并的抽象记法）*
+
+这个公式看起来很抽象，其中的关键是理解 $D^k_{\mathbf{x}}f(\mathbf{x}_0)$ 和 $\boldsymbol{\delta}^{\otimes k}$ 的含义，以及它们之间如何“相乘”。
+
+#### 13.2 高阶导数张量 $D^k_{\mathbf{x}}f(\mathbf{x}_0)$
+
+$D^k_{\mathbf{x}}f(\mathbf{x}_0)$ 代表了函数 $f$ 在点 $\mathbf{x}_0$ 的 **k 阶（全）导数**，它是一个 **k 阶张量 (k-th order tensor)**。
+
+*   **递归定义**: 高阶导数可以看作是对前一阶导数（梯度、海森矩阵等）再求一次梯度。
+    *   **一阶 (梯度)**: $\nabla_{\mathbf{x}}f(\mathbf{x})$
+    *   **二阶 (海森矩阵)**: $\nabla_{\mathbf{x}}(\nabla_{\mathbf{x}}f(\mathbf{x}))$
+    *   **三阶**: $\nabla_{\mathbf{x}}(\nabla_{\mathbf{x}}(\nabla_{\mathbf{x}}f(\mathbf{x})))$
+*   **核心规则**: 每对一个导数对象（向量、矩阵、张量）再求一次梯度，就会为该对象增加一个新的维度。
+*   **一般形式**: 对于一个输入为 $D$ 维向量的函数，它的 k 阶导数是一个维度为 $\underbrace{D \times D \times \dots \times D}_{k \text{ times}}$ 的 k 阶张量。
+    *   该张量在位置 $(i_1, i_2, \dots, i_k)$ 上的元素是：
+        $$ \left[ D^k_{\mathbf{x}}f(\mathbf{x}_0) \right]_{i_1, i_2, \dots, i_k} = \frac{\partial^k f}{\partial x_{i_1} \partial x_{i_2} \cdots \partial x_{i_k}} \bigg|_{\mathbf{x}=\mathbf{x}_0} $$
+
+**导数阶数与对象类型的关系总结**:
+
+| 阶数 (Order) | 导数对象 (Object) | 形状 (Shape) | 几何/物理意义 |
+| :--- | :--- | :--- | :--- |
+| 1st | **梯度 (Gradient)** | 向量 (n) | 局部最陡峭的**斜坡** |
+| 2nd | **海森矩阵 (Hessian)** | 矩阵 ($n \times n$) | 局部斜坡的**变化率 (曲率)** |
+| 3rd | **三阶导数张量** | 三阶张量 ($n \times n \times n$) | 局部曲率的**变化率** |
+
+#### 13.3 位移向量的张量幂 $\boldsymbol{\delta}^{\otimes k}$
+
+在单变量泰勒级数中，我们有 $(x-x_0)^k$ 这一项。在多变量中，对应的项是位移向量 $\boldsymbol{\delta}$ 的 **k 次张量积 (k-th tensor power)**，记为 $\boldsymbol{\delta}^{\otimes k}$ (幻灯片中简化记为 $\delta^k$)。这是一个 k 阶张量，由向量 $\boldsymbol{\delta}$ 的外积构造而成。
+
+*   **k = 1**: $\boldsymbol{\delta}^{\otimes 1} = \boldsymbol{\delta}$ (位移向量本身)。
+*   **k = 2**: $\boldsymbol{\delta}^{\otimes 2} = \boldsymbol{\delta}\boldsymbol{\delta}^T$ (向量的外积，一个 $D \times D$ 的**矩阵**)。
+*   **k = 3**: $\boldsymbol{\delta}^{\otimes 3}$ 是一个 $D \times D \times D$ 的**三阶张量**。
+*   **一般情况**: $\boldsymbol{\delta}^{\otimes k}$ 是一个 k 阶张量，其在位置 $(i_1, i_2, \dots, i_k)$ 上的元素是：
+    $$ [\boldsymbol{\delta}^{\otimes k}]_{i_1, i_2, \dots, i_k} = \delta_{i_1} \delta_{i_2} \cdots \delta_{i_k} $$
+
+#### 13.4 展开前几项 (将张量运算具体化)
+
+现在我们可以理解多元泰勒级数中每一项的真正含义了。每一项都是一个 k 阶导数张量和一个 k 阶位移张量的**缩并 (Contraction)**，结果是一个标量。
+
+*   **零阶项 (k=0)**:
+    $$ \frac{1}{0!}D^0f(\mathbf{x}_0) = f(\mathbf{x}_0) $$
+
+*   **一阶项 (k=1)**:
+    *   $D^1f(\mathbf{x}_0)$ 是一个 $1 \times D$ 的行向量 (梯度)。
+    *   $\boldsymbol{\delta}^{\otimes 1}$ 是一个 $D \times 1$ 的列向量。
+    *   它们的缩并就是**点积**:
+        $$ \frac{1}{1!}(\nabla_{\mathbf{x}}f)(\mathbf{x}_0) \cdot \boldsymbol{\delta} = (\nabla_{\mathbf{x}}f)(\mathbf{x}_0)^T (\mathbf{x} - \mathbf{x}_0) $$
+
+*   **二阶项 (k=2)**:
+    *   $D^2f(\mathbf{x}_0)$ 是一个 $D \times D$ 的矩阵 (海森矩阵 $H$)。
+    *   $\boldsymbol{\delta}^{\otimes 2}$ 是一个 $D \times D$ 的矩阵 ($\boldsymbol{\delta}\boldsymbol{\delta}^T$)。
+    *   它们的缩并是一种**双点积 (double dot product)**，在矩阵形式下可以方便地写成**二次型**:
+        $$ \frac{1}{2!} \boldsymbol{\delta}^T H \boldsymbol{\delta} = \frac{1}{2} (\mathbf{x} - \mathbf{x}_0)^T H(\mathbf{x}_0) (\mathbf{x} - \mathbf{x}_0) $$
+
+*   **最终的二阶泰勒展开**:
+    将这些项组合起来，我们就得到了在优化中最常用、最重要的二阶多元泰勒展开：
+    $$ f(\mathbf{x}) \approx f(\mathbf{x}_0) + (\nabla_{\mathbf{x}}f)(\mathbf{x}_0)^T (\mathbf{x} - \mathbf{x}_0) + \frac{1}{2} (\mathbf{x} - \mathbf{x}_0)^T H(\mathbf{x}_0) (\mathbf{x} - \mathbf{x}_0) $$
+    这个公式用一个**二次函数**来近似原函数 $f(\mathbf{x})$ 在 $\mathbf{x}_0$ 附近的形状，是**牛顿法**等二阶优化算法的理论基础。
