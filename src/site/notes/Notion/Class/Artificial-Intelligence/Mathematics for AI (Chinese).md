@@ -2681,6 +2681,8 @@ $$\frac{\partial f}{\partial x} = \frac{\partial f}{\partial a} \cdot 2x$$
     *   **局部最大值 (Local Maximum)**: 如果在临界点处，海森矩阵 $H$ 是**负定的 (negative definite)**（即所有特征值都为负），那么这个点是一个局部最大值。函数的形状像一个向下开口的“帽子”。
     *   **鞍点 (Saddle Point)**: 如果在临界点处，海森矩阵 $H$ 是**不定的 (indefinite)**（即既有正特征值也有负特征值），那么这个点是一个鞍点。函数在某些方向上向上弯曲，在另一些方向上向下弯曲，像一个马鞍。
 
+[[Notion/Class/Concept/用二阶导的优化方法 (The optimization method using the second-order derivative)\|用二阶导的优化方法 (The optimization method using the second-order derivative)]]
+
 海森矩阵为我们提供了超越梯度的“二阶信息”，使我们能够更深入地分析损失函数的几何形状，并设计出更强大的优化算法（如牛顿法）。
 
 ## 第三部分：线性化与多元泰勒级数 (Linearization and Multivariate Taylor Series)
@@ -2710,7 +2712,7 @@ $$\frac{\partial f}{\partial x} = \frac{\partial f}{\partial a} \cdot 2x$$
     $$ f(\mathbf{x}) = \sum_{k=0}^{\infty} \frac{D^k_{\mathbf{x}}f(\mathbf{x}_0)}{k!} \boldsymbol{\delta}^k $$
     这个公式看起来很抽象，其中的关键是理解 $D^k_{\mathbf{x}}f(\mathbf{x}_0)$ 和 $\boldsymbol{\delta}^k$ 的含义。
 
-#### 10.2 高阶导数张量 $D^k_{\mathbf{x}}f(\mathbf{x}_0)$**
+#### 10.2 高阶导数张量 $D^k_{\mathbf{x}}f(\mathbf{x}_0)$
 
 $D^k_{\mathbf{x}}f(\mathbf{x}_0)$ 代表了函数 $f$ 在点 $\mathbf{x}_0$ 的 **k 阶（全）导数**，它是一个 **k 阶张量 (k-th order tensor)**。
 
