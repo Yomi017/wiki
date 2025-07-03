@@ -217,6 +217,8 @@ $$ P(\mathcal{D}_{train} \text{ is bad}) \le M \cdot 2\exp(-2\epsilon^2N) $$
 
 这个最终的公式为我们的信念提供了坚实的数学支撑：**只要我们的训练集 $N$ 足够大，即使考虑到所有可能的模型，我们不幸抽到一个“坏”的、不具代表性的训练集的概率也会趋近于零。**
 
+[[Notion/Theoretical-Knowledge/Computer-Science/Artificial-Intelligence/Question/为什么使用了验证集后，模型依然可能过拟合？ (Why may the model still overfit after using the validation set)\|为什么使用了验证集后，模型依然可能过拟合？ (Why may the model still overfit after using the validation set)]]
+
 *(注：对于神经网络这种模型库 $\mathcal{H}$ 包含无限个函数的情况，需要更高级的理论如 VC 维 (VC Dimension) 来处理，但其核心思想与此类似。)*
 
 但是，这个结论中隐藏着一个微妙的矛盾，这引出了关于模型选择的核心问题。
