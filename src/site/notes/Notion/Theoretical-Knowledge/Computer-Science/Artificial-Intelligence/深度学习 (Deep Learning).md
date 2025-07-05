@@ -642,7 +642,7 @@ GAN 的核心思想源于博弈论。它设定了两个相互竞争的神经网�
 
 2.  **判别器 (Discriminator, D):**
     *   **角色**: 判别器是GAN中的“**鉴赏家**”或“**警察**”。它的唯一目标就是尽可能准确地分辨出输入的数据是“真实的”还是由生成器“伪造的”。
-    *   **工作流程**: 你提供的这张图完美地展示了判别器的工作流程和目标。![Image/Computer-Science/Deep Learning/6.png](/img/user/Image/Computer-Science/Deep%20Learning/6.png)
+    *   **工作流程**: ![Image/Computer-Science/Deep Learning/6.png](/img/user/Image/Computer-Science/Deep%20Learning/6.png)
         1.  **输入 (Input)**: 判别器接收一个数据样本，通常是一张图片。这个图片可能来自**真实数据集**，也可能来自**生成器**。判别器事先不知道图片的来源。
         2.  **网络结构 (Network)**: 如图中所述 "It is a neural network (that is, a function)"，判别器本身就是一个神经网络。对于图像任务，它通常是一个标准的**卷积神经网络 (CNN)**，其设计与我们之前学习的图像分类器非常相似。
         3.  **输出 (Output)**: 判别器最终输出一个**标量 (Scalar)** 值，即一个单一的数字。这个数字代表了它对输入图片“真实性”的评估。
@@ -652,6 +652,8 @@ GAN 的核心思想源于博弈论。它设定了两个相互竞争的神经网�
         4.  **本质**: 判别器本质上是在做一个**二分类任务**：(类别1: 真实, 类别0: 伪造)。它通过学习大量真实和伪造样本的特征，来构建一个分类边界。
 
     *   在整个GAN的训练框架中，一个强大的判别器是至关重要的。正是因为它能敏锐地发现生成图片的“破绽”，才能给生成器提供有价值的梯度信号，迫使生成器不断进步。
+
+![Image/Computer-Science/Deep Learning/7.png](/img/user/Image/Computer-Science/Deep%20Learning/7.png)
 
 #### **对抗训练过程 (Adversarial Training):**
 
@@ -683,9 +685,11 @@ GAN 的核心思想源于博弈论。它设定了两个相互竞争的神经网�
 训练过程是交替进行的，在每次迭代中：
 
 **第一步：训练判别器 D (固定 G)**
-
-1.  从真实数据集中抽取一批 (mini-batch) **真实图片** $x$。
-2.  让生成器 G 根据随机噪声 $z$ 生成一批**伪造图片** $G(z)$。
+![Image/Computer-Science/Deep Learning/8.png](/img/user/Image/Computer-Science/Deep%20Learning/8.png)
+1.  **固定生成器 G (Fix Generator G)**: 在这一步，我们**冻结**生成器的所有参数，不让它进行任何学习或更新。它只是一个单纯的“假货生产机器”。
+2.  **准备训练数据**: 我们需要两类数据来喂给判别器：
+    *   **真实样本 (Real Objects)**: 从我们的真实数据库（Database）中随机抽取一批（mini-batch）图片。
+    *   **伪造样本 (Generated Objects)**: 随机生成一批噪声向量（randomly sampled vector），然后将它们输入到**固定的**生成器 G 中，产出一批伪造的图片。
 3.  将真实图片和伪造图片都送入判别器 D。
 4.  **计算 D 的损失**:
     *   对于真实图片 $x$，D 的预测 $D(x)$ 应该趋近于 1。
