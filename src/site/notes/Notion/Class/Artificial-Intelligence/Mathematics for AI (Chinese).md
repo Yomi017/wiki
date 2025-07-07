@@ -3955,7 +3955,7 @@ CDF 是另一种描述概率分布的通用工具，它对离散和连续随机�
     $$
     *   **结论**: 随机向量经过仿射变换 $A\mathbf{X}+\mathbf{b}$ 后，其新的协方差矩阵为 $A \Sigma A^T$。注意，平移项 $\mathbf{b}$ 对协方差没有影响。
 
-#### **44. 互协方差的变换**
+### 44. 互协方差的变换
 
 *   **问题**: 考虑原随机向量 $\mathbf{X}$ 和变换后的随机向量 $\mathbf{Y} = A\mathbf{X} + \mathbf{b}$ 之间的互协方差 $\text{Cov}[\mathbf{X}, \mathbf{Y}]$。
 *   **推导**:
@@ -3973,3 +3973,61 @@ CDF 是另一种描述概率分布的通用工具，它对离散和连续随机�
     \end{aligned}
     $$
 *   **结论**: $\text{Cov}[\mathbf{X}, A\mathbf{X}+\mathbf{b}] = \text{Cov}[\mathbf{X}, \mathbf{X}]A^T = \Sigma A^T$。
+
+## 第十部分：高斯分布 (Gaussian Distribution)
+
+高斯分布，也称为**正态分布 (Normal Distribution)**，是概率论和统计学中**最重要、研究最深入**的连续概率分布。
+
+### 45. 高斯分布的重要性
+
+*   **核心地位**: 由于其优美的数学性质和广泛的适用性，高斯分布在机器学习中扮演着核心角色。
+*   **中心极限定理**: 许多独立的随机过程，其总和的分布会趋向于高斯分布，这解释了它在自然界中的普遍性。
+*   **应用**:
+    *   在**线性回归**中用作似然和先验。
+    *   作为**高斯混合模型 (GMM)** 的组件，用于密度估计。
+    *   在**高斯过程 (Gaussian Processes)**、**变分推断 (Variational Inference)**、**强化学习**、**信号处理**（如卡尔曼滤波器）和**控制论**（如线性二次调节器）中都是基础。
+
+### 46. 高斯分布的数学形式
+
+高斯分布完全由其**均值**和**协方差矩阵**这两个参数所决定。
+
+*   **单变量高斯分布 (Univariate Gaussian)**:
+    对于一个随机变量 $X$，其概率密度函数 (PDF) 为：
+    $$ p(x | \mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp \left( -\frac{(x-\mu)^2}{2\sigma^2} \right) $$
+    记为 $X \sim \mathcal{N}(\mu, \sigma^2)$。
+
+*   **多维高斯分布 (Multivariate Gaussian)**:
+    对于一个随机向量 $\mathbf{x} \in \mathbb{R}^D$，其概率密度函数为：
+    $$ p(\mathbf{x} | \boldsymbol{\mu}, \Sigma) = (2\pi)^{-\frac{D}{2}} |\Sigma|^{-\frac{1}{2}} \exp \left( -\frac{1}{2}(\mathbf{x}-\boldsymbol{\mu})^T \Sigma^{-1} (\mathbf{x}-\boldsymbol{\mu}) \right) $$
+    记为 $\mathbf{X} \sim \mathcal{N}(\boldsymbol{\mu}, \Sigma)$。
+    *   $\boldsymbol{\mu}$: 均值向量。
+    *   $\Sigma$: 协方差矩阵。
+    *   $|\Sigma|$: 协方差矩阵的行列式。
+    *   $(\mathbf{x}-\boldsymbol{\mu})^T \Sigma^{-1} (\mathbf{x}-\boldsymbol{\mu})$: 称为**马氏距离 (Mahalanobis distance)** 的平方，它衡量了点 $\mathbf{x}$ 到分布中心 $\boldsymbol{\mu}$ 的“统计距离”。
+
+*   **标准正态分布 (Standard Normal Distribution)**:
+    *   一个特殊情况，当均值为零向量 ($\boldsymbol{\mu}=\mathbf{0}$)，协方差矩阵为单位矩阵 ($\Sigma=I$) 时，称为标准正态分布，记为 $\mathcal{N}(\mathbf{0}, I)$。
+
+### 47. 高斯分布的变换性质
+
+高斯分布一个非常重要的特性是它在**仿射变换**下是**封闭的 (closed)**，即一个高斯随机变量经过仿射变换后，其结果仍然服从高斯分布。
+
+*   **仿射变换**:
+    *   设随机向量 $\mathbf{X} \sim \mathcal{N}(\boldsymbol{\mu}, \Sigma)$。
+    *   我们对其进行仿射变换得到新的随机向量 $\mathbf{Y} = A\mathbf{X} + \mathbf{b}$。
+
+*   **变换后的分布**:
+    *   $\mathbf{Y}$ 仍然服从高斯分布，即 $\mathbf{Y} \sim \mathcal{N}(\boldsymbol{\mu}_Y, \Sigma_Y)$。
+    *   其新的均值和协方差矩阵可以直接通过我们之前推导的公式计算：
+        *   **新均值**: $\boldsymbol{\mu}_Y = A\boldsymbol{\mu} + \mathbf{b}$
+        *   **新协方差**: $\Sigma_Y = A \Sigma A^T$
+
+*   **非线性变换**:
+    *   如果对一个高斯随机变量进行**非线性变换** $Z=h(\mathbf{X})$，那么结果 $Z$ **通常不再服从高斯分布**。
+    *   我们可以计算 $Z$ 的期望和方差，但这通常需要知道 $X$ 的更高阶矩（例如，计算 $E[Z]=E[h(X)]$ 需要积分）。
+    *   **示例**: 设 $Z = X_1^2 + X_2$，其中 $\mathbf{X}=[X_1, X_2]^T$ 是高斯变量。
+        *   $E[Z] = E[X_1^2] + E[X_2]$
+        *   我们可以利用关系式 $\text{Var}[X_1] = E[X_1^2] - (E[X_1])^2$ 来求得 $E[X_1^2]$。
+        *   $E[X_1^2] = \text{Var}[X_1] + (E[X_1])^2$。
+        *   这两个值可以从原高斯分布的协方差矩阵（对角线元素）和均值向量中直接读出。
+    *   尽管我们可以计算出新变量的均值和方差，但它的完整分布形式通常是未知的或难以处理的。这在机器学习中引出了许多近似推断技术。
