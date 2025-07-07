@@ -3366,7 +3366,9 @@ $$
 2.  所有不等式约束函数 $g_i(\mathbf{x})$ 都是**凸函数**。
 3.  所有等式约束函数 $h_j(\mathbf{x})$ 都是**仿射函数 (affine)**，即 $h_j(\mathbf{x}) = \mathbf{a}_j^T\mathbf{x} - b_j$。（因为只有仿射函数的水平集 $h_j(\mathbf{x})=0$ 才能保证是凸集）。
 
-### 16. 示例：最小二乘问题
+### 16. 示例
+
+#### 16.1 最小二乘问题
 
 经典的无约束**最小二乘问题 (Least Squares Problem)** 是一个典型的凸优化问题。
 $$ \min_{\mathbf{x} \in \mathbb{R}^N} \|\mathbf{y} - A\mathbf{x}\|_2^2 $$
@@ -3379,3 +3381,68 @@ $$ \min_{\mathbf{x} \in \mathbb{R}^N} \|\mathbf{y} - A\mathbf{x}\|_2^2 $$
         $$ \mathbf{z}^T (2A^TA) \mathbf{z} = 2 (\mathbf{z}^T A^T) (A\mathbf{z}) = 2(A\mathbf{z})^T(A\mathbf{z}) = 2\|A\mathbf{z}\|_2^2 $$
     4.  因为向量范数的平方 $\|A\mathbf{z}\|_2^2$ 永远是大于等于 0 的，所以 $2A^TA$ 是**半正定的**。
     5.  根据二阶条件，我们证明了最小二乘的目标函数是一个凸函数。由于没有约束，所以这是一个无约束凸优化问题。
+
+#### 16.2 最小范数问题 (Minimum Norm Problem)
+
+另一个经典的凸优化问题是**最小范数问题**。
+
+**问题形式**:
+$$
+\begin{aligned}
+\min_{\mathbf{x} \in \mathbb{R}^N} \quad & \|\mathbf{x}\|_2 \\
+\text{subject to} \quad & A\mathbf{x} = \mathbf{y}
+\end{aligned}
+$$
+*（最小化 $\|\mathbf{x}\|_2$ 与最小化 $\|\mathbf{x}\|_2^2$ 是等价的，后者在计算上更方便）*
+
+**直观解释**: 在所有满足线性方程组 $A\mathbf{x} = \mathbf{y}$ 的解中，找到那个**长度最短**的解。
+
+**这是一个凸优化问题吗？**
+根据凸优化问题的定义，我们需要验证两点：
+1.  目标函数 $f(\mathbf{x}) = \|\mathbf{x}\|_2$ 是一个凸函数。
+2.  约束定义的可行域 $\{ \mathbf{x} | A\mathbf{x} - \mathbf{y} = 0 \}$ 是一个凸集。
+
+---
+
+##### **证明 1: 目标函数 $f(\mathbf{x}) = \|\mathbf{x}\|_2$**** 是凸函数
+
+*   **一般性结论**: **所有的范数 (Norms) 都是凸函数**。
+*   **证明**: 我们需要验证范数是否满足凸函数的定义：
+    $$ f(\theta\mathbf{x} + (1-\theta)\mathbf{y}) \le \theta f(\mathbf{x}) + (1-\theta)f(\mathbf{y}) $$
+    将 $f(\cdot) = \|\cdot\|_2$ 代入，我们需要证明：
+    $$ \|\theta\mathbf{x} + (1-\theta)\mathbf{y}\|_2 \le \theta\|\mathbf{x}\|_2 + (1-\theta)\|\mathbf{y}\|_2 $$
+    1.  利用范数的**三角不等式 (Triangle Inequality)**：$\|\mathbf{a}+\mathbf{b}\| \le \|\mathbf{a}\| + \|\mathbf{b}\|$。
+        $$ \|\theta\mathbf{x} + (1-\theta)\mathbf{y}\|_2 \le \|\theta\mathbf{x}\|_2 + \|(1-\theta)\mathbf{y}\|_2 $$
+    2.  利用范数的**正齐次性 (Absolute Homogeneity)**：$\|\alpha\mathbf{a}\| = |\alpha|\|\mathbf{a}\|$。
+        $$ \|\theta\mathbf{x}\|_2 + \|(1-\theta)\mathbf{y}\|_2 = |\theta|\|\mathbf{x}\|_2 + |1-\theta|\|\mathbf{y}\|_2 $$
+    3.  因为我们已知 $0 \le \theta \le 1$，所以 $|\theta| = \theta$ 且 $|1-\theta| = 1-\theta$。
+        $$ = \theta\|\mathbf{x}\|_2 + (1-\theta)\|\mathbf{y}\|_2 $$
+    4.  结合以上步骤，我们证明了 $\|\theta\mathbf{x} + (1-\theta)\mathbf{y}\|_2 \le \theta\|\mathbf{x}\|_2 + (1-\theta)\|\mathbf{y}\|_2$。
+    5.  因此，欧几里得范数（以及所有范数）都是凸函数。
+
+---
+
+##### 证明 2: 可行域 $\{ \mathbf{x} | A\mathbf{x} = \mathbf{y} \}$ 是凸集
+
+*   **一般性结论**: **由仿射函数定义的等式约束，其可行域是一个凸集**。（这样的集合也称为**仿射集 (Affine Set)**）。
+*   **证明**: 我们需要验证该集合是否满足凸集的定义。
+    1.  设集合为 $S = \{ \mathbf{x} \in \mathbb{R}^n | A\mathbf{x} = \mathbf{y} \}$。
+    2.  从 $S$ 中任意取出两个点 $\mathbf{x}_1$ 和 $\mathbf{x}_2$。根据定义，我们知道：
+        *   $A\mathbf{x}_1 = \mathbf{y}$
+        *   $A\mathbf{x}_2 = \mathbf{y}$
+    3.  现在，我们考虑这两点的任意一个凸组合点 $\mathbf{x}_\theta = \theta\mathbf{x}_1 + (1-\theta)\mathbf{x}_2$，其中 $0 \le \theta \le 1$。我们要检查 $\mathbf{x}_\theta$ 是否也属于集合 $S$。
+    4.  我们将 $A$ 作用于 $\mathbf{x}_\theta$：
+        $$
+        \begin{aligned}
+        A\mathbf{x}_\theta &= A(\theta\mathbf{x}_1 + (1-\theta)\mathbf{x}_2) \\
+        &= \theta(A\mathbf{x}_1) + (1-\theta)(A\mathbf{x}_2) & (\text{利用矩阵乘法的线性性}) \\
+        &= \theta\mathbf{y} + (1-\theta)\mathbf{y} & (\text{因为 } \mathbf{x}_1, \mathbf{x}_2 \in S) \\
+        &= (\theta + 1 - \theta)\mathbf{y} \\
+        &= \mathbf{y}
+        \end{aligned}
+        $$
+    5.  由于 $A\mathbf{x}_\theta = \mathbf{y}$，这表明 $\mathbf{x}_\theta$ 也满足约束条件，因此 $\mathbf{x}_\theta \in S$。
+    6.  这就证明了集合 $S$ 是一个凸集。
+
+**最终结论**:
+由于最小范数问题的目标函数是凸的，且其约束定义的可行域也是一个凸集，因此**最小范数问题是一个标准的凸优化问题**。
