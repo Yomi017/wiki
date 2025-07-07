@@ -3116,13 +3116,13 @@ $$ D^2f(\mathbf{x}_0) [\boldsymbol{\delta}^{\otimes 2}] = \sum_{i=1}^D \sum_{j=1
 
 *   **结论**: **小批量梯度下降**在计算效率和收DENOISE稳定性之间取得了很好的平衡，是目前训练大规模机器学习模型（特别是深度神经网络）的**标准和首选**方法。
 
-## 第九讲：约束优化与拉格朗日乘子，凸优化
+# 第九讲：约束优化与拉格朗日乘子，凸优化
 
-### **第一部分：约束优化与拉格朗日乘子 (Constrained Optimization and Lagrange Multipliers)**
+## 第一部分：约束优化与拉格朗日乘子 (Constrained Optimization and Lagrange Multipliers)
 
 在上一讲中，我们主要讨论了**无约束优化**，即在整个参数空间中自由地寻找函数的最小值。然而，在许多实际问题中，参数的取值会受到各种**约束 (constraints)** 的限制。
 
-#### **1. 约束优化问题**
+### 1. 约束优化问题
 
 *   **从无约束到有约束**:
     *   **无约束优化**: $\min_{\mathbf{x}} f(\mathbf{x})$
@@ -3135,7 +3135,7 @@ $$ D^2f(\mathbf{x}_0) [\boldsymbol{\delta}^{\otimes 2}] = \sum_{i=1}^D \sum_{j=1
     *   在某些模型中，权重参数必须是非负的。
     *   在资源分配问题中，总消耗不能超过预算。
 
-#### **2. 处理约束的朴素思想与拉格朗日乘子的动机**
+### 2. 处理约束的朴素思想与拉格朗日乘子的动机
 
 *   **指示函数法 (Indicator Function Approach)**:
     *   一个最直接但**不实用**的想法是，将约束转化为一个惩罚项，加到目标函数中。我们可以定义一个新的目标函数 $J(\mathbf{x})$:
@@ -3149,7 +3149,7 @@ $$ D^2f(\mathbf{x}_0) [\boldsymbol{\delta}^{\otimes 2}] = \sum_{i=1}^D \sum_{j=1
     *   为了克服指示函数的缺点，我们需要一种更“温和”的方式来处理约束。
     *   拉格朗日乘子法通过将这种“硬约束”（无限高的墙）替换为一个**“软”的、线性的惩罚项**，使得问题在数学上变得更容易处理（更平滑、可微）。
 
-#### **3. 拉格朗日函数与拉格朗日乘子**
+### 3. 拉格朗日函数与拉格朗日乘子
 
 *   **引入拉格朗日乘子**:
     *   对于每一个不等式约束 $g_i(\mathbf{x}) \le 0$，我们都引入一个与之对应的**拉格朗日乘子 (Lagrange multiplier)** $\lambda_i$，并要求 $\lambda_i \ge 0$。
@@ -3160,3 +3160,124 @@ $$ D^2f(\mathbf{x}_0) [\boldsymbol{\delta}^{\otimes 2}] = \sum_{i=1}^D \sum_{j=1
     $$ \mathcal{L}(\mathbf{x}, \boldsymbol{\lambda}) = f(\mathbf{x}) + \boldsymbol{\lambda}^T \mathbf{g}(\mathbf{x}) $$
     其中 $\mathbf{g}(\mathbf{x})$ 是所有约束函数构成的向量，$\boldsymbol{\lambda}$ 是所有拉格朗日乘子构成的向量。
 *   **作用**: 拉格朗日函数巧妙地将一个有约束的优化问题，转化为了一个关于 $\mathbf{x}$ 和 $\boldsymbol{\lambda}$ 的、更易于分析的函数。我们将在后面看到，通过分析这个函数的性质，我们可以找到原约束问题的解。
+
+### 4. 拉格朗日对偶性：原问题与对偶问题
+
+拉格朗日乘子法最强大的地方在于它引入了**对偶性 (Duality)**。它允许我们将一个原始的、可能很难解决的优化问题（原问题），转化为一个与之相关的、但可能更容易解决的新问题（对偶问题）。
+
+*   **原问题 (Primal Problem)**:
+    这就是我们最初想要解决的带约束的优化问题。
+    $$ \min_{\mathbf{x}} f(\mathbf{x}) \quad \text{subject to} \quad g_i(\mathbf{x}) \le 0, \quad \forall i=1, \dots, m $$
+    这里的变量 $\mathbf{x}$ 被称为**原变量 (primal variables)**。
+
+*   **拉格朗日函数 (Lagrangian)**:
+    我们已经定义过，它是连接原问题和对偶问题的桥梁。
+    $$ \mathcal{L}(\mathbf{x}, \boldsymbol{\lambda}) = f(\mathbf{x}) + \sum_{i=1}^m \lambda_i g_i(\mathbf{x}) $$
+
+*   **对偶函数 (Dual Function)**:
+    对偶函数 $D(\boldsymbol{\lambda})$ 是通过**最小化**拉格朗日函数 $\mathcal{L}(\mathbf{x}, \boldsymbol{\lambda})$ **关于原变量 $\mathbf{x}$** 得到的结果。
+    $$ D(\boldsymbol{\lambda}) = \min_{\mathbf{x}} \mathcal{L}(\mathbf{x}, \boldsymbol{\lambda}) $$
+    注意，在计算 $D(\boldsymbol{\lambda})$ 时，我们将 $\boldsymbol{\lambda}$ 视为固定的常数。$D(\boldsymbol{\lambda})$ 的结果是一个只依赖于 $\boldsymbol{\lambda}$ 的函数。
+
+*   **对偶问题 (Dual Problem)**:
+    对偶问题就是去**最大化**这个对偶函数 $D(\boldsymbol{\lambda})$。
+    $$ \max_{\boldsymbol{\lambda} \in \mathbb{R}^m} D(\boldsymbol{\lambda}) \quad \text{subject to} \quad \lambda_i \ge 0, \quad \forall i=1, \dots, m $$
+    这里的变量 $\boldsymbol{\lambda}$ 被称为**对偶变量 (dual variables)**。
+
+### 5. 弱对偶性与极小化极大不等式
+
+原问题和对偶问题之间存在一个基本且恒成立的关系，称为**弱对偶性 (Weak Duality)**。
+
+*   **原问题的等价形式**:
+    我们可以将原约束问题巧妙地重写为一个“极小化-极大化”问题：
+    $$ \min_{\mathbf{x} \in \mathbb{R}^d} \max_{\boldsymbol{\lambda} \ge 0} \mathcal{L}(\mathbf{x}, \boldsymbol{\lambda}) $$
+    **为什么等价？** 考虑内部的 $\max_{\boldsymbol{\lambda} \ge 0} \mathcal{L}(\mathbf{x}, \boldsymbol{\lambda})$：
+    *   如果 $\mathbf{x}$ **违反**了某个约束（例如 $g_i(\mathbf{x}) > 0$），那么我们可以让对应的 $\lambda_i \to \infty$，这会使得 $\mathcal{L}$ 趋向于无穷大。
+    *   如果 $\mathbf{x}$ **满足**所有约束（即所有 $g_i(\mathbf{x}) \le 0$），那么为了最大化 $\mathcal{L}$，由于 $\lambda_i \ge 0$，我们应该让所有 $\lambda_i g_i(\mathbf{x})$ 项尽可能大。因为 $g_i(\mathbf{x}) \le 0$，所以这项的最大值是 0（当 $\lambda_i=0$ 或 $g_i(\mathbf{x})=0$ 时取到）。
+    *   因此，$\max_{\boldsymbol{\lambda} \ge 0} \mathcal{L}(\mathbf{x}, \boldsymbol{\lambda})$ 的结果是：如果 $\mathbf{x}$ 可行，则为 $f(\mathbf{x})$；如果 $\mathbf{x}$ 不可行，则为 $\infty$。
+    *   那么对这个结果再取 $\min_{\mathbf{x}}$，就恰好等价于在可行域内最小化 $f(\mathbf{x})$，这正是原问题的定义。
+
+*   **极小化极大不等式 (Minimax Inequality)**:
+    对于任何函数，交换 `min` 和 `max` 的顺序，会得到一个不等式关系：
+    $$ \min_{\mathbf{x}} \max_{\boldsymbol{\lambda} \ge 0} \mathcal{L}(\mathbf{x}, \boldsymbol{\lambda}) \ge \max_{\boldsymbol{\lambda} \ge 0} \min_{\mathbf{x}} \mathcal{L}(\mathbf{x}, \boldsymbol{\lambda}) $$
+
+*   **弱对偶性**:
+    将我们之前的定义代入这个不等式：
+    *   不等式的左边是**原问题的最优值**。
+    *   不等式的右边是**对偶问题的最优值**（因为 $\min_{\mathbf{x}} \mathcal{L}$ 就是对偶函数 $D(\boldsymbol{\lambda})$）。
+    *   因此，我们得到了弱对偶性定理：
+        $$ p^* = \min_{\mathbf{x}, \mathbf{g(x)}\le 0} f(\mathbf{x}) \ge \max_{\boldsymbol{\lambda}\ge 0} D(\boldsymbol{\lambda}) = d^* $$
+    **结论**: **对偶问题的最优解 $d^*$ 永远是原问题最优解 $p^*$ 的一个下界 (lower bound)**。
+
+### 6. 为什么对偶性有用？
+
+1.  **提供下界与最优性证明**:
+    *   对偶问题提供了一个衡量我们当前解有多好的标尺。原问题的任何一个可行解的目标函数值 $f(\mathbf{x})$ 与对偶问题的任何一个可行解的目标函数值 $D(\boldsymbol{\lambda})$ 之间的差 $f(\mathbf{x}) - D(\boldsymbol{\lambda})$，被称为**对偶间隙 (duality gap)**。
+    *   这个间隙告诉我们，我们找到的 $f(\mathbf{x})$ 最多比全局最优解 $p^*$ 大多少。如果这个间隙为零，我们就找到了全局最优解。
+
+2.  **计算上的便利性**:
+    *   在很多情况下，**对偶问题比原问题更容易求解**。
+    *   例如，对偶问题可能会有更少的变量，更好的数学性质（例如，对偶函数总是凹函数，无论原问题是否是凸的），或者具有可以分解为多个子问题的优美结构。
+    *   在许多大规模机器学习问题中（如支持向量机 SVM），求解其对偶问题远比直接求解原问题高效。
+
+3.  **强对偶性 (Strong Duality)**:
+    *   在某些“良好”的情况下（特别是对于**凸优化问题**，并满足一些约束规范，如Slater条件），弱对偶性中的不等号可以取等号，即 $p^* = d^*$。
+    *   这就是**强对偶性**。当强对偶性成立时，求解对偶问题就完全等价于求解原问题。我们可以通过解决更容易的对偶问题来获得原问题的最优解。
+
+### 7. 求解拉格朗日对偶问题 (可微情况)
+
+当我们处理的函数 $f(\mathbf{x})$ 和 $g_i(\mathbf{x})$ 都是**可微的**，我们可以采用一个系统性的步骤来求解对偶问题。
+
+**求解流程**:
+
+1.  **构造拉格朗日函数**:
+    写出拉格朗日函数 $\mathcal{L}(\mathbf{x}, \boldsymbol{\lambda}) = f(\mathbf{x}) + \sum_{i=1}^m \lambda_i g_i(\mathbf{x})$。
+
+2.  **求解对偶函数 $D(\boldsymbol{\lambda})$**:
+    *   回忆对偶函数的定义：$D(\boldsymbol{\lambda}) = \min_{\mathbf{x}} \mathcal{L}(\mathbf{x}, \boldsymbol{\lambda})$。
+    *   这是一个关于 $\mathbf{x}$ 的无约束优化问题。为了找到最小值，我们将 $\mathcal{L}$ 对 $\mathbf{x}$ 求梯度，并令其为零：
+        $$ \nabla_{\mathbf{x}} \mathcal{L}(\mathbf{x}, \boldsymbol{\lambda}) = 0 $$
+    *   从这个方程中，**解出最优的 $\mathbf{x}^*$**，这个解通常会是 $\boldsymbol{\lambda}$ 的一个函数，即 $\mathbf{x}^*(\boldsymbol{\lambda})$。
+
+3.  **得到对偶函数表达式**:
+    *   将上一步解出的 $\mathbf{x}^*(\boldsymbol{\lambda})$ **代回到**拉格朗日函数 $\mathcal{L}$ 中，消去 $\mathbf{x}$。
+    *   得到的结果就是一个只包含对偶变量 $\boldsymbol{\lambda}$ 的函数，这正是对偶函数 $D(\boldsymbol{\lambda})$ 的显式表达式。
+
+4.  **求解对偶问题**:
+    *   现在我们有了对偶函数 $D(\boldsymbol{\lambda})$，我们需要解决对偶问题：
+        $$ \max_{\boldsymbol{\lambda}} D(\boldsymbol{\lambda}) \quad \text{subject to} \quad \boldsymbol{\lambda} \ge 0 $$
+    *   这是一个新的、关于 $\boldsymbol{\lambda}$ 的约束优化问题。我们可以使用梯度上升法或其他优化技术来求解它。
+
+### 8. 处理等式约束 (Equality Constraints)
+
+到目前为止，我们只考虑了不等式约束 $g_i(\mathbf{x}) \le 0$。现在我们将其推广到包含**等式约束** $h_j(\mathbf{x}) = 0$ 的情况。
+
+**问题形式**:
+$$
+\begin{aligned}
+\min_{\mathbf{x}} \quad & f(\mathbf{x}) \\
+\text{subject to} \quad & g_i(\mathbf{x}) \le 0, \quad i=1, \dots, m \\
+& h_j(\mathbf{x}) = 0, \quad j=1, \dots, p
+\end{aligned}
+$$
+
+**处理方法**:
+一个等式约束 $h_j(\mathbf{x}) = 0$ 在逻辑上等价于**两个不等式约束**同时成立：
+$$ h_j(\mathbf{x}) \le 0 \quad \text{and} \quad -h_j(\mathbf{x}) \le 0 $$
+
+我们可以为这两个不等式分别引入拉格朗日乘子 $\mu_j^+$ 和 $\mu_j^-$，并要求它们都大于等于零。拉格朗日函数中对应的项为：
+$$ \dots + \mu_j^+ h_j(\mathbf{x}) + \mu_j^- (-h_j(\mathbf{x})) = \dots + (\mu_j^+ - \mu_j^-) h_j(\mathbf{x}) $$
+
+现在，我们令 $\nu_j = \mu_j^+ - \mu_j^-$。因为 $\mu_j^+$ 和 $\mu_j^-$ 可以是任何非负实数，它们的差 $\nu_j$ 就可以取**任何实数值**（正、负、零都可以）。
+
+**结论与规则总结**:
+这导出了一个非常重要的规则，用于区分不同类型约束所对应的拉格朗日乘子：
+
+*   **不等式约束 ($g_i(\mathbf{x}) \le 0$)**:
+    *   其对应的拉格朗日乘子 $\lambda_i$ 必须是**非负的** ($\lambda_i \ge 0$)。
+*   **等式约束 ($h_j(\mathbf{x}) = 0$)**:
+    *   其对应的拉格朗日乘子 $\nu_j$ 是**无符号约束的 (unconstrained)**，它可以是任何实数。
+
+在构造包含两种约束的拉格朗日函数时，这个区别至关重要：
+$$ \mathcal{L}(\mathbf{x}, \boldsymbol{\lambda}, \boldsymbol{\nu}) = f(\mathbf{x}) + \sum_{i=1}^m \lambda_i g_i(\mathbf{x}) + \sum_{j=1}^p \nu_j h_j(\mathbf{x}) $$
+并且在求解对偶问题时，我们需要满足 $\lambda_i \ge 0$，而对 $\nu_j$ 没有符号要求。这对于后续推导 KKT 条件是必不可少的一步。
