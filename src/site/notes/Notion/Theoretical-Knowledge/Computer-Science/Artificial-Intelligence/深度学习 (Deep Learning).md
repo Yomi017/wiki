@@ -698,17 +698,42 @@ GAN 的核心思想源于博弈论。它设定了两个相互竞争的神经网�
 5.  **更新 D 的参数**: 根据这个损失，通过反向传播**只更新判别器 D 的权重**。
 
 **第二步：训练生成器 G (固定 D)**
-
+![Image/Computer-Science/Deep Learning/9.png](/img/user/Image/Computer-Science/Deep%20Learning/9.png)
 1.  生成新的一批**伪造图片** $G(z)$。
 2.  将这批伪造图片送入**固定的**判别器 D，得到预测结果 $D(G(z))$。
 3.  **计算 G 的损失**:
     *   生成器 G 的目标是**欺骗** D。它希望 D 看到自己伪造的图片 $G(z)$ 时，会输出一个接近 1 的值。
     *   因此，G 的损失是基于 $D(G(z))$ 与目标 **1** 之间的差距来计算的。
 4.  **更新 G 的参数**: 根据这个损失，通过反向传播（误差会穿过固定的 D）**只更新生成器 G 的权重**。
-
+![Image/Computer-Science/Deep Learning/10.png](/img/user/Image/Computer-Science/Deep%20Learning/10.png)
 重复以上两个步骤，直到模型收敛。
 
 ## 3.4 代价函数 (Cost Function)
+
+在深入研究GAN具体的数学公式之前，我们首先要理解它的**根本目标 (Our Objective)**。
+![Image/Computer-Science/Deep Learning/11.png](/img/user/Image/Computer-Science/Deep%20Learning/11.png)
+这张图告诉我们，生成器 G 的训练，本质上是一个**最小化两个概率分布之间差异**的过程。
+
+1.  **图中元素解读:**
+    *   **$P_{data}$ (蓝色)**: 真实数据（如所有真实的动漫头像）在空间中所形成的**真实概率分布**。这个分布是复杂且未知的，我们只有它的一些样本（我们的训练集）。
+    *   **$P_G$ (绿色)**: 生成器 G 通过接收一个简单的正态分布（Normal Distribution）输入，所创造出的**生成数据分布**。
+    *   **目标 "as close as possible"**: 我们的终极目标，就是调整生成器 G 的参数，使得它产生的分布 $P_G$ 与真实数据的分布 $P_{data}$ **尽可能地接近**。当两个分布完全重合时，就意味着生成器已经完美地学会了如何创造真实数据，以假乱真。
+
+2.  **数学目标公式:**
+    *   图下方的公式 `G* = arg min_G Div(P_G, P_data)` 是对上述目标的数学化表达。
+    *   **$G^*$**: 代表我们想要找到的**最优生成器**。
+    *   **$\arg \min_G$**: 意思是“找到那个能使后面表达式最小化的G”。
+    *   **`Div(P_G, P_data)`**: 代表一个用于衡量两个分布 $P_G$ 和 $P_{data}$ 之间**差异度或散度 (Divergence)** 的函数。散度越小，表示两个分布越接近。常见的散度衡量方法有KL散度(Kullback-Leibler Divergence)、JS散度(Jensen-Shannon Divergence)等。
+
+### **从理论目标到GAN的巧妙实现**
+
+现在问题来了：我们并不知道 $P_{data}$ 的具体数学形式，那么如何去计算和最小化这个`Div(P_G, P_data)`呢？
+
+这正是GAN最天才的地方：它**不直接计算这个散度**，而是设计了一个巧妙的代理任务——**二人零和博弈**，并利用**判别器D**来间接地衡量这个散度。
+
+*   **判别器D的角色**: 判别器D通过不断学习来区分真实数据和生成数据，它实际上在隐式地**估算 $P_G$ 和 $P_{data}$ 之间的差异**。一个训练得很好的D，能敏锐地发现两个分布不重合的地方。
+*   **GAN的代价函数**: 我们接下来要学习的那个著名的**最小最大博弈 (Minimax Game)** 代价函数，实际上就是在优化 $P_G$ 和 $P_{data}$ 之间的 **JS散度(Jensen-Shannon Divergence)**。
+
 
 原始 GAN 论文中提出了一个**最小最大博弈 (Minimax Game)** 的代价函数：
 $$ \min_G \max_D V(D, G) = \mathbb{E}_{x \sim p_{data}(x)}[\log D(x)] + \mathbb{E}_{z \sim p_{z}(z)}[\log(1 - D(G(z)))] $$

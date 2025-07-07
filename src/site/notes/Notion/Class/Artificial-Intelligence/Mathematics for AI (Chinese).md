@@ -3115,3 +3115,48 @@ $$ D^2f(\mathbf{x}_0) [\boldsymbol{\delta}^{\otimes 2}] = \sum_{i=1}^D \sum_{j=1
         *   **一个意外的好处**: 这种噪声有时可以帮助优化算法**“跳出”不好的局部最小值或鞍点**，起到一种正则化的效果，可能有助于找到泛化性能更好的解。
 
 *   **结论**: **小批量梯度下降**在计算效率和收DENOISE稳定性之间取得了很好的平衡，是目前训练大规模机器学习模型（特别是深度神经网络）的**标准和首选**方法。
+
+## 第九讲：约束优化与拉格朗日乘子，凸优化
+
+### **第一部分：约束优化与拉格朗日乘子 (Constrained Optimization and Lagrange Multipliers)**
+
+在上一讲中，我们主要讨论了**无约束优化**，即在整个参数空间中自由地寻找函数的最小值。然而，在许多实际问题中，参数的取值会受到各种**约束 (constraints)** 的限制。
+
+#### **1. 约束优化问题**
+
+*   **从无约束到有约束**:
+    *   **无约束优化**: $\min_{\mathbf{x}} f(\mathbf{x})$
+    *   **约束优化**:
+        $$ \min_{\mathbf{x}} f(\mathbf{x}) \quad \text{subject to} \quad g_i(\mathbf{x}) \le 0, \quad \forall i=1, \dots, m $$
+*   **问题设定**: 我们要在满足一系列不等式约束条件 $g_i(\mathbf{x}) \le 0$ 的**可行域 (feasible region)** 内，找到使目标函数 $f(\mathbf{x})$ 最小的解。
+*   **普适性**: 目标函数 $f(\mathbf{x})$ 和约束函数 $g_i(\mathbf{x})$ 在一般情况下都可以是**非凸的**。
+*   **实际应用**:
+    *   在概率模型中，所有概率之和必须等于1。
+    *   在某些模型中，权重参数必须是非负的。
+    *   在资源分配问题中，总消耗不能超过预算。
+
+#### **2. 处理约束的朴素思想与拉格朗日乘子的动机**
+
+*   **指示函数法 (Indicator Function Approach)**:
+    *   一个最直接但**不实用**的想法是，将约束转化为一个惩罚项，加到目标函数中。我们可以定义一个新的目标函数 $J(\mathbf{x})$:
+        $$ J(\mathbf{x}) = f(\mathbf{x}) + \sum_{i=1}^m \mathbb{I}(g_i(\mathbf{x})) $$
+    *   其中，$\mathbb{I}(z)$ 是一个**无限阶跃函数 (infinite step function)**:
+        $$ \mathbb{I}(z) = \begin{cases} 0 & \text{if } z \le 0 \\ \infty & \text{otherwise} \end{cases} $$
+    *   **效果**: 如果任何一个约束被违反（即 $g_i(\mathbf{x}) > 0$），目标函数的值就会变成无穷大。这样，最小化 $J(\mathbf{x})$ 的过程就会自动地迫使解满足所有约束。
+    *   **缺点**: 这个新的目标函数 $J(\mathbf{x})$ 是**非连续、不可微的**，存在一个“无限高的墙”，这使得使用基于梯度的数值优化方法变得极其困难。
+
+*   **拉格朗日乘子的动机**:
+    *   为了克服指示函数的缺点，我们需要一种更“温和”的方式来处理约束。
+    *   拉格朗日乘子法通过将这种“硬约束”（无限高的墙）替换为一个**“软”的、线性的惩罚项**，使得问题在数学上变得更容易处理（更平滑、可微）。
+
+#### **3. 拉格朗日函数与拉格朗日乘子**
+
+*   **引入拉格朗日乘子**:
+    *   对于每一个不等式约束 $g_i(\mathbf{x}) \le 0$，我们都引入一个与之对应的**拉格朗日乘子 (Lagrange multiplier)** $\lambda_i$，并要求 $\lambda_i \ge 0$。
+*   **定义拉格朗日函数 (The Lagrangian)**:
+    我们将原始的目标函数和带权重的约束函数结合起来，构造一个新的函数，称为**拉格朗日函数**:
+    $$ \mathcal{L}(\mathbf{x}, \boldsymbol{\lambda}) = f(\mathbf{x}) + \sum_{i=1}^m \lambda_i g_i(\mathbf{x}) $$
+    或者用向量形式表示：
+    $$ \mathcal{L}(\mathbf{x}, \boldsymbol{\lambda}) = f(\mathbf{x}) + \boldsymbol{\lambda}^T \mathbf{g}(\mathbf{x}) $$
+    其中 $\mathbf{g}(\mathbf{x})$ 是所有约束函数构成的向量，$\boldsymbol{\lambda}$ 是所有拉格朗日乘子构成的向量。
+*   **作用**: 拉格朗日函数巧妙地将一个有约束的优化问题，转化为了一个关于 $\mathbf{x}$ 和 $\boldsymbol{\lambda}$ 的、更易于分析的函数。我们将在后面看到，通过分析这个函数的性质，我们可以找到原约束问题的解。
