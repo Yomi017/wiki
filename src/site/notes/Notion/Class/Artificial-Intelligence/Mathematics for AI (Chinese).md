@@ -2076,6 +2076,8 @@ $$ \det(A) = \det(D) = \prod_{i=1}^n \lambda_i $$
 
 ### 12.1 SVD 定理
 
+[[Notion/Class/Concept/SVD分解过程\|SVD分解过程]]
+
 对于**任何**一个 $m \times n$ 的实数矩阵 $A$（秩为 $r$），它都可以被分解为三个矩阵的乘积：
 $$ A = U\Sigma V^T $$
 其中：
