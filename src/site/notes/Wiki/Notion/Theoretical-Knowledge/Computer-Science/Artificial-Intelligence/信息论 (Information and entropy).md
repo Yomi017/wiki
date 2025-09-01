@@ -695,7 +695,7 @@ There is a special case illustrated by the transmission of code 271 in this exam
 在这个例子中，解码器有一个地方需要进行不寻常的操作。通常，在收到传输的码字后，解码器可以在字典中查找其字符串，然后输出它，并使用其第一个字符来完成部分形成的最后一个字典条目，然后开始下一个字典条目。这样只需要一次字典查找。然而，上面介绍的算法使用了两次查找，一次用于第一个字符，另一次用于整个字符串。为什么不只使用一次查找以提高效率呢？
 此示例中代码271的传输就说明了一个特殊情况，即接收到的代码对应的字符串不完整。可以找到第一个字符，但在检索整个字符串之前，必须先完成该条目。当一个字符或字符串第一次连续出现三次时，就会发生这种情况，因此这种情况很少见。上述算法可以正确工作，但代价是额外的一次查找，这很少需要，并可能减慢算法的速度。一个使用单次字典查找的更快算法只有在检测到这种情况并将其作为特殊情况处理时才能可靠工作。
 
-![11.png](/img/user/Wiki/Image/Computer-Science/Information%20and%20entropy/11.png)
+![Image/Computer-Science/Information and entropy/11.png](/img/user/Wiki/Image/Computer-Science/Information%20and%20entropy/11.png)
 
 *   **Core:** Demonstrates LZW's effectiveness for longer, repetitive strings, showing rapid dictionary growth and significant bit savings (e.g., 25% for the given example).
 *   **Distinction:** Highlights a rare "special case" in decoding (e.g., code 271) where the received string is incomplete, requiring a second dictionary lookup for correctness, which can impact efficiency if not optimized.
@@ -815,7 +815,7 @@ With this equation, we can compute the set of base matrices of the DCT, that is:
 `X = CYCT`。(3.15)
 利用这个方程，我们可以计算DCT的基矩阵集，即：Y的每个元素通过DCT对应的矩阵集。让我们构建一组所有可能的图像，每个图像只有一个非零像素。这些图像将代表矩阵Y的各个系数。
 
-![12.png](/img/user/Wiki/Image/Computer-Science/Information%20and%20entropy/12.png)
+![Image/Computer-Science/Information and entropy/12.png](/img/user/Wiki/Image/Computer-Science/Information%20and%20entropy/12.png)
 
 Figure 3.7(a) shows the set for 4×4 pixel images. Figure 3.7(b) shows the result of applying the IDCT to the images in Figure 3.7(a). The set of images in Figure 3.7(b) are called basis because the DCT of any of them will yield a matrix Y that has a single non-zero coefficient, and thus they represent the base images in which the DCT “decomposes” any input image.
 Recalling our overview of Discrete Linear Transformations above, should we want to recover an image X from its DCT Y we would just take each element of Y and multiply it by the corresponding matrix from 3.7(b). Indeed, Figure 3.7(b) introduces a very remarkable property of the DCT basis: it encodes spatial frequency. Compression can be achieved by ignoring those spatial frequencies that have smaller DCT coefficients. Think about the image of a chessboard—it has a high spatial frequency component, and almost all of the low frequency components can be removed. Conversely, blurred images tend to have fewer higher spatial frequency components, and then high frequency components, lower right in the Figure 3.7(b), can be set to zero as an “acceptable approximation”. This is the principle for irreversible compression behind JPEG.
@@ -823,7 +823,7 @@ Recalling our overview of Discrete Linear Transformations above, should we want 
 图3.7(a)显示了4×4像素图像的集合。图3.7(b)显示了将IDCT应用于图3.7(a)中图像的结果。图3.7(b)中的图像集合被称为基，因为其中任何一个图像的DCT都会产生一个只有一个非零系数的矩阵Y，因此它们代表了DCT“分解”任何输入图像的基图像。
 回顾我们上面对离散线性变换的概述，如果我们要从其DCT Y中恢复图像X，我们只需取出Y的每个元素并将其乘以图3.7(b)中对应的矩阵。实际上，图3.7(b)引入了DCT基的一个非常显著的特性：它编码空间频率。通过忽略具有较小DCT系数的空间频率可以实现压缩。想想棋盘图像——它具有高空间频率分量，几乎所有低频分量都可以被去除。相反，模糊图像往往具有较少的高空间频率分量，此时高频分量（在图3.7(b)的右下角）可以设置为零，作为“可接受的近似”。这就是JPEG背后不可逆压缩的原理。
 
-![13.png](/img/user/Wiki/Image/Computer-Science/Information%20and%20entropy/13.png)
+![Image/Computer-Science/Information and entropy/13.png](/img/user/Wiki/Image/Computer-Science/Information%20and%20entropy/13.png)
 
 *   **Core:** Discrete Cosine Transformation (DCT) is a specific type of discrete linear transformation (`Y = CᵀXC`) used in JPEG, where the transformation matrix C is defined using cosine functions and its inverse is its transpose (`C⁻¹ = Cᵀ`). This allows images (X) to be transformed into a matrix of coefficients (Y) in the spatial frequency domain.
 *   **Distinction:** The key advantage of DCT for compression is that its basis matrices (representing spatial frequencies) allow for **lossy compression**: coefficients corresponding to less perceptible high-frequency components (which have smaller values) can be discarded or set to zero, leading to an "acceptable approximation" (e.g., in JPEG).
