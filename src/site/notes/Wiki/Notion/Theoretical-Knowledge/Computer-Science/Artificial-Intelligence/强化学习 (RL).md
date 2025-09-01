@@ -351,7 +351,9 @@ $$
     $$ V^\pi(s) = \sum_{a} \pi(a|s) \sum_{s'} P(s'|s, a) \left[ R(s, a, s') + \gamma V^\pi(s') \right] $$
     $$V^\pi(s) = \underbrace{\sum_a \pi(a|s) \left[ \sum_r p(r|s,a)r \right]}_{\text{期望的立即奖励}} + \gamma \underbrace{\sum_a \pi(a|s) \sum_{s'} p(s'|s,a)V^\pi(s')}_{\text{期望的未来价值}}$$
     $$=\sum_a \pi(a|s) \left( \sum_r p(r|s,a)r + \gamma{ \sum_{s'} p(s'|s,a)V^\pi(s')}\right)$$
-      
+    $$=r_\pi(s)+\gamma\sum_{s'}p_\pi(s'|s)v_\pi(s')$$
+
+	  [[Wiki/Notion/Theoretical-Knowledge/Computer-Science/Artificial-Intelligence/Question/两个贝尔曼公式的互推 (The mutual derivation of two Bellman formulas)\|两个贝尔曼公式的互推 (The mutual derivation of two Bellman formulas)]]
 	*   当前状态的价值 = 所有可能行动的期望价值。
     *   某个行动的价值 = 所有可能后继状态的（即时奖励 + 折扣后的未来价值）的期望。
 
