@@ -843,7 +843,7 @@ $$ L(\theta) \approx L(\theta') + \frac{1}{2} (\theta - \theta')^T H (\theta - \
 ![Image/Computer-Science/Machine Learning/12.png](/img/user/Wiki/Image/Computer-Science/Machine%20Learning/12.png)
 
 在高维空间中（例如深度神经网络的参数空间），鞍点远比局部最小值点更常见。那么，当梯度下降卡在鞍点时（因为梯度为零），我们该怎么办呢？**海森矩阵 $H$ 告诉了我们逃离的方向！**
-[[Wiki/Notion/Class/Proof/鞍点的最速逃离方向 (The fastest escape direction for the stationed point)\|鞍点的最速逃离方向 (The fastest escape direction for the stationed point)]]
+[[Wiki/Notion/Class/Artificial-Intelligence/Mathematics for AI/Proof/鞍点的最速逃离方向 (The fastest escape direction for the stationed point)\|鞍点的最速逃离方向 (The fastest escape direction for the stationed point)]]
 *   **核心思想**: 在鞍点处，海森矩阵 $H$ 必然存在至少一个**负特征值 (negative eigenvalue)**。
 *   **逃离步骤**:
     1.  假设我们当前在鞍点 $\theta'$，梯度为零。
