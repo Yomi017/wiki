@@ -55,7 +55,8 @@
 ## Part II: Matrix Operation
 
 *   **Matrix Addition:**
-	* For $A,B\in \mathbb R^{n\times m}$:$$(A+B)_{ij}=a_{ij}+b_{ij}$$
+	* For $A,B\in \mathbb R^{n\times m}$:
+	* $$(A+B)_{ij}=a_{ij}+b_{ij}$$
 *   **Matrix Multiplication**
 	* For $A\in\mathbb R^{m\times n},B\in\mathbb R^{n\times k},C=AB\in\mathbb R^{m\times k}$:
 	$$c_{ij}=\sum_{l=1}^na_{il}b_{lj}$$
