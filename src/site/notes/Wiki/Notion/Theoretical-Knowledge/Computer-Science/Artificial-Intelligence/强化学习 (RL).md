@@ -193,6 +193,10 @@ $$ \tau = (S_0, \text{向右}, R_1=+10, S_1, \text{向上}, R_2=+10, S_2, \text{
     $$ Q^\pi(s, a) = \mathbb{E}_\pi [G_t | S_t = s, A_t = a] $$
 *   **解读**: $Q^\pi(s, a)$ 回答了“在策略 $\pi$ 下，于状态 $s$ 采取行动 $a$ 有多好？”这个问题。$Q$ 函数通常比 $V$ 函数更有用，因为它直接告诉我们选择哪个动作更好。
 
+#### 3.3 联系
+*  $$E[G_t|S_t=s]=\sum_aE[G_t|S_t=s,A_t=a]\pi(a|s)$$
+$$v_\pi(s)=\sum_a\pi(a|s)q_\pi(s,a)$$
+
 [[Wiki/Notion/Theoretical-Knowledge/Computer-Science/Artificial-Intelligence/Question/策略、轨迹与价值函数的关系 (The relationship between Policy, Trajectory and State Value)\|策略、轨迹与价值函数的关系 (The relationship between Policy, Trajectory and State Value)]]
 
 #### 3.4. 价值函数的估计：从贝尔曼方程到自举
@@ -349,6 +353,8 @@ $$
 #### 4.1. 贝尔曼期望方程 (Bellman Expectation Equation)
 *   **$V^\pi$ 的贝尔曼方程**:
     $$ V^\pi(s) = \sum_{a} \pi(a|s) \sum_{s'} P(s'|s, a) \left[ R(s, a, s') + \gamma V^\pi(s') \right] $$
+    $$\Rightarrow V_\pi(s)=\sum_a\pi(a|s)[\sum_rp(r|s,a)r+\gamma\sum_{s'}p(s'|s,a)V_\pi(s')]$$
+    $$\Rightarrow q_\pi(s,a)=\sum_rp(r|s,a)r+\gamma\sum_{s'}p(s'|s,a)V_\pi(s')$$
     $$V^\pi(s) = \underbrace{\sum_a \pi(a|s) \left[ \sum_r p(r|s,a)r \right]}_{\text{期望的立即奖励}} + \gamma \underbrace{\sum_a \pi(a|s) \sum_{s'} p(s'|s,a)V^\pi(s')}_{\text{期望的未来价值}}$$
     $$=\sum_a \pi(a|s) \left( \sum_r p(r|s,a)r + \gamma{ \sum_{s'} p(s'|s,a)V^\pi(s')}\right)$$
     $$=r_\pi(s)+\gamma\sum_{s'}p_\pi(s'|s)v_\pi(s')$$
