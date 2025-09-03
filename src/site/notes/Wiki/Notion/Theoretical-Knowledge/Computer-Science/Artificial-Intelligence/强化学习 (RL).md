@@ -725,7 +725,7 @@ $$
     *   **特点**: 样本利用率高，探索性强，但可能不稳定。
     *   **代表算法**: Q-Learning, DQN, DDPG。
 
-### **7. 蒙特卡洛（MC）强化学习算法笔记**
+### **7. 蒙特卡洛（MC）强化学习算法**
 
 蒙特卡洛（Monte Carlo, MC）方法是强化学习中一类非常重要的 **无模型（Model-Free）** 算法。
 
@@ -750,6 +750,8 @@ $$
 *   **局限性**：
     *   这只是一个**评估算法**，它只能告诉你一个策略有多好，但不能帮你找到更好的策略。
     *   为了找到最优策略，我们需要进入“控制”阶段。
+
+[[Wiki/Notion/Theoretical-Knowledge/Computer-Science/Artificial-Intelligence/Concept/MC Based\|MC Based]]
 
 ---
 
