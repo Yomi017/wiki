@@ -807,6 +807,8 @@ $$
 *   **局限性**：
     *   **不切实际**：“探索性开端”这个假设在现实世界中往往是无法实现的。例如，你不能让一个机器人凭空出现在某个特定的姿势（状态）并强制它执行某个动作（动作）来开始任务。
 
+[[Wiki/Notion/Theoretical-Knowledge/Computer-Science/Artificial-Intelligence/Question/The comparison of DP, MC and TD\|The comparison of DP, MC and TD]]
+
 ---
 
 #### **7.4 移除探索性开端：MC ε-Greedy (更实用的策略控制)**
