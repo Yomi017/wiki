@@ -1604,5 +1604,3 @@ Any complex 3D rotation can be decomposed into a sequence of fundamental rotatio
 *   **Commutativity:**
     *   In **$\mathbb{R}^2$**, rotations **are commutative**: $R(\phi)R(\theta) = R(\theta)R(\phi)$.
     *   In **$\mathbb{R}^3$ and higher dimensions**, rotations are **not commutative**.
-
-# Lecture 5: Matrix Decompositions: Determinant and Trace, Eigenvalues and Eigenvectors, Cholesky Decomposition, Eigendecomposition and Diagonalization
