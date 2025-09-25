@@ -16,7 +16,7 @@
 3.  环境接收行动 $a$，发生状态转移，进入新的状态 $S_{t+1}=s'$。
 4.  环境向智能体反馈一个即时**奖励** $R_{t+1}=r$。
 5.  智能体进入新状态 $s'$，循环继续。
-
+![Wiki/Image/Computer-Science/RL/6.png](/img/user/Wiki/Image/Computer-Science/RL/6.png)
 #### 1.2. MDP 的核心组成部分
 
 ##### **状态 (State, $s \in \mathcal{S}$)**
