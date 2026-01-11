@@ -13,7 +13,7 @@ $$
 
 -   **$U$**: 一个 $m \times m$ 的**正交矩阵** (Orthogonal Matrix)。其列向量 $uᵢ$ 被称为**左奇异向量 (Left Singular Vectors)**。
 -   **$Σ$ (Sigma)**: 一个 $m \times n$ 的**对角矩阵**。其对角线上的元素 $σᵢ$ 被称为**奇异值 (Singular Values)**。它们非负 ($σᵢ ≥ 0$) 且按从大到小的顺序排列。
--   **$V$**: 一个 $n x n$ 的**正交矩阵**。其列向量 $vᵢ$ 被称为**右奇异向量 (Right Singular Vectors)**。$V^T$ 是 $V$ 的转置。
+-   **$V$**: 一个 $n × n$ 的**正交矩阵**。其列向量 $vᵢ$ 被称为**右奇异向量 (Right Singular Vectors)**。$V^T$ 是 $V$ 的转置。
 
 ### **计算流程：三步走战略**
 
