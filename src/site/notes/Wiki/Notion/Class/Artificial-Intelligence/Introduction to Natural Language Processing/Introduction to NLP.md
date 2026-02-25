@@ -43,9 +43,29 @@
 *   **Formal Definition (形式化定义):**
     一个上下文无关文法由四个元素组成：
     1.  $N$: 非终结符集合（Non-terminal symbols），如 NP, VP。
-    2.  $\Sigma$: 终结符集合（Terminal\ symbols），即具体的单词。
+    2.  $\Sigma$: 终结符集合（Terminal symbols），即具体的单词。
     3.  $R$: 规则/产生式集合，形式为 $A \rightarrow \beta$，其中 $A \in N$。
-    4.  $S$: 起始符号，$$S \in N$$。
+    4.  $S$: 起始符号，$S \in N$。
+
+*   **核心短语范畴 (Phrasal Categories)**，这些符号代表由多个词组成的短语单位：
+     **$NP$ (Noun Phrase): 名词短语**。句子的主体，通常指代人、事、物。例如：*a flight*（一个航班）, *the big blue bus*（那辆蓝色大巴士）。
+    
+     **$VP$ (Verb Phrase): 动词短语**。描述动作或状态。例如：*prefer a morning flight*（倾向于早班机）, *disappear*（消失）。
+    
+     **$PP$ (Prepositional Phrase): 介词短语**。由介词开头，表示地点、时间、方式等。例如：*from Atlanta*（来自亚特兰大）, *in the morning*（在早上）。
+    
+     **$AP$ (Adjective Phrase): 形容词短语**。以形容词为核心。例如：*least expensive*（最便宜的）。
+
+ *  **核心句子与词类范畴 (Clausal & Word Categories)**
+      **$S$ (Sentence): 句子**。文法的最高层级，通常由 $NP$ 和 $VP$ 组成。
+      
+     **$Aux$ (Auxiliary): 助动词**。协助主要动词构成时态、语态或疑问。例如：*do, does, can, will, have*。在是非问句（Yes-no Questions）中常用到它（如：*Do any of these flights...*）。
+     
+     **$Det$ (Determiner): 限定词**。放在名词前限定其范围。例如：*a, an, the, this, that*。
+     
+     **$Nominal$ (名词性成分):** 介于名词和名词短语之间的成分。它比单个名词信息更多，但还没加上限定词。例如：*morning flight* 是一个 $Nominal$，加上 *a* 之后变成 $NP$ (*a morning flight*)。
+     
+     **$Wh-NP$: 疑问名词短语**。引导疑问句的特殊名词短语，通常包含 *who, what, which* 等。例如：*What airlines*。
 
 *   **Sentence Structures (句子结构规则):**
     *   **Declarative (陈述句):** $$S \rightarrow NP\ VP$$
@@ -63,9 +83,9 @@
         *   $$Nominal \rightarrow relative-clause$$ (*flight that serves breakfast*)
 
 *   **Verb Phrase (VP):**
-    *   $$VP \rightarrow Verb$$ (*disappear*)
-    *   $$VP \rightarrow Verb\ NP$$ (*prefer a morning flight*)
-    *   $$VP \rightarrow Verb\ S$$ (含有句法补足语 Sentential complement)
+    *   $VP \rightarrow Verb$ (*disappear*)
+    *   $VP \rightarrow Verb\ NP$ (*prefer a morning flight*)
+    *   $VP \rightarrow Verb\ S$ (含有句法补足语 Sentential complement)
 
 *   **Data Source:** **Penn Treebank** 是常用的解析树标注语料库，用于派生 CFG 或训练解析器。
 
@@ -86,7 +106,7 @@
         *   *Example:* "I saw the Grand Canyon flying to New York." (谁在飞？我还是大峡谷？)
     *   **Coordination Ambiguity (并列歧义):** 连词连接的范围不明确。
         *   *Example:* "old men and women" (是“老的老头和老太太”，还是“老头和所有女人”？)
-
+![Wiki/Image/Class/Introdution to NLP/1.png](/img/user/Wiki/Image/Class/Introdution%20to%20NLP/1.png)
 ---
 
 ## Part IV: CYK Algorithm & CNF
