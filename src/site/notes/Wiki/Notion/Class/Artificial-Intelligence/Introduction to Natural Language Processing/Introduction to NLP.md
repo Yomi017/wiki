@@ -55,6 +55,14 @@
      **$PP$ (Prepositional Phrase): 介词短语**。由介词开头，表示地点、时间、方式等。例如：*from Atlanta*（来自亚特兰大）, *in the morning*（在早上）。
     
      **$AP$ (Adjective Phrase): 形容词短语**。以形容词为核心。例如：*least expensive*（最便宜的）。
+     
+     **$N$ 或 $NN$ (Noun): 名词**。表示人、地点、事物或概念的词。这是 $Nominal$ 和 $NP$ 的核心。
+     
+     **$V$ 或 $VB$ (Verb): 动词**。 表示动作、事件或状态的词。这是 $VP$ 的核心。
+     
+     **$Adj$ 或 $JJ$ (Adjective): 形容词**。用来修饰名词，描述其属性。它是 $AP$ 的核心。
+     
+     **$Adv$ 或 $RB$ (Adverb): 副词**。 用来修饰动词、形容词或其他副词。
 
  *  **核心句子与词类范畴 (Clausal & Word Categories)**
       **$S$ (Sentence): 句子**。文法的最高层级，通常由 $NP$ 和 $VP$ 组成。
@@ -66,6 +74,22 @@
      **$Nominal$ (名词性成分):** 介于名词和名词短语之间的成分。它比单个名词信息更多，但还没加上限定词。例如：*morning flight* 是一个 $Nominal$，加上 *a* 之后变成 $NP$ (*a morning flight*)。
      
      **$Wh-NP$: 疑问名词短语**。引导疑问句的特殊名词短语，通常包含 *who, what, which* 等。例如：*What airlines*。
+     
+     **$P$ 或 $IN$ (Preposition): 介词**。$PP$ (介词短语) 的核心词，通常放在名词短语之前，表示位置、时间或逻辑关系。
+     
+     **$Conj$ 或 $CC$ (Conjunction): 连词**。用于连接两个相同的语法成分（如连接两个 $NP$ 或两个 $S$）。这是造成**并列歧义**的主要原因。
+     
+     **$Pro$ 或 $PRP$ (Pronoun): 代词**。** 用来替代名词短语的词。在解析树中，它通常直接作为一个 $NP$。
+     
+     **$Card$ 或 $CD$ (Cardinal Number): 基数词**。**定义：** 表示数量的词。
+     
+     **$Ord$ (Ordinal Number): 序数词**。表示顺序的词。
+     
+     **$Quant$ (Quantifier): 数量词**。比限定词更具体地表示数量（不确定数量）。
+     
+     **$SBAR$ 或 $CP$ (Complementizer Phrase): 补语从句/关系从句**。**定义：** 由 *that* 或 *which* 等词引导的从句。它通常作为一个修饰语嵌套在 $NP$ 或 $VP$ 中。
+     
+     **$Wh-Adv$ (Wh-Adverb): 疑问副词**。**定义：** 引导疑问句的副词，询问时间、地点或原因。
 
 *   **Sentence Structures (句子结构规则):**
     *   **Declarative (陈述句):** $$S \rightarrow NP\ VP$$
@@ -131,7 +155,7 @@
 
 ---
 
-## Part V: The Bitter Lesson (现代视角)
+## Part V: The Bitter Lesson 
 
 *   **Core Concept (Rich Sutton):**
     在 NLP 发展史上，关于“构建人类知识（如句法规则）”与“利用大规模计算发现知识”一直存在争论。
@@ -142,3 +166,88 @@
     *   **Present (LLM):** 通过**下一标记预测**（$Next\ token\ prediction$），模型可以直接学习语言规律。
 *   **Conclusion:**
     虽然在 LLM 时代显式构建语法树可能显得不再必要，但学习这些概念对于理解语言结构和建立 NLP 直觉仍然至关重要。
+
+好的，这是根据 PDF 后半部分（Page 15 - Page 29）整理的后续笔记。这部分重点讲解了**句法分析的搜索策略**、**歧义性**以及解决效率问题的核心算法——**CYK 算法**。
+
+---
+
+## Part VI: Syntactic Parsing & Search Strategies
+
+*   **Goal (目标):**
+    给定一个 CFG 和一个句子，为该句子分配有效的解析树（Parsing trees）。
+    *   **Root constraint:** 树的根节点必须是起始符号 $S$。
+    *   **Leaf constraint:** 树的叶子节点必须是句子中的单词。
+    *   **Process:** 本质上是 CFG 生成句子过程的**逆过程**。
+
+*   **Search Strategies (搜索策略):**
+    句法分析本质上是一个在搜索空间中寻找合法树的过程。
+    1.  **Top-down Search (自顶向下搜索):**
+        *   **Method:** 从根节点 $S$ 开始，根据规则 $A \rightarrow \beta$ 逐步展开非终结符。
+        *   **Pruning:** 当展开的叶子无法匹配输入句子中的单词时进行剪枝。
+        *   **Stop:** 当生成的叶子序列与输入句子完全匹配时停止。
+        *   **Issue:** 可能会盲目地构建很多最终无法匹配输入单词的树结构。
+    2.  **Bottom-up Search (自底向上搜索):**
+        *   **Method:** 从叶子节点（输入单词）开始，利用规则右侧匹配，逐步归约为非终结符（如 $Det + Noun \rightarrow NP$）。
+        *   **Pruning:** 当生成的结构无法进一步组合或匹配任何规则右侧时剪枝。
+        *   **Stop:** 当最终归约为根节点 $S$ 时停止。
+        *   **Issue:** 可能会构建很多无法最终连接到根节点 $S$ 的孤立子树。
+
+*   **The Problem: Repeated Subproblems (重复子问题):**
+    无论是自顶向下还是自底向上，单纯的搜索算法效率很低。
+    *   **Reason:** 在搜索树的不同分支中，相同的子串（如 "*that flight*"）会被反复解析，即使之前的尝试已经证明它在某种组合下是死胡同（$dead\text{-}end$）。
+    *   **Solution:** 需要引入**动态规划 (Dynamic Programming)** 思想，缓存子问题的解。
+
+---
+
+## Part VII: Structural Ambiguity (结构歧义)
+
+同一个句子在句法上可能有多种合法的解析树，导致语义不同。这是 NLP 解析的难点。
+
+*   **Attachment Ambiguity (附件歧义):**
+    修饰性短语（如介词短语 PP 或分词短语）依附的对象不明确。
+    *   **Example:** "*I saw the Grand Canyon flying to New York.*"
+        *   **Case 1:** $VP$ (saw) $\leftarrow$ $Gerund\text{-}VP$ (flying...)。意味着“我”在飞往纽约时看到了峡谷。
+        *   **Case 2:** $NP$ (Grand Canyon) $\leftarrow$ $Gerund\text{-}VP$ (flying...)。意味着“大峡谷”在飞往纽约（虽然语义滑稽，但在句法上是合法的）。
+
+*   **Coordination Ambiguity (并列歧义):**
+    连词（如 *and*）连接的范围不明确。
+    *   **Example:** "*old men and women*"
+        *   **Case 1:** $[old\ men]\ and\ [women]$。$old$ 仅修饰 $men$。
+        *   **Case 2:** $old\ [men\ and\ women]$。$old$ 修饰整个 $NP$，即老人和老妇人。
+
+---
+
+## Part VIII: CYK Algorithm (Dynamic Programming)
+
+CYK (Cocke-Younger-Kasami) 算法是解决 CFG 解析效率问题的标准动态规划算法。
+
+*   **Core Idea (核心思想):**
+    *   **Overlapping Sub-problems:** 重复利用子问题的解（即解析过的子串不需要重新解析）。
+    *   **Optimal Substructure:** 一个大的成分（如 $S$）是由更小的成分（如 $NP, VP$）成功组合而成的。如果子成分解析错误，大成分也不可能正确。
+
+*   **Prerequisite: Chomsky Normal Form (CNF, 乔姆斯基范式):**
+    CYK 算法要求 CFG 必须转化为 CNF 形式，以便于构建标准化的二叉树结构。
+    *   **CNF Rules:** 规则只能是以下两种形式之一：
+        1.  $A \rightarrow B\ C$ （右侧严格为两个非终结符）
+        2.  $A \rightarrow a$ （右侧严格为一个终结符）
+    *   **Conversion (转化):** 任何 CFG 都可以转化为 CNF 而不损失表达能力。
+        *   混合规则转化：$A \rightarrow B\ c \Rightarrow A \rightarrow B\ X, X \rightarrow c$
+        *   长规则转化：$A \rightarrow B\ C\ D \Rightarrow A \rightarrow B\ Y, Y \rightarrow C\ D$
+
+*   **The Algorithm (算法流程):**
+    假设句子有 $n$ 个单词。
+    1.  **Data Structure:** 构建一个 $(n+1) \times (n+1)$ 的三角矩阵（或表）。
+        *   单元格 $table[i, j]$ 存储的是：能生成句子中从位置 $i$ 到 $j$ 的子串的所有非终结符集合。
+    2.  **Initialization (底层):** 
+        *   对于每个单词 $w_j$，如果存在规则 $A \rightarrow w_j$，将 $A$ 填入 $table[j-1, j]$。这是矩阵的对角线。
+    3.  **Recursion (填表):** 
+        *   对于跨度 $span$ 从 2 到 $n$（子串长度）：
+            *   对于起始位置 $i$ 从 0 到 $n-span$：
+                *   设结束位置 $j = i + span$。
+                *   尝试所有可能的**分割点** $k$ ($i < k < j$)。
+                *   **核心逻辑:** 如果 $B \in table[i, k]$ 且 $C \in table[k, j]$，并且文法中存在规则 $A \rightarrow B\ C$，则将 $A$ 加入 $table[i, j]$。
+    4.  **Termination (终止):** 
+        *   检查右上角单元格 $table[0, n]$。如果其中包含起始符号 $S$，则解析成功。
+
+*   **Efficiency:** 
+    通过缓存 $table[i, j]$，避免了重复解析相同的子串，将指数级的搜索复杂度降低到了多项式级别（通常是 $O(n^3)$）。
