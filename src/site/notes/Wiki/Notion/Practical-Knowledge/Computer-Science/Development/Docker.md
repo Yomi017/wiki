@@ -4,7 +4,7 @@
 
 # Docker 容器单独配置 DNS 修复
 
-## 1. 什么时候要考虑给 Docker 容器单独配 DNS
+## 1. 问题
 
 在 WSL2 + Docker Desktop 或 Docker Engine 的环境里，容器默认会走 Docker 内置 DNS `127.0.0.11`。  
 如果宿主机当前 DNS 链路里混入了 Tailscale、校园网、公司内网、代理软件等配置，容器就可能出现下面这种现象：
