@@ -5,7 +5,7 @@
 
 # AIAA 4051 Introduction to Natural Language Processing
 
-> 覆盖范围：Lecture 1-10 与 Lecture 20。整理方式按主题重组，不保留逐页课件页标题；标题页、demo、conclusion、quiz 中的复习重点已合并到对应主题或考试提示中。
+> 覆盖范围：Lecture 1-25。整理方式按主题重组，不保留逐页课件页标题；标题页、demo、conclusion、quiz 中的复习重点已合并到对应主题或考试提示中。
 
 # Lecture 1: 课程介绍、数学基础、概率基础与 MLE
 
@@ -916,74 +916,452 @@ $$
 * **Remaining issue (剩余问题)**：若 encoder 仍是 RNN，计算仍是 sequential bottleneck。Transformer 后续进一步移除 RNN。
 * **Review focus (复习重点)**：IBM Model 1 词独立翻译；HMM alignment 不能直接实现 many-to-many；短候选可能 BLEU-1 很高但翻译差；seq2seq 弱点包括输入压缩困难和早期错误影响未来。
 
-# Lecture 20: LLM Inference、KV Cache、Memory Wall、PagedAttention、StreamingLLM
+# Lecture 11: Transformer 架构、位置编码、注意力与训练推理
 
-## Part I: Autoregressive Inference and KV Cache
+## Part I: Transformer Big Picture
 
-* **Autoregressive generation (自回归生成)** 逐 token 生成。naive 实现每预测一个新 token 都重新计算历史 token 的 Key / Value，造成重复计算。
-* **Attention formula (注意力公式)**：
+* **Transformer** 起源于 2017 年的 *Attention is All You Need*，后来扩展到 CV、robotics、data science，也成为 GPT-like 应用的基础架构。
+* 作为 **foundation model (基础模型)**，Transformer 需要足够大的模型容量去覆盖多样语言模式，也需要大规模数据去看到广泛 pattern；它的 inductive bias 比 RNN/CNN 更弱，因此更依赖数据和规模。
+* 早期 Transformer 是 **encoder-decoder architecture**，后来 GPT 类模型主要采用 **decoder-only architecture**。
+* 核心组件包括 **positional embedding**、**masked multi-head attention**、**feed-forward / MLP layer**、**layer normalization** 和 **residual connections**。
+
+## Part II: Positional Embedding and Attention
+
+* **Positional Embedding (位置编码)** 给 token 加入位置信息；否则同一个 token 在不同位置 embedding 相同，模型无法区分其句法角色。比如 `Trust is what builds trust` 中两个 `trust` 的语法和语义角色不同。
+* **Attention (注意力)** 用 Query、Key、Value 计算 token 间依赖：
 $$
 Attention(Q,K,V)=softmax\left(\frac{QK^T}{\sqrt{d_k}}\right)V
 $$
-* **KV Cache (KV 缓存)** 保存过去 token 的 Key / Value，用 GPU memory 换时间。
+* **Masked Multi-head Attention (掩码多头注意力)** 让每个位置只能看见历史 token，符合 autoregressive generation；multi-head 把 embedding 维拆成多个 head，让模型学习不同类型的关系。
+* 典型实现中，batch size、head 数、sequence length、head size 会决定 `q/k/v` tensor 的 shape；所有 head 拼接后回到 embedding dimension。
+
+## Part III: MLP, LayerNorm, and Residuals
+
+* **MLP layer (前馈层)** 对每个 token 独立做非线性变换，增加表达能力；attention 负责 token 间交互，MLP 负责每个位置内部的 feature transformation。
+* **Layer Normalization (层归一化)** 对一个 token 的 hidden vector 做 feature 维 normalization，使深层训练更稳定。
+* **Residual Connection (残差连接)** 让层输出保留输入：
+$$
+x_{l+1}=x_l+F(x_l)
+$$
+  它缓解梯度传播困难，使训练大模型更容易。
+
+## Part IV: Interpretability, Training, and Inference
+
+* **Mechanistic Interpretability (机制可解释性)** 试图理解 Transformer 内部哪些 head、neuron、layer 承担具体功能。
+* **Training (训练)** 可并行处理序列位置，适合 GPU 大矩阵计算。
+* **Inference inefficiency (推理低效)** 来自 autoregressive generation：必须 token-by-token for loop 生成；每一步还可能重复读历史上下文。
+* **Review focus**：LayerNorm 稳定训练；attention 随序列长度通常是 quadratic 而不是 linear；Transformer 架构包括 attention、MLP、LayerNorm、residual，不包括 interpretability 本身。
+
+# Lecture 12: Pretraining、Mid-Training、Post-Training、BERT 与 GPT
+
+## Part I: Training Stages
+
+* **Pretraining (预训练)** 用大规模数据教模型语言、语法、推理和世界知识，得到 base foundation model。
+* **Mid-training (中训练)** 在高质量领域数据上继续训练，让模型深化专业能力，同时尽量不丢通用知识。
+* **Post-training / Alignment (后训练 / 对齐)** 让模型适配人类指令、偏好和具体任务，例如 sentiment analysis、information extraction、question answering。
+* 预训练后的模型可通过 **fine-tuning** 或 **prompting** 适配下游任务。
+
+## Part II: Why Pretraining Works
+
+* 预训练通过海量自监督任务学习通用表示；相比从零训练任务模型，pretrained model 可迁移到更多任务。
+* 影响 pretraining 的主要因素包括 **model architecture**、**data quantity**、**data quality**、**objective function**。
+* 数据数量提供覆盖面，数据质量决定模型学到的模式是否可靠；低质量数据会让模型吸收噪声和偏见。
+
+## Part III: Masked Language Modeling and BERT
+
+* **Masked Language Modeling (MLM)** 随机 mask 输入 token，并训练模型预测被 mask 的词。
+* **BERT** 使用 Transformer encoder 和 MLM objective，适合理解类任务，因为它能双向看上下文。
+* MLM 的优势是利用左右上下文学习表示；限制是预训练目标与自回归生成不完全一致。
+
+## Part IV: Autoregressive Language Modeling and GPT
+
+* **Autoregressive Language Modeling (自回归语言建模)** 用历史 token 预测下一个 token：
+$$
+L(\theta)=\sum_D\sum_t -\log p_\theta(w_t|w_{<t})
+$$
+* **GPT** 使用 decoder-only Transformer 和 autoregressive objective，天然适合生成任务。
+* GPT 生成时从左到右逐 token 采样；训练时可并行计算每个位置的 next-token loss。
+* **Review focus**：BERT 和 GPT 都用 Transformer，但预训练目标不同；pretrained model 可以进一步 fine-tune。
+
+# Lecture 13: Supervised Fine-Tuning、Alignment 与 SFT 数据
+
+## Part I: SFT and Alignment Motivation
+
+* **Supervised Fine-Tuning (SFT)** 把 base foundation model 调成 aligned model，让模型更好遵循指令和任务格式。
+* **Alignment (对齐)** 关注 helpful、honest、harmless 等行为目标。模型不仅要给答案，还要知道不确定性、避免幻觉、遵守安全和用户意图。
+* Pretraining 学语言和知识，SFT 学“怎样回答”。
+
+## Part II: Two Kinds of SFT and Data
+
+* SFT 可分为 **task-specific SFT** 和 **instruction / general SFT**。前者强化某类任务，后者提升通用指令跟随。
+* SFT 数据来自人工标注、公开 instruction datasets、AI-generated data、对话数据、代码修复轨迹等。
+* 课程提到 Alpaca、COIG 等可用数据集，也讨论了 AI generated data 在 SFT 中的作用。
+
+## Part III: SFT Loss and Performance
+
+* SFT 通常最大化参考答案 token likelihood，即对 response 部分做 teacher forcing 的 NLL。
+* 如果 prompt 为 $x$、目标回答为 $y$：
+$$
+L_{SFT}(\theta)=-\sum_t \log p_\theta(y_t|x,y_{<t})
+$$
+* SFT 性能取决于数据质量、任务覆盖、格式一致性和 curriculum。低质量 SFT 会让模型学到模板化或错误行为。
+
+## Part IV: Industrial SFT and SWE-Lego
+
+* 工业 SFT 常关注 coding agent、bug fixing trajectory、system prompt、任务 prompt、结果验证等完整流程。
+* **SWE-Lego** 示例强调 data curation、synthetic data curation、curriculum learning for SFT 和最终效果评估。
+* **Multi-task SFT** 需要处理 **catastrophic forgetting (灾难性遗忘)**：模型学新任务时可能忘掉旧能力。
+* **Dual-stage mixed fine-tuning** 用少量 specific task data 加 general data，兼顾特定能力和泛化。
+
+# Lecture 14: PEFT、LoRA 与 QLoRA
+
+## Part I: Why PEFT
+
+* 常规 full fine-tuning 需要保存模型参数、梯度、优化器状态和激活，显存成本高。
+* **Parameter-Efficient Fine-Tuning (PEFT)** 只训练少量新增参数或低维参数，从而降低显存和存储成本。
+* PEFT 的直觉来自 **intrinsic dimension (内在维度)**：大模型适配特定任务时，真正需要改变的方向可能远低于总参数维度。
+
+## Part II: LoRA
+
+* **LoRA (Low-Rank Adaptation)** 假设权重更新 $\Delta W$ 可用低秩矩阵分解：
+$$
+\Delta W=BA
+$$
+  其中 rank $r$ 远小于原矩阵维度。
+* 训练时冻结原始权重，只训练 $A,B$；推理时可把 LoRA 更新合并回原权重。
+* LoRA 初始化通常让初始 $\Delta W$ 接近 0，避免一开始破坏 base model 行为。
+* LoRA cost 远低于 full fine-tuning，但效果常能接近全量微调。
+
+## Part III: QLoRA and NF4
+
+* **QLoRA** 把 base model 量化存储，同时在低秩 adapter 上训练，进一步降低显存。
+* **NF4 (NormalFloat4)** 针对近似正态分布的权重设计，比普通 4-bit 表示更适合 LLM 权重。
+* QLoRA 常结合 quantization、LoRA adapter、paged optimizer 等技术，解决大模型微调显存问题。
+
+## Part IV: Industry Use and Review
+
+* LoRA / QLoRA 在工业中适合多租户、多任务、低成本适配：一个 base model 可挂多个 adapter。
+* **Review focus**：full SFT 中参数、梯度和优化器状态占显存；quantization 是把连续/高精度数映射到低精度离散表示；QLoRA 结合量化和 LoRA。
+
+# Lecture 15: RLHF、Reward Model 与 Bradley-Terry
+
+## Part I: Limitations of SFT
+
+* SFT 难处理 open-ended question：开放问题可能没有唯一正确答案，例如诗歌、创意写作、长文本建议。
+* 只用 reference answer 的 likelihood 不一定等于人类偏好；模型可能生成 token-level 高概率但整体质量差的答案。
+* 因此需要一种能评价整体输出质量的 measurement。
+
+## Part II: Reward Model
+
+* **Reward Model (奖励模型)** 学习给完整回答打分，用于度量 helpfulness、honesty、harmlessness 或人类偏好。
+* 奖励模型通常用成对比较数据训练：给同一 prompt 的两个回答，标注 winner 和 loser。
+* **Bradley-Terry Model** 把偏好概率建模为：
+$$
+P(y_w \succ y_l|x)=\sigma(r(x,y_w)-r(x,y_l))
+$$
+* Reward model 的问题包括偏好噪声、reward hacking、无法完美代表人类价值。
+
+## Part III: RLHF
+
+* **RLHF (Reinforcement Learning from Human Feedback)** = preference data + reward model + reinforcement learning。
+* 先训练 reward model，再冻结 reward model，用 RL 优化 target LLM 让生成回答获得更高 reward。
+* Policy gradient 用样本回报更新参数，但高方差、对 reward scale 敏感，后续 PPO/KL 约束用于稳定训练。
+* **Review focus**：RLHF 仍需要 token likelihood / policy probability 来计算 policy gradient；reward model 评价完整句子质量；reward model 由比较标注训练。
+
+# Lecture 16: PPO、KL Divergence、TRPO 与 RLHF 稳定优化
+
+## Part I: From RLHF to PPO
+
+* 本讲标题页提取文本显示 `Lecture 2`，但文件名和上下文为 Lecture 16，应视为课件编号 typo。
+* RLHF 中 reward model 训练好后会冻结，target LLM 作为 policy 继续优化。
+* **Delayed reward (延迟奖励)**：完整回答生成后才得到 reward，但需要把反馈分配给 token-level policy decisions。
+
+## Part II: Policy Gradient and Collapse
+
+* Policy gradient 直接用 reward 推动参数更新，但对采样、reward scale 和更新步长敏感。
+* **Catastrophic collapse (灾难性崩塌)**：policy 若为了高 reward 偏离太远，后续 online data 会被坏 policy 污染，模型行为可能快速退化。
+* 单纯沿普通梯度方向更新可能导致 policy distribution 变化过大，因此需要约束。
+
+## Part III: KL Divergence, Natural Gradient, TRPO
+
+* **KL Divergence** 衡量新旧 policy 分布差异，用于约束模型不要远离 reference / old policy。
+* KL 可通过 Taylor expansion 与 **Fisher Information Matrix (FIM)** 关联。
+* **Natural Gradient** 用参数空间中的分布几何修正梯度方向，使更新更符合 policy distribution 的实际变化。
+* **TRPO** 通过 trust region 约束 KL，追求稳定提升，但计算复杂，需要多次 forward/backward 或近似。
+
+## Part IV: PPO
+
+* **PPO (Proximal Policy Optimization)** 用 clipped objective 近似 trust region，使训练更简单稳定。
+* PPO 限制新旧 policy probability ratio，不让单步更新过大。
+* 在 RLHF 中，PPO 常配合 reward、KL penalty、advantage estimation 使用。
+* **Review focus**：RLHF 不会在 target LLM 优化时继续更新 reward model；KL 用于保持 policy 不偏离太远，而不是减少参数量。
+
+# Lecture 17: DPO、GRPO 与 Preference Optimization
+
+## Part I: Why Move Beyond PPO
+
+* RLHF with PPO 较复杂：需要 reward model、policy sampling、advantage、KL penalty、PPO update 等组件。
+* Reward model 可能不可靠，且 RL optimization 容易 reward hacking。
+* 新方法试图直接从 preference data 优化 policy，减少 RL pipeline 复杂度。
+
+## Part II: DPO
+
+* **DPO (Direct Preference Optimization)** 从 RLHF objective 出发，把最优 reward 写成 policy 和 reference policy 的函数。
+* 把 reward definition 代入 Bradley-Terry loss，可直接用 preference pairs 训练 policy，无需显式训练 reward model。
+* DPO 保留 reference model 作为 KL 风格约束，使 policy 不至于偏离太远。
+* 工业中 DPO 常比 PPO 简洁，但效果依赖 preference data 质量和超参数。
+
+## Part III: GRPO and Extensions
+
+* **GRPO (Group Relative Policy Optimization)** 用同一 query 的多个 samples 计算组内相对 reward / advantage，减少对 critic 的依赖。
+* GRPO 的 advantage 是 group-relative，不是来自不同 query 的混合比较。
+* 扩展方法包括 **KTO (Kahneman-Tversky Optimization)**、**SimPO (Simple Preference Optimization)** 和 **DAPO**。
+* **Review focus**：advantage 在 RLHF 中会使用；Bradley-Terry 比较 winner/loser 时不需要显式 partition function $Z(x)$；GRPO 不是用不同 queries 的 samples 计算同一个 advantage。
+
+# Lecture 18: Synthetic Data：生成、评估与局限
+
+## Part I: Why Synthetic Data
+
+* Llama、GPT、Qwen 等大模型训练都使用 public web text、knowledge documents、code、instruction dialogue、preference data 等多源数据。
+* 模型和数据需求增长很快，真实高质量数据增长较慢，可能出现 data bottleneck。
+* 重复使用同一训练数据早期有帮助，但重复次数增加后收益快速下降。
+* **Synthetic Data (合成数据)** 用 teacher LLM 或其他结构化来源生成新训练样本，用来补充 instruction following、alignment、evaluation、code、math、preference data。
+
+## Part II: Synthesis Methods
+
+* **Prompting a teacher LLM**：直接让强模型生成任务、答案、解释或偏好比较。
+* **Retrieve and transform**：检索真实材料后改写成训练样本。
+* **Extract and rewrite / rephrasing**：从文本中抽取知识点，再转换为 QA、instruction 或多样表达。
+* **Knowledge graph extraction**：从知识图谱抽取事实关系，转成自然语言任务。
+* **AI rating**：让模型给样本质量打分或筛选。
+* **Self-Instruct / Self-Guide / Evol-Instruct**：让模型自举生成指令并逐步增加复杂度。
+* **Multi-agent methods**：多个模型或角色协作生成、批评、修正数据。
+
+## Part III: Evaluation Dimensions
+
+* **Correctness (正确性)**：答案是否事实正确、推理是否成立。
+* **Complexity (复杂度)**：任务是否足够有挑战，不只是模板化简单问题。
+* **Diversity (多样性)**：覆盖不同领域、格式、推理类型、语言风格。
+* **Fidelity (保真度)**：合成数据是否忠实来源材料，不引入幻觉。
+* 合成数据也可用于 evaluation，但要防止模型和评测数据同源导致虚高分数。
+
+## Part IV: Limitations
+
+* **Mode collapse (模式坍塌)**：模型生成数据可能丢失训练数据中的细节；反复“生成-训练”会让细节越来越少。
+* **Boilerplate responses** 如 “sure I am glad to help” 价值低于深度细节。
+* **Lack of data provenance (缺少数据来源追踪)**：合成数据吸收到模型参数后，很难解释模型不良行为来源。
+
+# Lecture 19: Scaling Laws、FLOPs、Kaplan 与 Chinchilla
+
+## Part I: Scaling Motivation
+
+* 模型参数从百万级增长到千亿、万亿级，准确率和能力随规模提升出现规律性趋势。
+* **Scaling laws (缩放定律)** 研究 loss / accuracy 如何随 model size、data size、compute 改变。
+* 真实世界受 compute budget、data availability、hardware memory 和 inference cost 限制。
+
+## Part II: FLOPs and Transformer Compute
+
+* **FLOPs** 衡量浮点运算次数，是训练计算量的重要单位。
+* Matrix-vector multiplication 和 matrix multiplication 的复杂度与矩阵维度相关。
+* Transformer 参数量 $N$ 可由层数、hidden dimension、attention heads、MLP dimension 等估计。
+* Training compute $C$ 常近似与参数量 $N$ 和训练 token 数 $D$ 成正比。
+
+## Part III: Kaplan vs. Chinchilla
+
+* **Kaplan scaling laws** 强调增大模型尺寸、数据和 compute 会按幂律降低 pretraining cross-entropy loss。
+* Kaplan 结论倾向于大模型在固定 compute 下更有效，但可能低估数据量的重要性。
+* **Chinchilla scaling law** 强调 compute-optimal training 需要平衡 model size 和 data size；很多模型其实 under-trained，应使用更多 token 训练较小或适中模型。
+* 课程问题中的核心关系是 $N$、$C$、$D$ 之间的约束和平衡。
+
+## Part IV: Variants and Limitations
+
+* Scaling law 有很多变体，可针对 downstream performance、data quality、inference compute、architecture 等建模。
+* **Inverse scaling (反向缩放)** 指某些任务上模型变大反而表现变差，说明能力提升不是所有维度单调改善。
+* 限制包括数据质量、评估污染、任务选择、训练分布变化、硬件瓶颈和社会/经济成本。
+
+# Lecture 20: LLM Inference、KV Cache、Memory Wall、PagedAttention、StreamingLLM
+
+## Part I: KV Cache and Generation Stages
+
+* Autoregressive generation naive 实现会重复计算历史 token 的 K/V；**KV Cache** 保存历史 Key/Value，用内存换时间。
+* Decode step 只计算最新 token 的 $q_t,k_t,v_t$，再 attend 到 cached K/V：
 $$
 K_{cached}=[K_{prev};k_{new}],\quad V_{cached}=[V_{prev};v_{new}]
 $$
-  decode step $t$ 只需计算最新 token 的 $q_t,k_t,v_t$，然后用 $q_t$ attend 到所有 cached K/V。
-* KV cache 避免重复计算历史 K/V，使 decode 阶段 K/V 计算按 token 增量进行；代价是显存占用随序列长度线性增长。
+* **Prefill** 处理完整 prompt，建立初始 cache，通常 compute-bound，决定 TTFT。
+* **Decode** 每步生成一个 token，反复读 KV cache，通常 memory-bandwidth bound，决定 TPOT。
 
-## Part II: Prefill, Decode, and Memory Wall
+## Part II: Memory Wall and Attention Optimizations
 
-* **Prefill phase (预填充阶段)**：编码完整 prompt 并构建初始 cache。输入 token 可并行处理，GPU utilization 高，通常 compute-bound，决定 **TTFT (Time to First Token)**。
-* **Decode phase (解码阶段)**：每步只处理 1 个 token，GPU compute utilization 低，每步要从 HBM 读取整个 KV cache，通常 memory-bandwidth bound，决定 **TPOT (Time Per Output Token)**。
-* **Memory Wall (内存墙)**：GPU 计算速度增长快于内存传输速度，导致算力空闲等待内存。长上下文推理尤其容易被 KV cache 读取拖慢。
-* **KV cache growth (KV 缓存增长)**：模型权重大小固定，但每个请求的 cache 随 prompt 和生成长度增长。长文档 OOM 常由 KV cache 导致，而不只是模型权重。
-* **KV cache size formula (KV cache 大小公式)**，FP16 下：
+* **Memory Wall**：GPU FLOPs 增长快于 memory bandwidth，decode 阶段算力常等待 HBM 读写。
+* KV cache 大小随 batch、sequence length、layers、heads、head dim、precision 线性增长：
 $$
 Size=Batch\times SeqLen\times 2\times Layers\times Heads\times Dim\times 2\ bytes
 $$
-  第一个 2 表示 K 和 V，最后的 2 bytes 表示 FP16。
+* **FlashAttention** 用 tiling 和 exact online softmax 减少 attention weights 的 HBM 读写。
+* **MQA / GQA** 通过共享 K/V heads 减少 KV cache 和带宽；GQA 是 MHA 与 MQA 的折中。
 
-## Part III: Attention and Head-Level Optimizations
+## Part III: PagedAttention and Scheduling
 
-* **FlashAttention** 用 tiling block-by-block 在线计算 softmax，不缓存巨大 attention weights。
-* **Online softmax (在线 softmax)** 维护最大值、分母部分和加权和，可以精确计算而不是近似。
-* **MHA (Multi-Head Attention)** 每个 query head 有独立 K/V，KV cache 较大。
-* **MQA (Multi-Query Attention)** 让所有 query heads 共享一组 K/V，显著压缩 KV cache 和内存带宽，但可能损失表达能力。
-* **GQA (Grouped Query Attention)** 介于 MHA 与 MQA 之间：query heads 分组，每组共享一个 K/V head。它是实际大模型常用折中，比 MHA 省内存，比 MQA 保留更多表达能力。
+* 静态分配 KV cache 会产生 internal fragmentation 和 external fragmentation。
+* **PagedAttention** 像操作系统虚拟内存一样，用 block table 把 logical KV blocks 映射到 physical GPU blocks。
+* 多请求服务中，vLLM 的块式管理提高显存利用率和吞吐。
+* Continuous batching 中 prefill 和 decode 混合会产生 bubbles；chunked prefills 和 piggybacked decodes 用调度减少等待。
 
-## Part IV: Memory Fragmentation and PagedAttention
+## Part IV: StreamingLLM
 
-* **Internal fragmentation (内部碎片)**：系统为每个请求预留最大长度，如 2048 tokens，但用户实际只用 50/300/700 tokens，剩余空间不可用。
-* **External fragmentation (外部碎片)**：CUDA 物理空间不连续，小空洞无法分配给新请求。
-* **PagedAttention** 借鉴操作系统虚拟内存：
-  * 请求像进程。
-  * logical memory 像虚拟内存。
-  * block table 把逻辑块映射到 GPU physical blocks。
-  * block 类似 page。
-* KV cache 不必连续存放，block 满了再找新物理块，从而减少大块连续分配需求和碎片。
-* **vLLM multi-request cache (多请求缓存)**：多个请求的 KV cache 映射到 block engine 管理的不同 physical blocks，提高显存利用率和吞吐。
+* 长上下文保存完整 KV 会 OOM，简单丢弃早期 token 会导致性能崩溃。
+* **Attention Sink** 指初始 tokens 即使语义弱也吸引大量注意力；删除它们会破坏注意力分布。
+* **StreamingLLM** 保留若干初始 sink tokens 与最近 window，使 KV cache 固定大小。
+* **Review focus**：online softmax 可以精确计算；layer normalization 参数不是 KV cache size 因素。
 
-## Part V: Continuous Batching and Scheduling
+# Lecture 21: Quantization、Pruning 与 Distillation
 
-* **Continuous batching (连续批处理)** 中，iteration-level scheduling 可能造成 GPU resource underutilization 和 bubbles。
-* 一个请求的 decode 可能等待其他请求 prefill 完成；prefill 和 decode 的计算特性不同，调度不当会让 GPU 空等。
-* **Chunked Prefills (分块预填充)** 把完整 prefill 拆成固定大小 chunks。
-* **Piggybacked Decodes (搭载式解码)** 在处理 prefill chunk 时利用剩余计算容量搭载 decode task。
-* 这种调度减少 pipeline bubbles，让 decode 不必长时间等待大 prefill，提高连续 batching 效率。
+## Part I: Efficiency Challenge and Numeric Formats
 
-## Part VI: Long Context and StreamingLLM
+* Scaling law 推动模型变大，但硬件 memory 和 compute 增长跟不上。70B FP16 权重约 140GB，真实推理还需要 KV cache 和激活。
+* **Numeric formats** 决定数值范围、精度和存储成本。低精度可减少内存和带宽，但会带来 accuracy cost。
+* **Quantization (量化)** 把高精度数映射到低精度表示，典型形式：
+$$
+q=round(Sx+Z)
+$$
 
-* **Long Context Memory Wall (长上下文内存墙)**：
-  * 保存完整 memory 会爆炸并 OOM。
-  * 简单驱逐早期 tokens 会让性能崩溃。
-  * 反复 $O(L^2)$ 重算极慢。
-* **Attention Sink (注意力汇)**：观察到初始 tokens 即使语义不强，也会吸引注意力。可能原因包括 softmax 归一化、位置编码，以及自回归训练中早期位置被看到最多。
-* 删除初始 tokens 会破坏注意力分布，导致 perplexity 恶化；PPL 越低越好。
-* **StreamingLLM** 保留 attention sink（若干初始 tokens）和最近 tokens，使 KV cache 固定大小。
-* 一些 dummy characters（如换行）也可作为 sink 维持性能。
-* **Attention map observation (注意力图观察)**：无 sink token 时，低层偏局部注意力，深层对初始 tokens 注意力增加；有 sink token 时，各层明显关注 sink token，让冗余注意力集中到稳定位置。
-* **Review focus (复习重点)**：online softmax 可以精确计算；KV cache 大小因素包括 layers 和生成序列长度，layer normalization 参数不是 KV cache 因素。
+## Part II: QAT, PTQ, and Outliers
+
+* **QAT (Quantization-Aware Training)** 在训练中模拟量化误差，让模型适应低精度。
+* **PTQ (Post-Training Quantization)** 在训练后直接量化，成本低但可能更伤精度。
+* LLM 中存在 **emergent outlier activations**，只看权重大小可能漏掉重要激活。
+* **LLM.int8** 使用 mixed precision 处理 outliers；**SmoothQuant** 在 weight 和 activation 间迁移 scale，使量化更平滑。
+
+## Part III: Pruning
+
+* **Pruning (剪枝)** 删除不重要参数、神经元、attention heads 或结构，降低计算和存储。
+* **Activation pruning** 根据激活重要性剪枝；iterative pruning 逐步剪掉部分结构并恢复训练。
+* **Structured sparsity (2:4)** 每 4 个权重中保留 2 个，可更容易获得硬件加速。
+* 只按 weight magnitude 剪枝可能忽视 activation outliers。
+
+## Part IV: Distillation
+
+* **Knowledge Distillation (知识蒸馏)** 用 teacher model 的输出训练 student model，让小模型模仿大模型。
+* 蒸馏可用 soft labels、logits、rationales、step-by-step outputs 或 preference-style signals。
+* 蒸馏有产业争议和法律问题，因为 teacher 输出可能来自闭源模型或受版权限制的数据。
+* **Review focus**：structured pruning 删除层/神经元等结构，更可能带来真实计算效率；INT8 映射需根据 scale 和 zero point 计算。
+
+# Lecture 22: Mixture of Experts、Routing 与 Sparse Upcycling
+
+## Part I: MoE Motivation
+
+* **Mixture of Experts (MoE)** 的核心是每个 token 只激活模型的一小部分参数，降低每步计算成本。
+* Dense model 每次 forward 激活所有 FFN 参数；MoE 用多个 experts 替换或扩展 FFN，并由 router 选择 expert。
+* MoE 可在参数总量很大时保持较低 activated parameters。
+
+## Part II: MoE Architecture and Routing
+
+* 在 Transformer 中，MoE 通常替换 MLP / FFN 层。
+* **Top-1 routing** 每个 token 选择一个 expert；计算便宜但容易 routing collapse。
+* **Top-2 routing** 选择两个 experts，提升稳定性和表达能力但增加计算。
+* **Routing collapse** 指 router 总把 token 分到少数 experts，导致负载不均和专家退化。
+* 需要 load balancing loss、capacity factor、BASE routing 或其他约束。
+
+## Part III: Training and Building MoE LLMs
+
+* Expert selection 是离散/稀疏操作，但 router score 和被选 expert 可通过 backprop 更新。
+* DeepSeek、Mixtral、Qwen MoE 等案例展示了大规模 MoE 的工业实践。
+* **Sparse Upcycling** 从已有 dense model 的 FFN 复制或拆分出多个 experts，再继续训练。
+* **Sparse Splitting** 则更显式地拆分已有结构形成 experts。
+* **Review focus**：从现有 LLM 复制 FFN 创建 experts 是可行路径；MoE 可每 token 选择多个 experts；某 expert 当前 token 未被选中不代表未来 token 不能选中它。
+
+# Lecture 23: Diffusion Models：Forward / Reverse Process 与 DDPM
+
+## Part I: Generative Models and Iterative Refinement
+
+* 生成模型不只 Transformer；diffusion 是另一类重要生成方法。
+* **Diffusion model** 通过 iterative refinement 从噪声逐步生成数据。
+* Forward stochastic process 把 clean data 逐步加噪；reverse process 学习从噪声恢复数据。
+
+## Part II: Forward Process
+
+* Forward process 通常设计为逐步添加 Gaussian noise，使数据分布逐渐接近简单先验。
+* Variance schedule 控制每一步加噪强度。
+* 一个关键性质是可直接从 clean data $x_0$ 采样任意时间步 $x_t$，无需逐步模拟所有中间步。
+
+## Part III: Reverse Process and Training Objective
+
+* Reverse process 要学习 $p_\theta(x_{t-1}|x_t)$，但真实 posterior 通常难直接求。
+* 若条件在 clean data $x_0$ 上，posterior 可变得 tractable。
+* DDPM 的 simplified loss 常可化为训练神经网络预测噪声 $\epsilon$：
+$$
+L=\mathbb{E}_{t,x_0,\epsilon}\|\epsilon-\epsilon_\theta(x_t,t)\|^2
+$$
+* **U-Net and time embeddings** 是图像 diffusion 的典型实现：网络既看 noisy input，也看时间步。
+
+## Part IV: Sampling and Review
+
+* Sampling 从随机噪声开始，按 reverse steps 逐步去噪生成样本。
+* CIFAR-10 progressive generation 展示图像从噪声到清晰对象的过程。
+* **Review focus**：训练 diffusion 可归约为预测加入的噪声；两个 Gaussian 变量之和仍是 Gaussian；inference 起点通常从噪声分布采样，不需要已知 clean $x_0$。
+
+# Lecture 24: Score-Based Diffusion、Text Diffusion 与 Block Diffusion
+
+## Part I: Score-Based Perspective
+
+* **Score function** 是：
+$$
+\nabla_x \log p(x)
+$$
+  它指向数据分布高密度区域。
+* Denoising 可理解为把 noisy sample 沿 score vector field 推回高概率数据流形。
+* **Langevin dynamics** 描述粒子在势能场中带随机扰动地移动；若势能 $U(x)=-\log p(x)$，则向低势能移动等价于提高 $p(x)$。
+
+## Part II: Score Matching and Diffusion
+
+* 真实 $p(x)$ 不知道，因此训练神经网络近似 score function。
+* 通过给 clean data 加噪得到 $x_t$，条件分布的 log-gradient 容易计算。
+* **Denoising Score Matching** 用带噪样本训练模型预测 score，把 score-based modeling 与 diffusion 联系起来。
+* Denoising 与 score matching 可放进统一框架。
+
+## Part III: Diffusion for NLP
+
+* 文本是离散 token，不像图像像素那样天然连续；对文本加 Gaussian noise 不一定有语义。
+* 离散文本 diffusion 可用 transition matrix 表示 token corruption / replacement。
+* 也可在 **continuous latent space** 中做 diffusion，先把文本映射到连续表示，再生成或解码。
+* 需要谨慎设计 text perturbation，否则噪声过程可能破坏语义或语法结构。
+
+## Part IV: Control and Block Diffusion
+
+* 可用 classifier 或 classifier-free guidance 控制生成方向。
+* 训练 classifier 可帮助模型朝目标类别或条件移动。
+* **Block Diffusion** 尝试在文本块级别生成，结合 autoregressive 和 diffusion 的优点。
+* 与 autoregressive 相比，diffusion 早期可设定全局语义，后期修局部语法，具备一定 self-correction 能力。
+
+# Lecture 25: Agentic Systems、Memory、RAG、Reflection、Tools 与 MCP
+
+## Part I: What Is an Agentic System
+
+* **Agent** 不是新词，但在 LLM 时代重新流行。
+* **Agentic system** 通常包括：LLM as brain、memory、tools、environment、feedback。
+* LLM 负责 planning 和 rethinking；memory 保存 persistent perception 和 experience；tools 执行动作；environment 提供状态转移和反馈。
+* “If you're not the model, you're the harness” 强调系统编排和上下文工程的重要性。
+
+## Part II: Why Agents Differ from Plain LLMs
+
+* 复杂任务需要 planning、history、reflection、tool use、collaboration。
+* 普通 LLM 常是被动地对用户输入生成一次输出，受上下文窗口限制，不能天然持久记忆，也不直接与外部环境交互。
+* Agentic systems 可用于 robotics、electricity trading、coding、search、workflow automation 等。
+
+## Part III: Context Engineering, Memory, and RAG
+
+* **Context engineering (上下文工程)** 是给模型组织正确上下文、工具结果、记忆和任务状态。
+* **Memory (记忆)** 可保存长期偏好、任务轨迹、反馈、文件状态和中间结论。
+* **RAG (Retrieval-Augmented Generation)** 从外部知识库检索相关文档，把证据注入上下文，提升 factuality 和可追溯性。
+
+## Part IV: Reflection, Tools, and Collaboration
+
+* **Reflection (反思)** 让模型根据错误、失败轨迹、critic 或 feedback 修正计划。
+* **LLM-as-a-judge** 可用模型评估输出质量，但也要注意 judge bias 和可靠性。
+* **Tools (工具)** 包括代码解释器、文件操作、PDF parser、搜索、API、数据库等，让模型拥有“手和眼睛”。
+* **Collaboration (协作)** 涉及多 agent、多模型、多服务之间的接口。
+* **MCP (Model Context Protocol)** 提供统一接口，允许 $N$ 个模型和 $M$ 个服务从 $N\times M$ 的交互模式降到 $N+M$。
 
 # Formula Cheat Sheet / 公式速查表
 
@@ -1056,15 +1434,7 @@ P(O|Q)=\prod_{t=1}^T b_{q_t}(o_t)
 $$
 
 $$
-\alpha_1(i)=\pi_i b_i(o_1)
-$$
-
-$$
 \alpha_t(j)=\sum_i \alpha_{t-1}(i)a_{ij}b_j(o_t)
-$$
-
-$$
-\beta_T(i)=1
 $$
 
 $$
@@ -1090,71 +1460,59 @@ L_G=\{w\in\Sigma^* \mid S\Rightarrow^* w\}
 $$
 
 $$
-P(w_1,\ldots,w_m|G)=\sum_t P(t,w_1,\ldots,w_m|G)
-$$
-
-$$
 \beta_j(p,q)=\sum_{r,s,d}P(N^j\rightarrow N^rN^s)\beta_r(p,d)\beta_s(d+1,q)
 $$
 
-Viterbi-style PCFG parsing：把 Inside 的 $\sum$ 换成 $\max$，并记录 backpointer。
-
-## RNN / Seq2Seq / Attention
-
-$$
-a=\sigma(w^Tx+b)
-$$
-
-$$
-h_t=\tanh(Wh_{t-1}+Ux_t+b)
-$$
-
-$$
-\hat{y}_t=softmax(Vh_t+c)
-$$
-
-$$
-P(y_1,\ldots,y_T|x_1,\ldots,x_S)
-$$
-
-$$
-c_t=\sum_i \alpha_{t,i}h_i
-$$
-
-$$
-\alpha_{t,i}=softmax(score(s_{t-1},h_i))
-$$
+## Transformer / Attention
 
 $$
 Attention(Q,K,V)=softmax\left(\frac{QK^T}{\sqrt{d_k}}\right)V
 $$
 
-## MT 与 BLEU
-
 $$
-E^*=\arg\max_E P(F|E)P(E)
+x_{l+1}=x_l+F(x_l)
 $$
 
-$$
-P(F,A|E)=P(J|I)P(A|I,J)\prod_j P(f_j|e_{a_j})
-$$
+## Pretraining / SFT
 
 $$
-P(F,A|E)=P(J|I)\prod_j P(a_j|a_{j-1},I)P(f_j|e_{a_j})
-$$
-
-BLEU 主要由 $n=1,\ldots,4$ 的 modified n-gram precisions 的几何平均构成，并配合短句惩罚。
-
-## LLM 推理与 KV Cache
-
-$$
-Size=Batch\times SeqLen\times 2\times Layers\times Heads\times Dim\times 2\ bytes
+L_{AR}(\theta)=\sum_D\sum_t -\log p_\theta(w_t|w_{<t})
 $$
 
 $$
-K_{cached}=[K_{prev};k_{new}],\quad V_{cached}=[V_{prev};v_{new}]
+L_{SFT}(\theta)=-\sum_t \log p_\theta(y_t|x,y_{<t})
+$$
+
+## RLHF / Preference Optimization
+
+$$
+P(y_w \succ y_l|x)=\sigma(r(x,y_w)-r(x,y_l))
+$$
+
+DPO 把 reward 写成 policy/reference policy 的函数，直接用 preference pairs 优化 policy；GRPO 用同一 query 的多样本组内 reward 估计 advantage。
+
+## Scaling / Inference / Compression
+
+$$
+Size_{KV}=Batch\times SeqLen\times 2\times Layers\times Heads\times Dim\times 2\ bytes
 $$
 
 $$
-softmax\left(\frac{q_tK_{cached}^T}{\sqrt{d_k}}\right)V_{cached}
+q=round(Sx+Z)
 $$
+
+Scaling laws 关注 loss 与 model size $N$、data size $D$、compute $C$ 的幂律关系；Chinchilla 强调 compute-optimal 需要同时扩大模型和数据。
+
+## Diffusion / Score
+
+$$
+L=\mathbb{E}_{t,x_0,\epsilon}\|\epsilon-\epsilon_\theta(x_t,t)\|^2
+$$
+
+$$
+score(x)=\nabla_x\log p(x)
+$$
+
+## Agent / MCP
+
+Agentic system = LLM brain + memory + tools + environment + feedback；MCP 把 $N$ 个模型和 $M$ 个服务的连接从 $N\times M$ 降到 $N+M$。
