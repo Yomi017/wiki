@@ -372,6 +372,10 @@ $$
 P(w_i|w_{i-1})=\frac{Count(w_{i-1},w_i)}{Count(w_{i-1})}
 $$
 
+完整证明见：[[Wiki/Notion/Class/Artificial-Intelligence/Introduction to Natural Language Processing/Proof/Bigram MLE Derivation\|Bigram MLE Derivation]]。
+
+**考试直觉：** MLE 不是“随便数频率”。分母 $Count(w_{i-1})$ 是所有以前词 $w_{i-1}$ 开头的 bigram 总数，而不是整个语料 token 总数。
+
 ### 3. Laplace Smoothing：解决零概率，但会重新分配概率质量
 
 如果某个 bigram 在训练集没出现，MLE 会给它概率 0。只要句子中出现一个概率 0 的 bigram，整句概率就变成 0，这太极端。
