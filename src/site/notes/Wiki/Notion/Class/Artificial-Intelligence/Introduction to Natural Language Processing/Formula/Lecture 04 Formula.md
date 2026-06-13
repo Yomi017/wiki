@@ -123,8 +123,68 @@ $$
 
 做数值题时，Forward table 每个 cell 都是“到这里为止的总概率”；Backward table 每个 cell 是“从这里出发生成未来的总概率”。两者都不是 posterior，posterior 要再除以 $P(O)$。
 
+### Complexity Proof: 为什么是 $O(TN^2)$
+
+设：
+
+- $T$ 是观测序列长度，也就是句子里有多少个 token。
+- $N$ 是 hidden states 数量，也就是 POS tag 种类数。
+
+Forward table 有：
+
+$$
+T\times N
+$$
+
+个 cell，因为每个时间 $t$ 都要为每个当前状态 $j$ 算一个 $\alpha_t(j)$。
+
+对某一个固定 cell $\alpha_t(j)$，递推式是：
+
+$$
+\alpha_t(j)=\sum_i\alpha_{t-1}(i)a_{ij}b_j(o_t)
+$$
+
+这里的 $i$ 要遍历所有可能的前一状态：
+
+$$
+i=1,\ldots,N
+$$
+
+所以算一个 cell 需要 $O(N)$ 次前一状态累加。
+
+因此 Forward 总复杂度是：
+
+$$
+\underbrace{T}_{time\ steps}
+\times
+\underbrace{N}_{current\ states}
+\times
+\underbrace{N}_{previous\ states}
+=O(TN^2)
+$$
+
+Backward 同理。Backward table 也有 $T\times N$ 个 cell。对某一个固定 cell $\beta_t(i)$：
+
+$$
+\beta_t(i)=\sum_j a_{ij}b_j(o_{t+1})\beta_{t+1}(j)
+$$
+
+这里 $j$ 要遍历所有可能的下一状态 $1,\ldots,N$，所以每个 cell 也是 $O(N)$，总复杂度仍然是：
+
+$$
+O(TN^2)
+$$
+
+这个复杂度比直接枚举所有 hidden paths 的 $O(N^T)$ 小很多。直接枚举时，每个时间点有 $N$ 个状态选择，长度 $T$ 就有：
+
+$$
+N\times N\times\cdots\times N=N^T
+$$
+
+条路径。Forward/Backward 的关键就是把指数多条路径压缩进 DP table 的局部求和里。
+
 ## Exam / Homework Traps
 
 - Forward 是 summation，不是 max。
 - $\beta_T(i)=1$ 是空序列概率，不代表状态概率。
-- 复杂度是 $O(TN^2)$。
+- 复杂度是 $O(TN^2)$，来自 $T$ 个时间步、$N$ 个当前状态、每个 cell 遍历 $N$ 个相邻状态。

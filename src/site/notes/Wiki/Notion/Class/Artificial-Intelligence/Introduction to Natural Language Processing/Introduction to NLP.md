@@ -1028,7 +1028,7 @@ HMM decoding 不是只选每个词最常见 tag，而是选整体最可能 tag s
 
 ### 9. HMM 动机：用上下文消除 POS 歧义
 
-* **定义 / 内容：** HMM 使用 emission probability 与 transition probability。$P("back"|NN)$ 衡量 NN 发射 back 的可能；$P(NN|PRP\$)$ 衡量 possessive pronoun 后接 noun 的可能。
+* **定义 / 内容：** HMM 使用 emission probability 与 transition probability。$P(\text{back}\mid NN)$ 衡量 NN 发射 `back` 的可能；$P(NN\mid PRP\text{-poss})$ 衡量 possessive pronoun 后接 noun 的可能。
 * **直觉：** 词本身只告诉我们候选 POS，上一个 tag 会进一步缩小范围。HMM 的核心就是同时建模“tag 如何转移”和“tag 如何生成词”。
 
 ### 10. HMM 形式化
@@ -3275,7 +3275,7 @@ GPT 是 decoder-only Transformer。课件提到 GPT 2018 的 12 layers、117M pa
 
 ### 13. Masked language modeling
 
-* **定义 / 内容：** Masked language modeling。• Idea: replace some fraction of words in the input with；special [MASK] token; predict these words.；ℎ! , … , ℎ " = Encoder 𝑤! , … , 𝑤"；•；𝑧# ∼ 𝐴ℎ# + 𝑏；• Only add loss terms from words that are “masked；out”. If 𝑥2 is the masked version of x, we are learning；2 called masked LM.；𝑝$ (𝑥|𝑥),
+* **定义 / 内容：** Masked language modeling。核心做法是把输入中一部分 token 替换为 `[MASK]`、随机 token 或保持不变，然后只对被选中的 masked positions 计算预测损失。目标可写为 $L_{MLM}(\theta)=-\sum_{t\in M}\log p_\theta(w_t\mid x_{\setminus M})$，其中 $M$ 是 mask 位置集合。
 * **直觉：** 本页展开 foundation model 的 pretraining / mid-training / post-training，以及 BERT 的 MLM 和 GPT 的 autoregressive objective。 这些核心概念中的一个局部，需与本讲前后页面一起理解。
 
 ### 14. Masked language modeling: BERT
@@ -3300,12 +3300,12 @@ GPT 是 decoder-only Transformer。课件提到 GPT 2018 的 12 layers、117M pa
 
 ### 18. Autoregressive language modeling
 
-* **定义 / 内容：** Autoregressive language modeling。Pre-trained model Pre-trained model for；downstream tasks；ℎ# , … , ℎ % = f 𝑤# , … , 𝑤%；𝑧" = 𝐴ℎ"$# + 𝑏；Add a linear layer on top of；𝑝! 𝑤" 𝑤# , … 𝑤"$# , 𝑥 : conditioned on a source the last hidden layer to make；context to generate from left-to-right it a classifier!；Radford A, Narasimhan K, Salimans T, et al. Improving language understanding by generative pre-training[J]. 2018.
+* **定义 / 内容：** Autoregressive language modeling。预训练模型得到 hidden states $h_1,\ldots,h_n=f(w_1,\ldots,w_n)$，下游任务可在最后一层 hidden state 上加 linear layer，例如 $z=Ah+b$ 做分类。生成式预训练则用 $p_\theta(w_t\mid w_{<t},x)$ 从左到右建模文本。Radford A, Narasimhan K, Salimans T, et al. Improving language understanding by generative pre-training[J]. 2018.
 * **直觉：** 本页展开 foundation model 的 pretraining / mid-training / post-training，以及 BERT 的 MLM 和 GPT 的 autoregressive objective。 这些核心概念中的一个局部，需与本讲前后页面一起理解。
 
 ### 19. Autoregressive language modeling
 
-* **定义 / 内容：** Autoregressive language modeling。min 0 0 − log 𝑝𝜽 𝑤" ∣ 𝑤*" • Pros:；𝜽；'∈)!"#$% " o The pre-training objective is unified；and simple, and the training procedure；is consistent with the inference process.；• 𝛉: model parameters o Strong scaling behavior；• 𝐷%&'() : training data；• 𝑝𝜽 𝑤+ ∣ 𝑤,+ : conditional language；• Cons:；modeling, conditioned on a；source context to generate from o Only uses left-to-right context；o Autoregressive generation is slow；left to right.；o Error accumulation during generation；Radford A, Narasimhan K, Salimans T, et al. Improving language understanding by generative pre-training[J]. 2018.
+* **定义 / 内容：** Autoregressive language modeling。预训练目标是从左到右预测下一个 token：$L_{AR}(\theta)=-\sum_{D\in\mathcal{D}_{train}}\sum_t\log p_\theta(w_t\mid w_{<t})$。优点是训练目标统一、训练过程与推理过程一致、scaling behavior 强；缺点是只能使用 left-to-right context，生成时逐 token decode，且可能 error accumulation。
 * **直觉：** 本页展开 foundation model 的 pretraining / mid-training / post-training，以及 BERT 的 MLM 和 GPT 的 autoregressive objective。 这些核心概念中的一个局部，需与本讲前后页面一起理解。
 
 ### 20. Autoregressive language modeling: GPT
@@ -3350,7 +3350,7 @@ GPT 是 decoder-only Transformer。课件提到 GPT 2018 的 12 layers、117M pa
 
 ### 28. Quiz
 
-* **定义 / 内容：** Quiz。1. Pen and paper; no compute or cellphone allowed.；2. Turn in your answer sheet when you leave the classroom.；• Q1 (short answer): write down the objective function of pre-training using；auto-regression.；• Q2 (T/F): Pretrained models can be further fine-tuned for other tasks.；• Q3 (T/F): both BERT and GPT use transformer architecture, but are pre-；trained using different training objective functions.；• A1: ∑!∈#!"#$% ∑$ − log 𝑝𝜽 𝑤$ ∣ 𝑤&$；• A2: T；• A3: T
+* **定义 / 内容：** Quiz。Q1：写出 autoregressive pretraining objective；Q2：pretrained models can be further fine-tuned for other tasks；Q3：BERT 和 GPT 都使用 Transformer architecture，但 pretraining objectives 不同。答案线索：A1 为 $L_{AR}(\theta)=-\sum_{D\in\mathcal{D}_{train}}\sum_t\log p_\theta(w_t\mid w_{<t})$；A2: True；A3: True。
 * **直觉：** 本页是课堂测验页，保留题目和答案线索，用于复习考试重点。
 * **为什么重要：** 这部分常直接变成判断题、选择题或短答题；复习时要把题目背后的概念关系说清楚。
 * **易错点：** quiz 页往往考最小概念差异，例如是否是同一个概率、是否需要归一化、复杂度是否来自 DP 而不是 greedy。
@@ -4705,7 +4705,7 @@ Multi-agent 方法让多个 agent 相互批评和修改，可以减少单一模�
 
 ### 15. Data synthesis methods: extract and re-write
 
-* **定义 / 内容：** Data synthesis methods: extract and re-write。• Pros；o The rewriting step helps standardize formatting and may improve clarity or completeness；• Cons；o The extraction stage depends heavily on the quality of heuristic rules and classifiers；o The filtering stage can also be expensive when it relies on strong models such as GPT-4；Home > Math > Algebra；Limited-time offer: Get premium access for $1.99；Download our app for more exercises Instruction: Solve the equation 2x + 3 = 11. Good；Response: x = 4, because subtracting 3；Question: Solve 2x + 3 = 11 gives 2x = 8, and dividing by 2 gives x = 4 instruction；A. 2 B. 3 C. 4 D. 5；Answer: C；Raw web Explanation: 2x = 8, so x = 4.；page text Instruction: Solve 2x + 3 = 11 and；Recommended for you:；- 100 linear equation exercises；download our app for more exercises. Bad；Response: C. This problem is too easy.；- Best SAT prep courses Try 100 linear equation exercises instruction；User comments:；"This problem is too easy."；Privacy Policy | Contact Us | About；Yue X, Zheng T, Zhang G, et al. Mammoth2: Scaling instructions from the web[J]. Advances in Neural Information Processing Systems, 2024, 37: 90629-90660.
+* **定义 / 内容：** Data synthesis methods: extract and re-write。extract-and-rewrite 先从网页或原始语料中抽取可训练内容，再改写为标准 instruction-response 格式。优点是 rewrite 可以统一格式、提升清晰度和完整性；缺点是 extraction 依赖规则/分类器质量，filtering 若依赖强模型会很贵。课件例子用线性方程 `2x + 3 = 11` 展示：好的 response 会给出推理过程 `x = 4`，坏的 response 可能只抄选项或混入广告、评论、网页噪声。
 * **直觉：** 本页关注数据来源、构造、质量或评估；在 LLM 训练中数据常常与模型结构同样关键。
 * **为什么重要：** 数据决定模型学到什么，复习时要同时关注数据来源、构造方式、质量控制和潜在偏差。
 
@@ -4962,7 +4962,7 @@ IsoFLOP curves 的思想：固定不同 FLOPs $C$，扫描 model size，找每�
 
 ### 4. Motivation of Scaling laws
 
-* **定义 / 内容：** Motivation of Scaling laws。• A million-dollar question: How should I invest a fixed amount of resources on；data or GPU?；o GPT-4 pretraining is estimated to have cost over $100 million.；o Decision-makers need to predict what model size, data scale, and compute budget are required to；reach a target level of performance.；Cottier B, Rahman R, Fattorini L, et al. The rising costs of training frontier AI models[J]. arXiv preprint arXiv:2405.21015, 2024.
+* **定义 / 内容：** Motivation of Scaling laws。核心问题是：固定资源下应该投向更多 data、更大 model，还是更多 GPU compute？课件提到 frontier model pretraining 成本可达上亿美元量级，因此 decision-makers 需要用 scaling laws 预测达到目标性能所需的 model size、data scale 与 compute budget。
 * **直觉：** 本页解释问题动机或现有方法的局限，说明为什么需要引入本讲的新模型、算法或系统设计。
 * **为什么重要：** 这是引入新方法的原因，复习时要能说明旧方法哪里不够，以及新方法解决了哪个痛点。
 
@@ -4983,12 +4983,12 @@ IsoFLOP curves 的思想：固定不同 FLOPs $C$，扫描 model size，找每�
 
 ### 8. FLOPs: Matrix-vector Multiplication
 
-* **定义 / 内容：** FLOPs: Matrix-vector Multiplication。• Requires 2𝑚𝑛 (2× matrix size) operations to multiply 𝐴 ∈ ℝ !×# and B ∈ ℝ #；• The factor 2: 1 for multiplication, 1 for addition.；• For multiplying 𝐴 ∈ ℝ !×# and B ∈ ℝ #×$ , one needs 2𝑚𝑛𝑝 operations；• This is just for the forward propagation.
+* **定义 / 内容：** FLOPs: Matrix-vector Multiplication。矩阵向量乘法 $A\in\mathbb{R}^{m\times n}$ 乘 $x\in\mathbb{R}^{n}$ 约需要 $2mn$ FLOPs，其中乘法和加法各算一次。矩阵乘法 $A\in\mathbb{R}^{m\times n}$、$B\in\mathbb{R}^{n\times p}$ 约需要 $2mnp$ FLOPs。这里主要讨论 forward propagation 的数量级。
 * **直觉：** 本页展开 scaling laws、FLOPs、Transformer 参数/计算量、Kaplan、Chinchilla、inverse scaling 与限制。 这些核心概念中的一个局部，需与本讲前后页面一起理解。
 
 ### 9. FLOPs: Matrix Multiplication
 
-* **定义 / 内容：** FLOPs: Matrix Multiplication。• Backward passes calculate the derivatives of loss with respect to both；hidden state (for further backprop) and parameters (for gradient)；Due to the chain-rule；and inner product We compute；$%；to propagate；between 𝑊 and 𝑋 , back $&；propagations are also the gradient to earlier layers；matrix-vector products:；$% $%；= 𝑊 (× $%；$& $) We compute to update；$'；$% $% model parameters；= 𝑋 (×；$' $)；• FLOPs for backward pass is roughly twice of forward pass.
+* **定义 / 内容：** FLOPs: Matrix Multiplication。Backward pass 需要同时计算对 hidden state 的梯度和对参数的梯度。若 forward 中有 $y=Wx$，则 backprop 需要类似 $\partial L/\partial x=W^T(\partial L/\partial y)$ 和 $\partial L/\partial W=(\partial L/\partial y)x^T$ 的矩阵/向量乘法。因此 backward pass 的 FLOPs 通常约为 forward pass 的两倍，训练总 FLOPs 常粗略记为 forward 的三倍左右，再结合乘加操作估算为 $6\times tokens\times parameters$。
 * **直觉：** 本页展开 scaling laws、FLOPs、Transformer 参数/计算量、Kaplan、Chinchilla、inverse scaling 与限制。 这些核心概念中的一个局部，需与本讲前后页面一起理解。
 
 ### 10. FLOPs: Matrix Multiplication
@@ -4998,7 +4998,7 @@ IsoFLOP curves 的思想：固定不同 FLOPs $C$，扫描 model size，找每�
 
 ### 11. FLOPs: Matrix Multiplication
 
-* **定义 / 内容：** FLOPs: Matrix Multiplication。• If 𝑊 ∈ ℝ'!" ×'#$% , then the number of parameters for muplyling W with a；vector ℎ is 𝑊 = 𝑑() ×𝑑*+, .；FLOPs of a single layer with a single matrix-vector product is；6 x (# tokens) x (# of parameters)；• Example: If 𝑊 ∈ ℝ-./0×11..2 , with 8 tokens, the training FLOPs are；6×B× W = 6×8×4096×11008 ≈ 2.16×10-
+* **定义 / 内容：** FLOPs: Matrix Multiplication。如果 $W\in\mathbb{R}^{d_{out}\times d_{in}}$，参数量是 $d_{out}d_{in}$。训练 FLOPs 常用粗略估计 $6\times(\#tokens)\times(\#parameters)$。例如 $W\in\mathbb{R}^{4096\times11008}$ 且有 8 个 tokens，则训练 FLOPs 约为 $6\times8\times4096\times11008\approx2.16\times10^9$。
 * **直觉：** 本页展开 scaling laws、FLOPs、Transformer 参数/计算量、Kaplan、Chinchilla、inverse scaling 与限制。 这些核心概念中的一个局部，需与本讲前后页面一起理解。
 
 ### 12. Transformer FLOPs
@@ -5023,7 +5023,7 @@ IsoFLOP curves 的思想：固定不同 FLOPs $C$，扫描 model size，找每�
 
 ### 16. Calculating Transfomer’s C
 
-* **定义 / 内容：** Calculating Transfomer’s C。• Consider HyperCLOVA, an 82B parameter model that was pre-trained on 150B tokens,；using a cluster of 1024 A100 GPUs.；• Training cost (FLOPs):；• The peak throughput of A100 GPUs if 312 teraFLOPS or 3.12×10%&；• How long would this take?；• In other words, 𝐶 = 2.7 𝑇𝐹 = 2.7×10'( 𝑃𝐹；• TF=TeraFLOPs, and PF=PeraFLOPs
+* **定义 / 内容：** Calculating Transformer's C。课件以 HyperCLOVA 为例：82B parameters、150B training tokens、1024 A100 GPUs。训练成本可用 $C\approx6ND$ 粗估，其中 $N$ 是参数量、$D$ 是 token 数。A100 peak throughput 可按约 $312$ TFLOPs，也就是 $3.12\times10^{14}$ FLOPs/s 估算；再用 total FLOPs 除以集群总吞吐量得到理论训练时间。注意 TF 表示 TeraFLOPs，PF 表示 PetaFLOPs。
 * **直觉：** 本页展开 scaling laws、FLOPs、Transformer 参数/计算量、Kaplan、Chinchilla、inverse scaling 与限制。 这些核心概念中的一个局部，需与本讲前后页面一起理解。
 
 ### 17. Calculating Transfomer’s C
@@ -5278,7 +5278,7 @@ $$
 
 ### 11. FlashAttention
 
-* **定义 / 内容：** FlashAttention。• Tiling: compute attention softmax online block-by-block and don’t；cache the attention weights at all.；• A simple demonstration；• Suppose we have 3 keys/values, and a query generates 3 logits [𝑚! 𝑚" 𝑚# ].；• Softmax calculates the weights over 3 value vectors.；$%& '! (' ∗ $%& '# (' ∗ $%& '$ (' ∗；• 𝑤" 𝑤! 𝑤# = ( , , )；) ) )；• 𝑑 = ∑*+",!,# exp 𝑚* − 𝑚 ∗；• 𝑚 ∗ = max(𝑚" 𝑚! 𝑚# )；• Want to find the weighted sum s = 𝑤" 𝑣" + 𝑤! 𝑣! + 𝑤# 𝑣#；• The nominators can be calculated in parallel, but the denominator d is the sum of；all nominators: the weights can be found only after going through all logits.；• What if the logits and are in different places?；.；• Define the partial sum 𝑑. = ∑*+" exp 𝑚* − 𝑚 ∗；• 𝑠. = ((𝑠.(" ∗ 𝑑.(" ) + exp 𝑚. − 𝑚 ∗ 𝑣. )/𝑑.
+* **定义 / 内容：** FlashAttention。Tiling 的核心是 block-by-block 计算 attention softmax，不把完整 attention weights matrix 缓存在 HBM。设一个 query 对 3 个 keys 得到 logits $m_1,m_2,m_3$，稳定 softmax 先取 $m^*=\max(m_1,m_2,m_3)$，分母为 $d=\sum_i\exp(m_i-m^*)$，权重为 $w_i=\exp(m_i-m^*)/d$，最终 weighted sum 为 $s=\sum_iw_iv_i$。online softmax 维护 running max 与 denominator，所以可以 exact 地分块合并，而不是近似 softmax。
 * **直觉：** 本页展开 KV cache、prefill/decode、memory wall、FlashAttention、MQA/GQA、PagedAttention 与 StreamingLLM。 这些核心概念中的一个局部，需与本讲前后页面一起理解。
 
 ### 12. Optimizing Attention Heads
@@ -5494,7 +5494,7 @@ distillation 可让 student 不同架构、参数更少、速度更快；缺点�
 
 ### 4. Mathematical mapping
 
-* **定义 / 内容：** Mathematical mapping。Quantization maps continuous values to a discrete set of integers using a Scale；( ) and Zero-point ( ):；!"#("%&(')) !"# ' -!./(')；𝑆= (absmax quantization), or 𝑆 = (zeropoint quantization)；*+, +∗*+,；Example (INT8 symmetric quantization)： Setting:；• The range [-max, max] is mapped to [-127, 127]. X=2.14 S=0.0275 Z=0；qmin=-128 qmax=127；• Quantize (FP32 to INT8):；q=78；• Dequantization approximates the original:；x=2.14；Storing less information: 8 bits rather than 32 bits,；plus quantization parameters S and Z.
+* **定义 / 内容：** Mathematical mapping。Quantization 用 scale $S$ 和 zero-point $Z$ 把连续值映射到离散整数：$q=round(x/S)+Z$，再用 $\hat{x}=S(q-Z)$ 近似还原。对 INT8 symmetric quantization，常把区间 $[-max,max]$ 映射到 $[-127,127]$，scale 可写成 $S=max(|x|)/127$。例如 $x=2.14,S=0.0275,Z=0$ 时，量化值约为 $q=78$，dequantization 近似回 $x\approx2.14$。核心收益是用 8 bits 而不是 32 bits 存储数值，但要额外保存量化参数 $S,Z$。
 * **直觉：** 本页给出目标函数、推导或数学定义，是理解训练/推理算法的核心。
 
 ### 5. Quantization accuracy cost
@@ -5535,7 +5535,7 @@ distillation 可让 student 不同架构、参数更少、速度更快；缺点�
 
 ### 12. Compression efficiency
 
-* **定义 / 内容：** Compression efficiency。• In information theory, and coding theory in particular, the goal is to assign；some discrete (quantized) codes (numbers) to symbols to reduce overall；size of storing some information (e.g., pice of texts).；• Expected total length；3；𝐿=$ 𝑝1 × 𝑙1；12* symbol p codes；a 5 1100；• 𝑝! : probability of seeing the i-th symbol；• 𝑙! : code length assigned to the i-th symbol b 9 1101；• Want to minimize the expectation. c 12 100；• Huffman tree: generates the codes. d 13 101；• Average code length is close to the e 16 111；information entropy f 45 0；of the symbol distribution.；• Mixed precision model quantization! Rare events require longer code, while；frequent events use shorter codes.
+* **定义 / 内容：** Compression efficiency。信息论/编码理论中，目标是给 symbols 分配离散 code 来减少存储长度。期望长度可写为 $L=\sum_i p_i l_i$，其中 $p_i$ 是第 $i$ 个 symbol 的出现概率，$l_i$ 是分配给它的 code length。Huffman coding 的直觉是高频 symbol 用短码、低频 symbol 用长码，使平均 code length 接近 entropy；mixed precision quantization 也有类似“重要/常见部分保留更多表示能力”的压缩直觉。
 * **直觉：** 本页展开 numeric format、quantization、QAT/PTQ、outlier activations、LLM.int8、SmoothQuant、pruning 与 distillation。 这些核心概念中的一个局部，需与本讲前后页面一起理解。
 
 ### 13. LLM.int8 (mixed precision quantization)
@@ -5752,12 +5752,12 @@ Mixtral、Qwen MoE 说明 sparse upcycling 可从 dense checkpoint 出发构建 
 
 ### 5. Mixture of Experts in LSTM
 
-* **定义 / 内容：** Mixture of Experts in LSTM。• For input X, the gating network computes routing；scores: 𝐺 = Softmax 𝑊! 𝑋；• The model selects the top-K experts, e.g. K=2, 𝐼 =；𝑖" , 𝑖# = Top𝐾 𝐺 𝑘 = 2；• The selected experts are assigned weights:；𝐺$! 𝐺$"；𝑠" = , 𝑠# =；𝐺$! + 𝐺$" 𝐺$! + 𝐺$"；• Each selected expert is a feed-forward network.；The final output is a weighted combination of the；selected experts:；𝑌 = s$ FFN%! 𝑋 + 𝑠! FFN%" 𝑋；Shazeer N, Mirhoseini A, Maziarz K, et al. Outrageously large neural networks: The sparsely-gated mixture-of-experts layer. arXiv preprint arXiv:1701.06538, 2017.
+* **定义 / 内容：** Mixture of Experts in LSTM。对输入 $X$，gating network 先计算 routing scores：$G=softmax(W_gX)$。模型选择 top-$K$ experts，例如 $K=2$ 时选择 $i_1,i_2=TopK(G)$，并在被选中的 experts 内重新归一化权重：$s_1=G_{i_1}/(G_{i_1}+G_{i_2})$，$s_2=G_{i_2}/(G_{i_1}+G_{i_2})$。最终输出是 selected experts 的加权和：$Y=s_1FFN_{i_1}(X)+s_2FFN_{i_2}(X)$。
 * **直觉：** 本页展开 MoE、expert routing、routing collapse、Top-1/Top-2/BASE/RL routing、DeepSeek、sparse upcycling。 这些核心概念中的一个局部，需与本讲前后页面一起理解。
 
 ### 6. Mixture of Experts in Transformer
 
-* **定义 / 内容：** Mixture of Experts in Transformer。• Switch Transformer block, where the standard FFN；is replaced by a Mixture-of-Experts layer.；• For each input token, the router computes a；probability: P = Softmax 𝑊% ℎ；• Each expert is a feed-forward network 𝐸$ , The；model selects the expert with the highest routing；probability；• Only the selected expert processes the token:；𝑀𝑜𝐸(ℎ) = 𝑝& 𝐸& (ℎ)；token 1 token 2；Fedus W, Zoph B, Shazeer N. Switch transformers: Scaling to trillion parameter models with simple and efficient sparsity[J]. Journal of Machine Learning Research, 2022,；23(120): 1-39.
+* **定义 / 内容：** Mixture of Experts in Transformer。Switch Transformer 把标准 FFN 替换为 MoE layer。对每个 token hidden state $h$，router 计算 $p=softmax(W_rh)$，选择 routing probability 最大的 expert $E_i$，并只让该 expert 处理 token：$MoE(h)=p_iE_i(h)$。这样增加总参数容量，但每个 token 只激活少数 experts。
 * **直觉：** 本页展开 MoE、expert routing、routing collapse、Top-1/Top-2/BASE/RL routing、DeepSeek、sparse upcycling。 这些核心概念中的一个局部，需与本讲前后页面一起理解。
 
 ### 7. Routing algorithms — Top 1 routing
@@ -6260,7 +6260,7 @@ $$
 
 ### 6. Langevin Dynamics for inference (reverse process)
 
-* **定义 / 内容：** Langevin Dynamics for inference (reverse process)。Starting from a random location 𝑥 ! , use the trained score function 𝑠" (𝑥# ) to iteratively move 𝑥 ! to 𝑥%$
+* **定义 / 内容：** Langevin Dynamics for inference (reverse process)。从随机初始点 $x_0$ 出发，使用训练好的 score function $s_\theta(x)$ 迭代移动样本，使其逐步靠近高概率数据区域。常见更新形式为 $x_{k+1}=x_k+\frac{\eta}{2}s_\theta(x_k)+\sqrt{\eta}z_k$。
 * **直觉：** 本页文字较少或主要依赖图示；知识点按页标题、可见文字和前后页面上下文保留。
 
 ### 7. Unified Framework: Denoising vs. Score Matching
@@ -6291,7 +6291,7 @@ $$
 
 ### 12. From Gaussian Kernels to Transition Matrices
 
-* **定义 / 内容：** From Gaussian Kernels to Transition Matrices。To define diffusion over a discrete vocabulary V, we replace the Gaussian kernel with a；Transition Matrix .；Instead of shifting a mean, we define the probability of a token xt-1 "jumping" to another token；xt. The forward process is now a categorical Markov chain:；𝑥# = 𝑄# 𝑥#%& : transiting from a probability distribution 𝑥#%& over tokens to another distribution 𝑥# .；Examples:
+* **定义 / 内容：** From Gaussian Kernels to Transition Matrices。离散文本 diffusion 不能直接使用连续 Gaussian kernel，因此用 transition matrix $Q_t$ 定义 token 从 $x_{t-1}$ 跳到 $x_t$ 的概率。forward process 变成 categorical Markov chain，可写作 $x_t=Q_tx_{t-1}$，即把上一时刻的 token distribution 转换成下一时刻 distribution。
 * **直觉：** 本页展开 score function、Langevin dynamics、score matching、text diffusion、discrete transition matrix、latent diffusion、classifier guidance 与 block diffusion。 这些核心概念中的一个局部，需与本讲前后页面一起理解。
 
 ### 13. How to Forward Step Works
@@ -6531,7 +6531,7 @@ collaboration 则强调 agent 与人类或其他 agent 协作：人类给目标�
 
 ### 15. Tools
 
-* **定义 / 内容：** Tools。• Web search；Recognize when need a web search:；• limited context to understand user query；• beyond the learned konwledge of the LLM；How to do a web search:；• MCP (search engine companies；provide the service).；Process the search results.；Image source: https://substackcdn.com/image/fetch/$s_!CRpe!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-；media.s3.amazonaws.com%2Fpublic%2Fimages%2F905d3033-c2c2-49dd-aa10-1ca1c8033022_2993x1313.png
+* **定义 / 内容：** Tools。Web search 适用于用户问题上下文不足、问题超出模型已学知识或需要当前信息的场景。工具调用流程包括识别搜索需求、调用搜索服务、读取与筛选搜索结果、把结果整合进回答。MCP 类接口的价值是让搜索引擎等外部服务以统一协议暴露给模型。
 * **直觉：** 本页展开 agentic system、planning、memory、RAG、reflection、LLM-as-a-judge、tools、collaboration 与 MCP。 这些核心概念中的一个局部，需与本讲前后页面一起理解。
 
 ### 16. Tools
@@ -6551,7 +6551,7 @@ collaboration 则强调 agent 与人类或其他 agent 协作：人类给目标�
 
 # Formula Cheat Sheet / 公式速查表
 
-完整分讲公式笔记见：[[Formula/Formula Index\|Formula Index]]。
+完整分讲公式笔记见：[[Wiki/Notion/Class/Artificial-Intelligence/Introduction to Natural Language Processing/Formula/Formula Index\|Formula Index]]。
 
 ## Probability and MLE
 
