@@ -5,7 +5,9 @@
 # 1. Group
 
 ## 1. Basic Concept
-
+### (0) Monoid
+- ① $\forall x,y,z \in S,\; x * (y * z) = (x * y) * z$
+- ② $\exists e \in S,\; \forall x \in S,\; e * x = x * e = x$
 ### (1) Group
 
 **(G, ·) group $\iff$**
@@ -21,3 +23,4 @@
 * ③ 逆元: $\forall a \in G, \exists a^{-1} \in G, a·a^{-1}=a^{-1}·a=e$
 * ④ 交换律: $\forall a,b \in G, a·b=b·a$
 
+## 2. Subgroup
