@@ -56,6 +56,38 @@
 **For groups $(G, \cdot)$ and $(H, \ast)$, $f:G \to H$ is a group homomorphism $\iff$**
 * ① 保持运算: $\forall a,b \in G, f(a \cdot b)=f(a) \ast f(b)$
 
+#### Properties
+
+设 $e_G$ 与 $e_H$ 分别为 $G$ 与 $H$ 的单位元。
+
+* ① 保持单位元: $f(e_G)=e_H$
+* ② 保持逆元: $\forall a \in G, f(a^{-1})=f(a)^{-1}$
+
+#### Proof
+
+①
+$$
+\begin{aligned}
+e_H
+&=f(e_G)^{-1} \ast f(e_G)\\
+&=f(e_G)^{-1} \ast f(e_G \cdot e_G)\\
+&=f(e_G)^{-1} \ast \bigl(f(e_G) \ast f(e_G)\bigr)\\
+&=f(e_G).
+\end{aligned}
+$$
+
+②
+$$
+\begin{aligned}
+f(a) \ast f(a^{-1})
+&=f(a \cdot a^{-1})=f(e_G)=e_H,\\
+f(a^{-1}) \ast f(a)
+&=f(a^{-1} \cdot a)=f(e_G)=e_H
+\end{aligned}
+\quad\Longrightarrow\quad
+f(a^{-1})=f(a)^{-1}.
+$$
+
 ### (2) Monoid Homomorphism
 
 **For monoids $(M, \cdot)$ and $(N, \ast)$, $f:M \to N$ is a monoid homomorphism $\iff$**
